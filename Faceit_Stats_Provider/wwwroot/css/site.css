@@ -1,0 +1,78 @@
+:root {
+    --maincolor: #1f1f1f;
+    --darkermain: #161616;
+    --orange: #f50;
+}
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    background-color: var(--maincolor);
+    background: linear-gradient(to right top ,var(--darkermain),var(--maincolor));
+    color:white;
+}
+
+.box {
+    position:absolute;
+    justify-content:center;
+    align-items:center;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+
+input {
+    position: relative;
+    display:inline-block;
+    font-size:20px;
+    box-sizing: border-box;
+    transition: .5s;
+}
+
+input[type="text"] {
+
+    background: #fff;
+    width:340px;
+    height:50px;
+    border:none;
+    outline:none;
+    padding: 0 25px;
+    border-radius: 25px 0 0 25px;
+}
+
+input[type="submit"] {
+    left:-5px;
+    position: relative;
+    border-radius: 0 25px 25px 0;
+    width: 150px;
+    height: 50px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #f50;
+    color: #fff;
+}
+
+input[type="submit"]:hover {
+
+        background: #ff3c22;
+}
+.navbarcolor {
+    background-color: #f50;
+}
+.logo {
+    margin-right:10px;
+}
