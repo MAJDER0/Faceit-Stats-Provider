@@ -1,37 +1,79 @@
 ﻿@model Faceit_Stats_Provider.Models.PlayerStats
 
-<div class="row">
+<div class="row mainstatspanel">
+
+    <div class="col-md-4">
+
+        @if (string.IsNullOrWhiteSpace(Model.ErrorMessage) == false)
+        {
+            <div class="h2">@Model.ErrorMessage</div>
+        }
+        else if (Model.Playerinfo is null)
+        {
+            <div class="h4">Loading</div>
+        }
+        else
+        {
+            <div class="PlayerPanel">
+                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300">
+                <div class="PlayerNick">@Model.Playerinfo.nickname</div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-4">
+        <canvas id="faceitlvl" width="250" height="250"></canvas>
+
+        <script>
+            window.addEventListener('load', function () {
+                generate10lvl();
+                drawFrame();
+            });
+
+        </script>
+        
+    </div>
+
+    <div class="col-md-4">
+        <div>Random text</div>
+    </div>
+</div>
+
+ <div class="row matchespanel">
+
     <div class="col-md-12 PlayerInfo">
         @if (string.IsNullOrWhiteSpace(Model.ErrorMessage) == false)
         {
             <div class="h2">@Model.ErrorMessage</div>
         }
-        else if(Model.Playerinfo is null)
+        else if (Model.Playerinfo is null)
         {
             <div class="h4">Loading</div>
         }
-        else{
+        else
+        {
             <table class="table table-striped table-dark">
-                    <thead>
-                        <tr>
-                            <th>Avatar</th>
-                            <th>Nickname</th>
-                            <th>Skill level</th>
-                            <th>Elo</th>
-                            <th>Country</th>
-                        </tr>
-                        <tbody>
-                            <tr>
-                                <td><img src="@Model.Playerinfo.avatar" width="25" height="25"/></td>
-                                <td>@Model.Playerinfo.nickname</td>
-                                <td>@Model.Playerinfo.games.csgo.skill_level</td>
-                                <td>@Model.Playerinfo.games.csgo.faceit_elo</td>
-                                <td>@Model.Playerinfo.country</td>
-                            </tr>
-                        </tbody>
-                    </thead>
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Nickname</th>
+                        <th>Skill level</th>
+                        <th>Elo</th>
+                        <th>Country</th>
+                    </tr>
+                <tbody>
+                    <tr>
+                        <td><img src="@Model.Playerinfo.avatar" width="25" height="25" /></td>
+                        <td>@Model.Playerinfo.nickname</td>
+                        <td>@Model.Playerinfo.games.csgo.skill_level</td>
+                        <td>@Model.Playerinfo.games.csgo.faceit_elo</td>
+                        <td>@Model.Playerinfo.country</td>
+                    </tr>
+                </tbody>
+                </thead>
             </table>
         }
-    
+
     </div>
-</div>
+
+ </div>

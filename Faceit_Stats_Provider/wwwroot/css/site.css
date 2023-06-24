@@ -4,7 +4,7 @@
     --orange: #f50;
 }
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -21,8 +21,9 @@ html {
 body {
     margin-bottom: 60px;
     background-color: var(--maincolor);
-    background: linear-gradient(to right top ,var(--darkermain),var(--maincolor));
-    color:white;
+    background: linear-gradient(to right top,var(--darkermain),var(--maincolor));
+    color: white;
+    font-family: 'Play', sans-serif;
 }
 
 .box {
@@ -65,10 +66,27 @@ input[type="submit"] {
     background-color: #f50;
     color: #fff;
 }
+.PlayerNick {
+    width:300px;
+    text-align: center;
+    color:darkmagenta;
+    font-weight: bold;
+    font-size: 25px;
+}
+#faceitlvl {
+    font-family: 'Play', sans-serif;
+    margin-top: 20px;
+}
 
+.mainstatspanel {
+    margin-top: 40px;
+}
+
+.matchespanel {
+    margin-top: 80px;
+}
 input[type="submit"]:hover {
-
-        background: #ff3c22;
+    background: #ff3c22;
 }
 .navbarcolor {
     background-color: #f50;
