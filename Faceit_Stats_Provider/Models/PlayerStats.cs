@@ -1,9 +1,13 @@
-﻿namespace Faceit_Stats_Provider.Models
+﻿using static Faceit_Stats_Provider.Models.MatchHistory;
+
+namespace Faceit_Stats_Provider.Models
 {
     public class PlayerStats
     {
         public Rootobject Playerinfo { get; set; }
-
+        public MatchHistory.Rootobject MatchHistory { get; set; }
+        public List<MatchStats.Round> Last20MatchesStats { get; set; }
+        public OverallPlayerStats.Rootobject OverallPlayerStatsInfo { get; set; }
         public string ErrorMessage { get; set; }
 
         public class Rootobject
@@ -61,6 +65,5 @@
         public class Infractions
         {
         }
-
     }
 }

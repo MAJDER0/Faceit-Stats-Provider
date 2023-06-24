@@ -1,10 +1,8 @@
 ﻿@model Faceit_Stats_Provider.Models.PlayerStats
 
 <div class="row mainstatspanel">
-
     <div class="col-md-4">
-
-        @if (string.IsNullOrWhiteSpace(Model.ErrorMessage) == false)
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
         {
             <div class="h2">@Model.ErrorMessage</div>
         }
@@ -23,26 +21,67 @@
 
     <div class="col-md-4">
         <canvas id="faceitlvl" width="250" height="250"></canvas>
-
         <script>
             window.addEventListener('load', function () {
                 generate10lvl();
                 drawFrame();
             });
-
         </script>
-        
+
+        <div class="InfoUnderCanvas">
+            <p>Maximum lvl has been reached</p>
+            <p class="EloInfoUnderCanvas">Elo: @Model.Playerinfo.games.csgo.faceit_elo</p>
+        </div>
     </div>
 
     <div class="col-md-4">
-        <div>Random text</div>
+        <div class="StatsContainer">
+            <div class="OverallStats">
+                <p class="title">Overall Stats</p>
+                <p>Matches: @Model.OverallPlayerStatsInfo.lifetime.Matches</p>
+                <p>Win Ratio: @Model.OverallPlayerStatsInfo.lifetime.WinRate%</p>
+                <p>Headshots: @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</p>
+                <p>K/D Ratio: @Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</p>
+            </div>
+            <div class="Last20Stats">
+                <p class="title">Last 20 stats</p>
+                @if (Model.Last20MatchesStats != null)
+                {
+                    double totalKdRatio = 0;
+                    int gameCount = 0;
+
+                        @foreach (var match in Model.Last20MatchesStats)
+                        {
+                            foreach (var team in match.teams)
+                            {
+                                foreach (var player in team.players)
+                                {
+                                    if (player.nickname == Model.Playerinfo.nickname)
+                                    {
+                                        double kills = double.Parse(player.player_stats.Kills);
+                                        double deaths = double.Parse(player.player_stats.Deaths);
+                                        double kdRatio = kills / deaths;
+                                        totalKdRatio += kdRatio;
+                                        gameCount++;
+                                    }
+                                }
+                            }
+                        }
+
+                    double averageKdRatio = totalKdRatio / gameCount;
+                    string averageKdRatioFormatted = averageKdRatio.ToString("F2");
+
+                    <p>K/D Ratio: @averageKdRatioFormatted</p>
+                }
+            </div>
+
+        </div>
     </div>
 </div>
 
- <div class="row matchespanel">
-
+<div class="row matchespanel">
     <div class="col-md-12 PlayerInfo">
-        @if (string.IsNullOrWhiteSpace(Model.ErrorMessage) == false)
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
         {
             <div class="h2">@Model.ErrorMessage</div>
         }
@@ -61,6 +100,7 @@
                         <th>Elo</th>
                         <th>Country</th>
                     </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <td><img src="@Model.Playerinfo.avatar" width="25" height="25" /></td>
@@ -70,10 +110,7 @@
                         <td>@Model.Playerinfo.country</td>
                     </tr>
                 </tbody>
-                </thead>
             </table>
         }
-
     </div>
-
- </div>
+</div>

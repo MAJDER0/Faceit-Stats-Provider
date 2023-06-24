@@ -75,15 +75,47 @@ input[type="submit"] {
 }
 #faceitlvl {
     font-family: 'Play', sans-serif;
-    margin-top: 20px;
 }
 
 .mainstatspanel {
-    margin-top: 40px;
+    margin-top: 60px;
+}
+
+.StatsContainer {
+    display: flex;
+}
+.OverallStats {
+    font-size: 20px;
+    flex: 1;
+}
+
+.OverallStats p.title {
+    font-size: 25px;
+    color: darkmagenta;
+}
+
+.Last20Stats {
+    font-size: 20px;
+    flex: 1;
+}
+
+.Last20Stats p.title {
+    font-size: 25px;
+    color: darkmagenta;
+}
+
+.InfoUnderCanvas > p {
+    color: red;
+    font-weight:bold;
+    margin-left: 4%;
+}
+
+.EloInfoUnderCanvas {
+    padding-left: 18%;
 }
 
 .matchespanel {
-    margin-top: 80px;
+    margin-top: 60px;
 }
 input[type="submit"]:hover {
     background: #ff3c22;

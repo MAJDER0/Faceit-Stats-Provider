@@ -1,8 +1,9 @@
-﻿namespace Faceit_Stats_Provider.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Faceit_Stats_Provider.Models
 {
     public class MatchStats
     {
-
         public class Rootobject
         {
             public Round[] rounds { get; set; }
@@ -65,6 +66,8 @@
             public string Result { get; set; }
             public string QuadroKills { get; set; }
             public string KRRatio { get; set; }
+
+            [JsonPropertyName("K/D Ratio")]
             public string KDRatio { get; set; }
             public string Assists { get; set; }
             public string MVPs { get; set; }
