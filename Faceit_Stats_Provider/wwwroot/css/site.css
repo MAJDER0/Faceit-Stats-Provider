@@ -91,6 +91,7 @@ input[type="submit"] {
 
 .OverallStats p.title {
     font-size: 25px;
+    font-weight:bold;
     color: darkmagenta;
 }
 
@@ -101,6 +102,7 @@ input[type="submit"] {
 
 .Last20Stats p.title {
     font-size: 25px;
+    font-weight:bold;
     color: darkmagenta;
 }
 

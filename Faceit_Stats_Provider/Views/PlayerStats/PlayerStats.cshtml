@@ -48,6 +48,9 @@
                 @if (Model.Last20MatchesStats != null)
                 {
                     double totalKdRatio = 0;
+                    double totalKrRatio = 0;
+                    double totalAverageKills = 0;
+                    double totalAverageAssists = 0;
                     int gameCount = 0;
 
                         @foreach (var match in Model.Last20MatchesStats)
@@ -60,7 +63,12 @@
                                     {
                                         double kills = double.Parse(player.player_stats.Kills);
                                         double deaths = double.Parse(player.player_stats.Deaths);
+                                        double Assists = double.Parse(player.player_stats.Assists);
                                         double kdRatio = kills / deaths;
+                                        double KrRatio = kills / double.Parse(match.round_stats.Rounds);;
+                                        totalAverageKills += kills;
+                                        totalAverageAssists += Assists;
+                                        totalKrRatio += KrRatio;
                                         totalKdRatio += kdRatio;
                                         gameCount++;
                                     }
@@ -69,9 +77,20 @@
                         }
 
                     double averageKdRatio = totalKdRatio / gameCount;
+                    double averageKrRatio = totalKrRatio / gameCount;
+                    double averageKills = totalAverageKills / gameCount;
+                    double averageAssists = totalAverageAssists / gameCount;
+
+
                     string averageKdRatioFormatted = averageKdRatio.ToString("F2");
+                    string averageKrRatioFormatted = averageKrRatio.ToString("F2");
+                    string averageKillsFormatted = averageKills.ToString("F0");
+                    string averageAssistsFormatted = averageAssists.ToString("F0");
 
                     <p>K/D Ratio: @averageKdRatioFormatted</p>
+                    <p>K/R Ratio: @averageKrRatioFormatted</p>
+                    <p>Average Kills: @averageKillsFormatted</p>
+                    <p>Average Assists: @averageAssistsFormatted</p>
                 }
             </div>
 

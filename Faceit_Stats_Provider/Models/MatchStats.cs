@@ -65,8 +65,9 @@ namespace Faceit_Stats_Provider.Models
             public string PentaKills { get; set; }
             public string Result { get; set; }
             public string QuadroKills { get; set; }
-            public string KRRatio { get; set; }
 
+            [JsonPropertyName("K/R Ratio")]
+            public string KRRatio { get; set; }
             [JsonPropertyName("K/D Ratio")]
             public string KDRatio { get; set; }
             public string Assists { get; set; }
