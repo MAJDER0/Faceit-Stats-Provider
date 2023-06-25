@@ -3,19 +3,20 @@
     --darkermain: #161616;
     --orange: #f50;
 }
+
 html {
     font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -27,52 +28,53 @@ body {
 }
 
 .box {
-    position:absolute;
-    justify-content:center;
-    align-items:center;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
 }
 
 input {
     position: relative;
-    display:inline-block;
-    font-size:20px;
+    display: inline-block;
+    font-size: 20px;
     box-sizing: border-box;
     transition: .5s;
 }
 
-input[type="text"] {
+    input[type="text"] {
+        background: #fff;
+        width: 340px;
+        height: 50px;
+        border: none;
+        outline: none;
+        padding: 0 25px;
+        border-radius: 25px 0 0 25px;
+    }
 
-    background: #fff;
-    width:340px;
-    height:50px;
-    border:none;
-    outline:none;
-    padding: 0 25px;
-    border-radius: 25px 0 0 25px;
-}
+    input[type="submit"] {
+        left: -5px;
+        position: relative;
+        border-radius: 0 25px 25px 0;
+        width: 150px;
+        height: 50px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: #f50;
+        color: #fff;
+    }
 
-input[type="submit"] {
-    left:-5px;
-    position: relative;
-    border-radius: 0 25px 25px 0;
-    width: 150px;
-    height: 50px;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    background-color: #f50;
-    color: #fff;
-}
 .PlayerNick {
-    width:300px;
+    width: 300px;
     text-align: center;
-    color:darkmagenta;
+    color: darkmagenta;
     font-weight: bold;
     font-size: 25px;
 }
+
 #faceitlvl {
     font-family: 'Play', sans-serif;
 }
@@ -84,31 +86,32 @@ input[type="submit"] {
 .StatsContainer {
     display: flex;
 }
+
 .OverallStats {
     font-size: 20px;
     flex: 1;
 }
 
-.OverallStats p.title {
-    font-size: 25px;
-    font-weight:bold;
-    color: darkmagenta;
-}
+    .OverallStats p.title {
+        font-size: 25px;
+        font-weight: bold;
+        color: darkmagenta;
+    }
 
 .Last20Stats {
     font-size: 20px;
     flex: 1;
 }
 
-.Last20Stats p.title {
-    font-size: 25px;
-    font-weight:bold;
-    color: darkmagenta;
-}
+    .Last20Stats p.title {
+        font-size: 25px;
+        font-weight: bold;
+        color: darkmagenta;
+    }
 
 .InfoUnderCanvas > p {
     color: red;
-    font-weight:bold;
+    font-weight: bold;
     margin-left: 4%;
 }
 
@@ -116,15 +119,32 @@ input[type="submit"] {
     padding-left: 18%;
 }
 
+.PlayerNotFound {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.PlayerNotFound .message {
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: -50vh;
+}
+
 .matchespanel {
     margin-top: 60px;
 }
+
 input[type="submit"]:hover {
     background: #ff3c22;
 }
+
 .navbarcolor {
     background-color: #f50;
 }
+
 .logo {
-    margin-right:10px;
+    margin-right: 10px;
 }

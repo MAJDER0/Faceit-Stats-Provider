@@ -53,9 +53,19 @@ namespace Faceit_Stats_Provider.Controllers
                 matchstats = null;
             }
 
-            var ConnectionStatus = new PlayerStats {OverallPlayerStatsInfo = overallplayerstats, Last20MatchesStats = matchstats, MatchHistory = matchhistory, Playerinfo = playerinf, ErrorMessage = errorString };
+            if (playerinf is null)
+            {
+                return RedirectToAction("PlayerNotFound");
+            }
+
+            var ConnectionStatus = new PlayerStats {OverallPlayerStatsInfo = overallplayerstats, Last20MatchesStats = matchstats, MatchHistory = matchhistory,Playerinfo = playerinf, ErrorMessage = errorString };
             
             return View(ConnectionStatus);
+        }
+
+        public IActionResult PlayerNotFound()
+        {
+            return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
     }
 }

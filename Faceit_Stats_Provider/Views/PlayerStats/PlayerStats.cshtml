@@ -21,30 +21,130 @@
 
     <div class="col-md-4">
         <canvas id="faceitlvl" width="250" height="250"></canvas>
-        <script>
-            window.addEventListener('load', function () {
-                generate10lvl();
-                drawFrame();
-            });
-        </script>
+        @switch (@Model.Playerinfo.games.csgo.skill_level)
+        {
+            case 10:
+            <script>
+                    window.addEventListener('load', function () {
+                        generatelvl("10", 0.08, "#FE1F00", 0.85);
+                    });
+            </script>
+
+                break;
+            case 9:               
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("9", 0.08, "#FF6309", 0.418);
+                });
+            </script>
+
+                break;
+
+            case 8:
+            <script>
+                window.addEventListener('load', function () {
+                        generatelvl("8", 0.08, "#FF6309", -0.01);;
+                });
+                </script>
+
+                break;
+
+            case 7:
+                <script>
+                    window.addEventListener('load', function () {
+                        generatelvl("7", 0.08, "#FFC800", -0.65);
+                });
+            </script>
+            break;
+            case 6:
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("6", 0.08, "#FFC800", -1.07);
+                });
+            </script>
+            break;
+            case 5:
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("5", 0.05, "#FFC800", -1.65);
+                });
+                </script>
+                break;
+            case 4:
+                <script>
+                    window.addEventListener('load', function () {
+                        generatelvl("4", 0.03, "#FFC800", -2.47);
+                });
+            </script>
+            break;
+            case 3:
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("3", 0.03, "#1CE400", -3.13);
+                });
+            </script>
+            break;
+            case 2:
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("2", 0.02, "#1CE400", -3.5);
+                });
+            </script>
+            break;
+            case 1:
+             <script>
+                window.addEventListener('load', function () {
+                        generatelvl("1", 0.01, "#EEE", -3.65);
+                });
+            </script>
+            break;
+        }
+ 
 
         <div class="InfoUnderCanvas">
-            <p>Maximum lvl has been reached</p>
-            <p class="EloInfoUnderCanvas">Elo: @Model.Playerinfo.games.csgo.faceit_elo</p>
+            @if(@Model.Playerinfo.games.csgo.skill_level==10)
+              {  
+                  <p>Maximum lvl has been reached</p>
+              }
+
+            @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+            {
+                <div class="h2">@Model.ErrorMessage</div>
+            }
+            else if (Model.Playerinfo is null)
+            {
+                <div class="h4">Loading</div>
+            }
+            else
+            {
+                <p class="EloInfoUnderCanvas">Elo: @Model.Playerinfo.games.csgo.faceit_elo</p>
+            }
         </div>
     </div>
 
     <div class="col-md-4">
         <div class="StatsContainer">
             <div class="OverallStats">
-                <p class="title">Overall Stats</p>
-                <p>Matches: @Model.OverallPlayerStatsInfo.lifetime.Matches</p>
-                <p>Win Ratio: @Model.OverallPlayerStatsInfo.lifetime.WinRate%</p>
-                <p>Headshots: @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</p>
-                <p>K/D Ratio: @Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</p>
+                <p class="title">OVERALL</p>
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="h2">@Model.ErrorMessage</div>
+                }
+                else if (Model.Playerinfo is null)
+                {
+                    <div class="h4">Loading</div>
+                }
+                else
+                {
+                    <p>MATCHES: @Model.OverallPlayerStatsInfo.lifetime.Matches</p>
+                    <p>WIN RATIO: @Model.OverallPlayerStatsInfo.lifetime.WinRate%</p>
+                    <p>HEADSHOTS: @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</p>
+                    <p>K/D RATIO: @Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</p>
+                }
+
             </div>
             <div class="Last20Stats">
-                <p class="title">Last 20 stats</p>
+                <p class="title">LAST 20</p>
                 @if (Model.Last20MatchesStats != null)
                 {
                     double totalKdRatio = 0;
@@ -87,10 +187,10 @@
                     string averageKillsFormatted = averageKills.ToString("F0");
                     string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                    <p>K/D Ratio: @averageKdRatioFormatted</p>
-                    <p>K/R Ratio: @averageKrRatioFormatted</p>
-                    <p>Average Kills: @averageKillsFormatted</p>
-                    <p>Average Assists: @averageAssistsFormatted</p>
+                    <p>K/D RATIO: @averageKdRatioFormatted</p>
+                    <p>K/R RATIO: @averageKrRatioFormatted</p>
+                    <p>AVERAGE KILLS: @averageKillsFormatted</p>
+                    <p>AVERAGE ASSISTS: @averageAssistsFormatted</p>
                 }
             </div>
 

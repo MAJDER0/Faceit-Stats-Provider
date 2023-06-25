@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] Faceit Stats Provider</title>
-    <link rel="icon" type="image/x-icon" href="/wypelnione.ico"/>
+    <link rel="icon" type="image/x-icon" href="/niewypelnione2.ico"/>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Faceit_Stats_Provider.styles.css" asp-append-version="true" />
@@ -15,7 +15,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light navbarcolor box-shadow mb-3">
             <div class="container-fluid">
-                <img src="~/niewypelnione.ico" width="35" height="35" class="logo" />
+                <a asp-action="Index">
+                    <img src="~/niewypelnione3.png" width="35" height="35" class="logo" />
+                </a>
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><strong>FACEIT STATS PROVIDER</strong></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +38,6 @@
     </div>
 
     <footer class="footer text-muted">
-
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

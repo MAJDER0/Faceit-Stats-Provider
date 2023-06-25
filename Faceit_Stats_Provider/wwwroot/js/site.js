@@ -3,16 +3,16 @@
 
 // Write your JavaScript code.
 
-var canvas = document.querySelector('#faceitlvl');
-var c = canvas.getContext('2d');
-const centerX = canvas.width / 2;
-const centerY = canvas.height / 2;
-const circle = canvas.width / 2;
+function generatelvl(level,AnimationSpeed, color, HowFarAnimationComes) {
 
-var x = -3.983;
-var dx = 0.10;
+    var canvas = document.querySelector('#faceitlvl');
+    var c = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const circle = canvas.width / 2;
 
-function generate10lvl() {
+    var x = -3.983;
+    var dx = AnimationSpeed;
 
     c.beginPath();
     c.arc(centerX, centerY, circle, 0, 2 * Math.PI);
@@ -22,9 +22,16 @@ function generate10lvl() {
     c.stroke();
 
     c.beginPath();
+    c.arc(centerX, centerY, circle * 0.7, 2.3, 0.92);
+    c.lineWidth = circle * 0.2;
+    c.strokeStyle = "RGB(205, 205, 205,0.1)";
+    c.fill();
+    c.stroke();
+
+    c.beginPath();
     c.arc(centerX, centerY, circle * 0.7, 2.3, x);
     c.lineWidth = circle * 0.2;
-    c.strokeStyle = "#FE1F00";
+    c.strokeStyle = color;
     c.fill();
     c.stroke();
 
@@ -33,10 +40,9 @@ function generate10lvl() {
     c.textBaseline = "middle";
     c.textAlign = "center";
     c.lineWidth = circle * 0.04;
-    c.strokeStyle = "#FE1F00";
-    c.strokeText("10", centerX - circle * 0.035, centerY);
-    c.fillStyle = "#FE1F00";
-    c.fillText("10", centerX - circle * 0.035, centerY);
+    c.strokeText(level, centerX - circle * 0.035, centerY);
+    c.fillStyle = color;
+    c.fillText(level, centerX - circle * 0.035, centerY);
     c.fill();
     c.stroke();
 
@@ -47,7 +53,7 @@ function generate10lvl() {
         c.arc(centerX, centerY, circle * 0.7, 2.3, x);
         c.stroke();
 
-        if (x <= 0.85) {
+        if (x <= HowFarAnimationComes) {
             x += dx;
             requestAnimationFrame(animate);
         }
