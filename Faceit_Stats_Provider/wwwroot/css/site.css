@@ -148,3 +148,98 @@ input[type="submit"]:hover {
 .logo {
     margin-right: 10px;
 }
+
+.bg {
+    background: #0D0D0D no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -3;
+}
+
+    .bg:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: #000;
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        opacity: 0.3;
+    }
+
+@keyframes sf-fly-by-1 {
+    0% {
+        transform: translateZ(-400px);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateZ(0);
+        opacity: 0.5;
+    }
+}
+
+@keyframes sf-fly-by-2 {
+    0% {
+        transform: translateZ(-1200px);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateZ(-600px);
+        opacity: 0.5;
+    }
+}
+
+@keyframes sf-fly-by-3 {
+    0% {
+        transform: translateZ(-1800px);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translateZ(-1200px);
+        opacity: 0.5;
+    }
+}
+
+.star-field {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    perspective: 600px;
+    -webkit-perspective: 600px;
+    z-index: -1;
+}
+
+    .star-field .layer {
+        box-shadow: -411px -476px red, 777px -407px #d4d4d4, -387px -477px #fcfcfc, -91px -235px red, 491px -460px red, 892px -128px #f7f7f7, 758px -277px red, 596px 378px red, 647px 423px whitesmoke, 183px 389px red, 524px -237px #f0f0f0, 679px -535px red, 158px 399px #ededed, 157px 249px #ededed, 81px -450px #ebebeb, 719px -360px #c2c2c2, -499px 473px #e8e8e8, -158px -349px red, 870px -134px #cfcfcf, 446px 404px #c2c2c2, 440px 490px #d4d4d4, 414px 507px #e6e6e6, -12px 246px red, -384px 369px #e3e3e3, 641px -413px #fcfcfc, 822px 516px #dbdbdb, 449px 132px #c2c2c2, 727px 146px #f7f7f7, -315px -488px red, 952px -70px #e3e3e3, -869px -29px red, 502px 80px red, 764px 342px red, -150px -380px red, 654px -426px red, -325px -263px red, 755px -447px red, 729px -177px red, -682px -391px red, 554px -176px #ededed, -85px -428px red, 714px 55px #e8e8e8, 359px -285px red, -362px -508px red, 468px -265px #fcfcfc, 74px -500px #c7c7c7, -514px 383px #dbdbdb, 730px -92px #cfcfcf, -112px 287px red, -853px 79px #d6d6d6, 828px 475px red, -681px 13px red, -176px 209px red, 758px 457px #fafafa, -383px -454px red, 813px 179px #d1d1d1, 608px 98px red, -860px -65px #c4c4c4, -572px 272px red, 459px 533px red, 624px -481px red, 790px 477px red, 731px -403px #ededed, 70px -534px red, -23px 510px red, -652px -237px whitesmoke, -690px 367px #d1d1d1, 810px 536px red, 774px 293px #c9c9c9, -362px 97px red, 563px 47px #dedede, 313px 475px red, 839px -491px red, -217px 377px #d4d4d4, -581px 239px red, -857px 72px #cccccc, -23px 340px #dedede, -837px 246px red, 170px -502px #cfcfcf, 822px -443px #e0e0e0, 795px 497px #e0e0e0, -814px -337px #cfcfcf, 206px -339px #f2f2f2, -779px 108px #e6e6e6, 808px 2px #d4d4d4, 665px 41px #d4d4d4, -564px 64px #cccccc, -380px 74px #cfcfcf, -369px -60px red, 47px -495px #e3e3e3, -383px 368px #f7f7f7, 419px 288px red, -598px -50px #c2c2c2, -833px 187px #c4c4c4, 378px 325px red, -703px 375px red, 392px 520px red, -492px -60px red, 759px 288px #ebebeb, 98px -412px #c4c4c4, -911px -277px red;
+ 
+        transform-style: preserve-3d;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 10px; /* Increase the size as desired */
+        width: 10px; /* Increase the size as desired */
+        border-radius: 40px; /* Adjust the border radius if needed */
+    }
+
+        .star-field .layer:nth-child(1) {
+            animation: sf-fly-by-1 17s linear infinite;
+        }
+
+        .star-field .layer:nth-child(2) {
+            animation: sf-fly-by-2 17s linear infinite;
+        }
+
+        .star-field .layer:nth-child(3) {
+            animation: sf-fly-by-3 17s linear infinite;
+        }
+
