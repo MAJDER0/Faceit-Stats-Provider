@@ -149,6 +149,39 @@ input[type="submit"]:hover {
     margin-right: 10px;
 }
 
+
+.matchesTable {
+    background-color: transparent;
+    border: none;
+}
+
+
+    .matchesTable thead {
+        background-color: rgba(0, 0, 0, 0.7); 
+        color: #fff; 
+    }
+
+    /* Style the table rows */
+    .matchesTable tbody tr {
+        background-color: rgba(0, 0, 0, 0.4); 
+    }
+
+
+    .matchesTable th,
+    .matchesTable td {
+        border-color: rgba(255, 255, 255, 0.2); 
+    }
+
+    
+    .matchesTable tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.6); 
+    }
+
+    
+    .matchesTable tbody tr:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+    }
+
 .bg {
     background: #0D0D0D no-repeat;
     background-size: cover;

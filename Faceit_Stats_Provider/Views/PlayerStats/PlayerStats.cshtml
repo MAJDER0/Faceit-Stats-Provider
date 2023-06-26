@@ -24,27 +24,27 @@
         @switch (@Model.Playerinfo.games.csgo.skill_level)
         {
             case 10:
-            <script>
+                <script>
                     window.addEventListener('load', function () {
                         generatelvl("10", 0.08, "#FE1F00", 0.85);
                     });
-            </script>
+                </script>
 
                 break;
-            case 9:               
-             <script>
-                window.addEventListener('load', function () {
+            case 9:
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("9", 0.08, "#FF6309", 0.418);
-                });
-            </script>
+                    });
+                </script>
 
                 break;
 
             case 8:
-            <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("8", 0.08, "#FF6309", -0.01);;
-                });
+                    });
                 </script>
 
                 break;
@@ -53,59 +53,59 @@
                 <script>
                     window.addEventListener('load', function () {
                         generatelvl("7", 0.08, "#FFC800", -0.65);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
             case 6:
-             <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("6", 0.08, "#FFC800", -1.07);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
             case 5:
-             <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("5", 0.05, "#FFC800", -1.65);
-                });
+                    });
                 </script>
                 break;
             case 4:
                 <script>
                     window.addEventListener('load', function () {
                         generatelvl("4", 0.03, "#FFC800", -2.47);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
             case 3:
-             <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("3", 0.03, "#1CE400", -3.13);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
             case 2:
-             <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("2", 0.02, "#1CE400", -3.5);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
             case 1:
-             <script>
-                window.addEventListener('load', function () {
+                <script>
+                    window.addEventListener('load', function () {
                         generatelvl("1", 0.01, "#EEE", -3.65);
-                });
-            </script>
-            break;
+                    });
+                </script>
+                break;
         }
- 
+
 
         <div class="InfoUnderCanvas">
-            @if(@Model.Playerinfo.games.csgo.skill_level==10)
-              {  
-                  <p>Maximum lvl has been reached</p>
-              }
+            @if (@Model.Playerinfo.games.csgo.skill_level == 10)
+            {
+                <p>Maximum lvl has been reached</p>
+            }
 
             @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
             {
@@ -153,28 +153,28 @@
                     double totalAverageAssists = 0;
                     int gameCount = 0;
 
-                        @foreach (var match in Model.Last20MatchesStats)
+                    @foreach (var match in Model.Last20MatchesStats)
+                    {
+                        foreach (var team in match.teams)
                         {
-                            foreach (var team in match.teams)
+                            foreach (var player in team.players)
                             {
-                                foreach (var player in team.players)
+                                if (player.nickname == Model.Playerinfo.nickname)
                                 {
-                                    if (player.nickname == Model.Playerinfo.nickname)
-                                    {
-                                        double kills = double.Parse(player.player_stats.Kills);
-                                        double deaths = double.Parse(player.player_stats.Deaths);
-                                        double Assists = double.Parse(player.player_stats.Assists);
-                                        double kdRatio = kills / deaths;
-                                        double KrRatio = kills / double.Parse(match.round_stats.Rounds);;
-                                        totalAverageKills += kills;
-                                        totalAverageAssists += Assists;
-                                        totalKrRatio += KrRatio;
-                                        totalKdRatio += kdRatio;
-                                        gameCount++;
-                                    }
+                                    double kills = double.Parse(player.player_stats.Kills);
+                                    double deaths = double.Parse(player.player_stats.Deaths);
+                                    double Assists = double.Parse(player.player_stats.Assists);
+                                    double kdRatio = kills / deaths;
+                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                    totalAverageKills += kills;
+                                    totalAverageAssists += Assists;
+                                    totalKrRatio += KrRatio;
+                                    totalKdRatio += kdRatio;
+                                    gameCount++;
                                 }
                             }
                         }
+                    }
 
                     double averageKdRatio = totalKdRatio / gameCount;
                     double averageKrRatio = totalKrRatio / gameCount;
@@ -210,24 +210,90 @@
         }
         else
         {
-            <table class="table table-striped table-dark">
+            <table class="table table-striped table-dark matchesTable">
                 <thead>
                     <tr>
-                        <th>Avatar</th>
-                        <th>Nickname</th>
-                        <th>Skill level</th>
-                        <th>Elo</th>
-                        <th>Country</th>
+                        <th>RESULT</th>
+                        <th>SCORE</th>
+                        <th>MAP</th>
+                        <th>TEAM</th>
+                        <th>STATS</th>
+                        <th>K/R</th>
+                        <th>K/D</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td><img src="@Model.Playerinfo.avatar" width="25" height="25" /></td>
-                        <td>@Model.Playerinfo.nickname</td>
-                        <td>@Model.Playerinfo.games.csgo.skill_level</td>
-                        <td>@Model.Playerinfo.games.csgo.faceit_elo</td>
-                        <td>@Model.Playerinfo.country</td>
-                    </tr>
+                        @foreach (var match in Model.Last20MatchesStats)
+                        {
+                        <tr>
+                            <td>
+                                @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                {
+                                    <p>WIN</p>
+                                }
+                                else if (match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                {
+                                    <p>WIN</p>
+                                }
+                                else
+                                {
+                                    <p>LOSS</p>
+                                }
+                            </td>
+                            <td>@match.round_stats.Score</td>
+                            <td>@match.round_stats.Map</td>
+                            <td>
+                                @if (match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                {
+                                    <p>@match.teams[0].team_stats.Team</p>
+                                }
+                                else if (match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                {
+                                    <p>@match.teams[1].team_stats.Team</p>
+                                }
+                            </td>
+                            <td>
+                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                }
+                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                }
+                            </td>
+
+                            <td>
+                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.KRRatio</p>
+                                }
+                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.KRRatio</p>
+                                }
+                            </td>
+
+                            <td>
+                                 @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.KDRatio</p>
+                                }
+                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                {
+                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                    <p>@playerStats.KDRatio</p>
+                                }
+
+                            </td>
+                            </tr>
+                        }
+
                 </tbody>
             </table>
         }
