@@ -1,4 +1,5 @@
-﻿@model Faceit_Stats_Provider.Models.PlayerStats
+﻿@using System.Globalization
+@model Faceit_Stats_Provider.Models.PlayerStats
 
 <div class="row mainstatspanel">
     <div class="col-md-4">
@@ -137,9 +138,9 @@
                 else
                 {
                     <p>MATCHES: @Model.OverallPlayerStatsInfo.lifetime.Matches</p>
-                    <p>WIN RATIO: @Model.OverallPlayerStatsInfo.lifetime.WinRate%</p>
+                    <p>WIN RATIO: <span style="color: @(int.Parse(Model.OverallPlayerStatsInfo.lifetime.WinRate) >= 50 ? "#6BBE49" : "#8C1F28")">@Model.OverallPlayerStatsInfo.lifetime.WinRate%</span></p>
                     <p>HEADSHOTS: @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</p>
-                    <p>K/D RATIO: @Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</p>
+                    <p>K/D RATIO: <span style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#8C1F28")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
                 }
 
             </div>

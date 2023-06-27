@@ -22,7 +22,7 @@ function generatelvl(level,AnimationSpeed, color, HowFarAnimationComes) {
     c.stroke();
 
     c.beginPath();
-    c.arc(centerX, centerY, circle * 0.7, 2.3, 0.92);
+    c.arc(centerX, centerY, circle * 0.7, 2.3, 0.90);
     c.lineWidth = circle * 0.2;
     c.strokeStyle = "RGB(205, 205, 205,0.1)";
     c.fill();
