@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using static Faceit_Stats_Provider.Models.PlayerStats;
 using static Faceit_Stats_Provider.Models.MatchHistory;
+using System.Diagnostics;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -9,9 +11,12 @@ namespace Faceit_Stats_Provider.Controllers
     {
         private readonly IHttpClientFactory _clientFactory;
 
-        public PlayerStatsController(IHttpClientFactory clientFactory)
+        private readonly IMemoryCache _memoryCache;
+
+        public PlayerStatsController(IHttpClientFactory clientFactory, IMemoryCache cache)
         {
             _clientFactory = clientFactory;
+            _memoryCache = cache;
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -22,30 +27,51 @@ namespace Faceit_Stats_Provider.Controllers
             MatchHistory.Rootobject matchhistory;
             List<MatchStats.Round> matchstats = new List<MatchStats.Round>();
             OverallPlayerStats.Rootobject overallplayerstats;
+            Stopwatch stopwatch = new Stopwatch();
 
             string errorString;
 
             try
             {
-                playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>
-                ($"v4/players?nickname={nickname}");
+                if (!_memoryCache.TryGetValue(nickname, out playerinf))
+                {
+                    playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
+                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(30));
+                }
 
-                matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>
+                var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
                 ($"v4/players/{playerinf.player_id}/history?game=csgo&offset=0&limit=20");
 
-                overallplayerstats = await client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
+                var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
                 ($"v4/players/{playerinf.player_id}/stats/csgo");
 
-                for (int i = 0; i < matchhistory.items.Count(); i++)
+                await Task.WhenAll(matchhistoryTask, overallplayerstatsTask);
+
+
+                matchhistory = matchhistoryTask.Result!;
+                overallplayerstats = overallplayerstatsTask.Result!;
+
+                var matchstatsCacheKey = $"{nickname}_matchstats";
+
+                if (!_memoryCache.TryGetValue(matchstatsCacheKey, out List<MatchStats.Round> cachedMatchStats))
                 {
-                    var match = await client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{matchhistory.items[i].match_id}/stats");
-                    matchstats.AddRange(match.rounds);
+                    List<Task<MatchStats.Rootobject>> tasks = matchhistory.items.Select(match => client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats")).ToList();
+
+                    await Task.WhenAll(tasks);
+
+                    matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
+
+                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(3));
+                }
+                else
+                {
+                    matchstats = cachedMatchStats;
                 }
 
                 errorString = null;
             }
             catch (Exception ex)
-            {         
+            {
                 errorString = $"Error: {ex.Message}";
                 playerinf = null;
                 matchhistory = null;
@@ -58,8 +84,8 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
-            var ConnectionStatus = new PlayerStats {OverallPlayerStatsInfo = overallplayerstats, Last20MatchesStats = matchstats, MatchHistory = matchhistory,Playerinfo = playerinf, ErrorMessage = errorString };
-            
+            var ConnectionStatus = new PlayerStats { OverallPlayerStatsInfo = overallplayerstats, Last20MatchesStats = matchstats, MatchHistory = matchhistory, Playerinfo = playerinf, ErrorMessage = errorString };
+
             return View(ConnectionStatus);
         }
 

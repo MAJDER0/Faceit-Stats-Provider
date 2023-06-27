@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "qm005dQSzTxomaB5gBYQL6vDu/6JmeK8sU88usAqh1I=",
+  "Hash": "PtHpop66B7hbrHN3+IqJf26uqSn7Ex68BJMaZaP5Zgw=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -83,23 +83,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\FaceitStatsProviderIcon.png"
-    },
-    {
-      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\galaxy.avi",
-      "SourceId": "Faceit_Stats_Provider",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
-      "BasePath": "_content/Faceit_Stats_Provider",
-      "RelativePath": "galaxy.avi",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\galaxy.avi"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\site.js",

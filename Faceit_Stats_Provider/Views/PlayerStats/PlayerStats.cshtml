@@ -14,7 +14,7 @@
         else
         {
             <div class="PlayerPanel">
-                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300">
+                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                 <div class="PlayerNick">@Model.Playerinfo.nickname</div>
             </div>
         }
@@ -137,10 +137,13 @@
                 }
                 else
                 {
-                    <p>MATCHES: @Model.OverallPlayerStatsInfo.lifetime.Matches</p>
-                    <p>WIN RATIO: <span style="color: @(int.Parse(Model.OverallPlayerStatsInfo.lifetime.WinRate) >= 50 ? "#6BBE49" : "#8C1F28")">@Model.OverallPlayerStatsInfo.lifetime.WinRate%</span></p>
-                    <p>HEADSHOTS: @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</p>
-                    <p>K/D RATIO: <span style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#8C1F28")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
+                    <p>MATCHES: <span class="Result">@Model.OverallPlayerStatsInfo.lifetime.Matches</span></p>
+
+                    <p>WIN RATIO: <span class="Result" style="color: @(int.Parse(Model.OverallPlayerStatsInfo.lifetime.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.WinRate%</span></p>
+
+                    <p>HEADSHOTS: <span class="Result" style="color:@(int.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots)>=45 ?  "#6BBE49" : "#F20707")"> @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%                            </span></p>
+
+                    <p>K/D RATIO: <span class ="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
                 }
 
             </div>
@@ -188,10 +191,13 @@
                     string averageKillsFormatted = averageKills.ToString("F0");
                     string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                    <p>K/D RATIO: @averageKdRatioFormatted</p>
-                    <p>K/R RATIO: @averageKrRatioFormatted</p>
-                    <p>AVERAGE KILLS: @averageKillsFormatted</p>
-                    <p>AVERAGE ASSISTS: @averageAssistsFormatted</p>
+                    <p>K/D RATIO: <span class="Result" style="color:@(averageKdRatio>=1 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+
+                    <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+
+                    <p>AVERAGE KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+
+                    <p>AVERAGE ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
                 }
             </div>
 
@@ -211,7 +217,7 @@
         }
         else
         {
-            <table class="table table-striped table-dark matchesTable">
+            <table class="table matchesTable">
                 <thead>
                     <tr>
                         <th>RESULT</th>
@@ -230,15 +236,15 @@
                             <td>
                                 @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
                                 {
-                                    <p>WIN</p>
+                                    <p style="color:#6BBE49;" class="Result">WIN</p>
                                 }
                                 else if (match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
                                 {
-                                    <p>WIN</p>
+                                    <p style="color:#6BBE49;" class="Result">WIN</p>
                                 }
                                 else
                                 {
-                                    <p>LOSS</p>
+                                    <p style="color:#F20707;" class="Result">LOSS</p>
                                 }
                             </td>
                             <td>@match.round_stats.Score</td>
@@ -270,12 +276,12 @@
                                 @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p>@playerStats.KRRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",","."), CultureInfo.InvariantCulture)>=0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
                                 }
                                 else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p>@playerStats.KRRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",","."), CultureInfo.InvariantCulture)>=0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
                                 }
                             </td>
 
@@ -283,12 +289,14 @@
                                  @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p>@playerStats.KDRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",","."), CultureInfo.InvariantCulture)>=1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
+
                                 }
                                 else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p>@playerStats.KDRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",","."), CultureInfo.InvariantCulture)>=1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
+
                                 }
 
                             </td>
