@@ -176,6 +176,7 @@ input[type="submit"]:hover {
     /* Style the table rows */
     .matchesTable tbody tr {
         background-color: rgba(0, 0, 0, 0.4); 
+        cursor: pointer;
     }
 
 

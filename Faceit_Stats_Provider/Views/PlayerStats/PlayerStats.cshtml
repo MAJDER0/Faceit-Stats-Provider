@@ -230,15 +230,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @foreach (var match in Model.Last20MatchesStats)
-                        {
-                        <tr>
+                    @foreach (var match in Model.Last20MatchesStats)
+                    {
+                        <tr class="match-row">
                             <td>
-                                @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
-                                {
-                                    <p style="color:#6BBE49;" class="Result">WIN</p>
-                                }
-                                else if (match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname) ||
+                               match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
                                 {
                                     <p style="color:#6BBE49;" class="Result">WIN</p>
                                 }
@@ -276,35 +273,48 @@
                                 @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",","."), CultureInfo.InvariantCulture)>=0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
                                 }
                                 else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",","."), CultureInfo.InvariantCulture)>=0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
                                 }
                             </td>
 
                             <td>
-                                 @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",","."), CultureInfo.InvariantCulture)>=1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
-
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
                                 }
                                 else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
                                 {
                                     var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",","."), CultureInfo.InvariantCulture)>=1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
-
+                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
                                 }
-
                             </td>
-                            </tr>
-                        }
-
+                        </tr>
+                        <tr class="scoreboard" style="display: none;">
+                            <td colspan="7">
+                                <!-- Scoreboard table content -->
+                                <table>
+                                    <div>Here will be more specific info</div>
+                                </table>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         }
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".match-row").click(function () {
+            $(this).next(".scoreboard").toggle();
+        });
+    });
+</script>
