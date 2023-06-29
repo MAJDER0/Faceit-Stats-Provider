@@ -27,7 +27,6 @@ namespace Faceit_Stats_Provider.Controllers
             MatchHistory.Rootobject matchhistory;
             List<MatchStats.Round> matchstats = new List<MatchStats.Round>();
             OverallPlayerStats.Rootobject overallplayerstats;
-            Stopwatch stopwatch = new Stopwatch();
 
             string errorString;
 
@@ -36,11 +35,11 @@ namespace Faceit_Stats_Provider.Controllers
                 if (!_memoryCache.TryGetValue(nickname, out playerinf))
                 {
                     playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
-                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(30));
+                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(5));
                 }
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
-                ($"v4/players/{playerinf.player_id}/history?game=csgo&offset=0&limit=20");
+                ($"v4/players/{playerinf.player_id}/history?game=csgo&from=120&offset=0&limit=20");
 
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
                 ($"v4/players/{playerinf.player_id}/stats/csgo");
@@ -61,7 +60,7 @@ namespace Faceit_Stats_Provider.Controllers
 
                     matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
 
-                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(3));
+                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(5));
                 }
                 else
                 {

@@ -347,7 +347,7 @@
                                         @foreach (var player in match.teams[0].players)
                                         {
                                             <tr>
-                                                <td>@player.nickname</td>
+                                                <td> <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color: @(player.nickname == Model.Playerinfo.nickname ?                                                                   "#6BBE49" : "white")">@player.nickname</a></td>
                                                 <td>@player.player_stats.Kills</td>
                                                 <td>@player.player_stats.Assists</td>
                                                 <td>@player.player_stats.Deaths</td>
@@ -384,7 +384,7 @@
                                         @foreach (var player in match.teams[1].players)
                                         {
                                             <tr>
-                                                <td>@player.nickname</td>
+                                                <td> <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color: @(player.nickname == Model.Playerinfo.nickname ?                                                                   "#6BBE49" : "white")">@player.nickname</a></td>
                                                 <td>@player.player_stats.Kills</td>
                                                 <td>@player.player_stats.Assists</td>
                                                 <td>@player.player_stats.Deaths</td>
