@@ -195,6 +195,19 @@ input[type="submit"]:hover {
         border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
     }
 
+.matchesTableStats {
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+.matchesTableStats thead {
+    background-color: rgba(0, 0, 0, 1);
+    font-weight: bold;
+    font-size: 14px;
+    color: darkmagenta;
+}
+
 .bg {
     background: #0D0D0D no-repeat;
     background-size: cover;

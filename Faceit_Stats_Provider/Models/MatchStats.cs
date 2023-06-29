@@ -60,12 +60,16 @@ namespace Faceit_Stats_Provider.Models
         public class Player_Stats
         {
             public string Deaths { get; set; }
+            [JsonPropertyName("Triple Kills")]
             public string TripleKills { get; set; }
             public string Headshots { get; set; }
+            [JsonPropertyName("Penta Kills")]
             public string PentaKills { get; set; }
             public string Result { get; set; }
-            public string QuadroKills { get; set; }
-
+            [JsonPropertyName("Quadro Kills")]
+            public string QuadroKills { get; set; }  
+            [JsonPropertyName("Headshots %")]
+            public string HeadshotsPercentage { get; set; }
             [JsonPropertyName("K/R Ratio")]
             public string KRRatio { get; set; }
             [JsonPropertyName("K/D Ratio")]
