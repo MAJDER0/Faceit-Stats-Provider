@@ -22,12 +22,21 @@ namespace Faceit_Stats_Provider.Models
             [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
 
+            [JsonPropertyName("Current Win Streak")]
             public string CurrentWinStreak { get; set; }
+
+            [JsonPropertyName("Longest Win Streak")]
             public string LongestWinStreak { get; set; }
+
             public string Matches { get; set; }
+            [JsonPropertyName("Total Headshots %")]
             public string TotalHeadshots { get; set; }
+
             public string Wins { get; set; }
+
             public string KDRatio { get; set; }
+
+            [JsonPropertyName("Recent Results")]
             public string[] RecentResults { get; set; }
 
             [JsonPropertyName("Win Rate %")]
@@ -37,7 +46,9 @@ namespace Faceit_Stats_Provider.Models
         public class Segment
         {
             public string label { get; set; }
+            [JsonPropertyName("img_small")]
             public string img_small { get; set; }
+            [JsonPropertyName("img_regular")]
             public string img_regular { get; set; }
             public Stats stats { get; set; }
             public string type { get; set; }

@@ -85,11 +85,12 @@ input {
 
 .StatsContainer {
     display: flex;
+    flex-wrap:wrap;
 }
 
 .OverallStats {
     font-size: 20px;
-    flex: 1;
+    width: 50%;
 }
 
     .OverallStats p.title {
@@ -100,7 +101,7 @@ input {
 
 .Last20Stats {
     font-size: 20px;
-    flex: 1;
+    width: 50%;
 }
 
     .Last20Stats p.title {
@@ -109,14 +110,33 @@ input {
         color: darkmagenta;
     }
 
+.SwitchToggle {
+    width:100%;
+    border-top: 1px solid red;
+    text-align: center;
+}
+
+.Include1v1 {
+    margin-top: 3%;
+    display: inline-block;
+}
+
+    .Include1v1 > p {
+        float: left;
+        margin-top: -3%;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
 .InfoUnderCanvas > p {
     color: red;
     font-weight: bold;
-    margin-left: 4%;
+    margin-left: -3.5%;
 }
 
 .EloInfoUnderCanvas {
-    padding-left: 18%;
+    padding-left: 24%;
+    font-size: 20px;
 }
 
 .PlayerNotFound {
@@ -165,7 +185,6 @@ input[type="submit"]:hover {
     color: white;
 }
 
-
     .matchesTable thead {
         background-color: rgba(0, 0, 0, 0.7); 
         font-weight:bold;
@@ -207,6 +226,70 @@ input[type="submit"]:hover {
     font-size: 14px;
     color: darkmagenta;
 }
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px; 
+    height: 20px; 
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px; 
+        width: 16px; 
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: red;
+}
+
+input:focus + .slider {
+    /*box-shadow: 0 0 1px red;*/
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(16px); 
+    -ms-transform: translateX(16px); 
+    transform: translateX(19px); 
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 24px; 
+}
+
+    .slider.round:before {
+        border-radius: 50%;
+    }
+
+
+
 
 .bg {
     background: #0D0D0D no-repeat;
