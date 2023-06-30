@@ -35,7 +35,7 @@ namespace Faceit_Stats_Provider.Controllers
                 if (!_memoryCache.TryGetValue(nickname, out playerinf))
                 {
                     playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
-                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(5));
+                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(4));
                 }
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
@@ -60,7 +60,7 @@ namespace Faceit_Stats_Provider.Controllers
 
                     matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
 
-                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(5));
+                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(4));
                 }
                 else
                 {
