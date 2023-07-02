@@ -252,6 +252,7 @@
                         <th>RESULT</th>
                         <th>SCORE</th>
                         <th>MAP</th>
+                        <th>MODE</th>
                         <th>TEAM</th>
                         <th>STATS</th>
                         <th>K/R</th>
@@ -276,6 +277,7 @@
                             </td>
                             <td>@match.round_stats.Score</td>
                             <td>@match.round_stats.Map</td>
+                            <td>@match.game_mode</td>
                             <td>
                                 @if (match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
                                 {

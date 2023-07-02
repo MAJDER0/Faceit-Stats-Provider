@@ -56,7 +56,7 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     List<Task<MatchStats.Rootobject>> tasks = matchhistory.items.Select(match => client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats")).ToList();
 
-                    await Task.WhenAll(tasks);
+                    //await Task.WhenAll(tasks);
 
                     matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
 
