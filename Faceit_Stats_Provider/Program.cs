@@ -11,6 +11,12 @@ builder.Services.AddHttpClient("Faceit", httpClient=>
     httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI"));
 });
 
+builder.Services.AddHttpClient("FaceitV1", httpClient =>
+{
+    httpClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+
+});
+
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

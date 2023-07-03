@@ -1,16 +1,21 @@
-﻿using Faceit_Stats_Provider.Models;
+﻿// ...
+
+using Faceit_Stats_Provider.Models;
 using Microsoft.AspNetCore.Mvc;
-using static Faceit_Stats_Provider.Models.PlayerStats;
-using static Faceit_Stats_Provider.Models.MatchHistory;
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace Faceit_Stats_Provider.Controllers
 {
     public class PlayerStatsController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
-
         private readonly IMemoryCache _memoryCache;
 
         public PlayerStatsController(IHttpClientFactory clientFactory, IMemoryCache cache)
@@ -22,11 +27,13 @@ namespace Faceit_Stats_Provider.Controllers
         public async Task<ActionResult> PlayerStats(string nickname)
         {
             var client = _clientFactory.CreateClient("Faceit");
+            var client2 = _clientFactory.CreateClient("FaceitV1");
 
             PlayerStats.Rootobject playerinf;
             MatchHistory.Rootobject matchhistory;
             List<MatchStats.Round> matchstats = new List<MatchStats.Round>();
             OverallPlayerStats.Rootobject overallplayerstats;
+            List<EloDiff.Root> eloDiff;
 
             string errorString;
 
@@ -44,11 +51,16 @@ namespace Faceit_Stats_Provider.Controllers
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
                 ($"v4/players/{playerinf.player_id}/stats/csgo");
 
-                await Task.WhenAll(matchhistoryTask, overallplayerstatsTask);
+                var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=20");
 
+
+                await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
+                eloDiff = eloDiffTask.Result!;
+
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -56,7 +68,7 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     List<Task<MatchStats.Rootobject>> tasks = matchhistory.items.Select(match => client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats")).ToList();
 
-                    //await Task.WhenAll(tasks);
+                    await Task.WhenAll(tasks);
 
                     matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
 
@@ -76,6 +88,7 @@ namespace Faceit_Stats_Provider.Controllers
                 matchhistory = null;
                 overallplayerstats = null;
                 matchstats = null;
+                eloDiff = null;
             }
 
             if (playerinf is null)
@@ -83,7 +96,15 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
-            var ConnectionStatus = new PlayerStats { OverallPlayerStatsInfo = overallplayerstats, Last20MatchesStats = matchstats, MatchHistory = matchhistory, Playerinfo = playerinf, ErrorMessage = errorString };
+            var ConnectionStatus = new PlayerStats
+            {
+                OverallPlayerStatsInfo = overallplayerstats,
+                Last20MatchesStats = matchstats,
+                MatchHistory = matchhistory,
+                Playerinfo = playerinf,
+                EloDiff = eloDiff,
+                ErrorMessage = errorString
+            };
 
             return View(ConnectionStatus);
         }
@@ -94,4 +115,3 @@ namespace Faceit_Stats_Provider.Controllers
         }
     }
 }
-
