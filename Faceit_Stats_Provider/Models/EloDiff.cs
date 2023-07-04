@@ -3,14 +3,15 @@
     public class EloDiff
     {
 
-        public class Root
+        public class Id
         {
-            public Class1[] Property1 { get; set; }
+            public string matchId { get; set; }
+            public string playerId { get; set; }
         }
 
-        public class Class1
+        public class Root
         {
-            public _Id _id { get; set; }
+            public Id _id { get; set; }
             public long created_at { get; set; }
             public long updated_at { get; set; }
             public string i9 { get; set; }
@@ -52,11 +53,6 @@
             public string elo { get; set; }
         }
 
-        public class _Id
-        {
-            public string matchId { get; set; }
-            public string playerId { get; set; }
-        }
 
     }
 

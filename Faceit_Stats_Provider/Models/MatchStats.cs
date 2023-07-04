@@ -20,6 +20,7 @@ namespace Faceit_Stats_Provider.Models
             public string played { get; set; }
             public Round_Stats round_stats { get; set; }
             public Team[] teams { get; set; }
+            public string elo { get; set; }
         }
 
         public class Round_Stats

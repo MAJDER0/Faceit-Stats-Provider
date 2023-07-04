@@ -324,7 +324,10 @@
                                     <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
                                 }
                             </td>
-                           @* <td>@Model.EloDiff[0].Property1[0].elo</td>*@
+@*
+                            @{int index = 0;
+                            <td> @Model.EloDiff[index].elo </td> index++;}*@
+
                         </tr>
                         <tr class="scoreboard match-row" style="display: none;">
                             <td colspan="8">
