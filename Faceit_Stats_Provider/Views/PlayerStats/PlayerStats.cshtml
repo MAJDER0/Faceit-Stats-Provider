@@ -261,6 +261,15 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                    @{int index = 0;}
+
+                    @{for (int i = 0; i < Model.EloDiff.Count(); i++)
+                        {
+                            if(Model.EloDiff[i].elo == null)
+                                Model.EloDiff[i].elo = 0.ToString();
+                    }}
+
                     @foreach (var match in Model.Last20MatchesStats)
                     {
                         <tr class="match-row">
@@ -324,13 +333,18 @@
                                     <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
                                 }
                             </td>
-@*
-                            @{int index = 0;
-                            <td> @Model.EloDiff[index].elo </td> index++;}*@
+
+                            <td> 
+                                @{int elodifference = (int.Parse(Model.EloDiff[index].elo) - int.Parse(Model.EloDiff[index+1].elo));}
+                                <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707")))">
+                                    @(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-")))@Math.Abs(elodifference)
+                                </p>
+                                @{index++;}
+                            </td>
 
                         </tr>
                         <tr class="scoreboard match-row" style="display: none;">
-                            <td colspan="8">
+                            <td colspan="9">
                                 <table class="table matchesTableStats">
                                     <thead>
                                         <tr>
