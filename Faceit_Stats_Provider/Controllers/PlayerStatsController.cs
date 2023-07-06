@@ -52,7 +52,7 @@ namespace Faceit_Stats_Provider.Controllers
                 ($"v4/players/{playerinf.player_id}/stats/csgo");
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=32");
+                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=21");
 
                 await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 

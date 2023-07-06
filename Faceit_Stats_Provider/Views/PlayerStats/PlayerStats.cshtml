@@ -234,6 +234,116 @@
     </div>
 </div>
 
+<div class="row">
+
+    <div class="col-md-12 EloGraph">
+        <canvas id="EloChart" height="250"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('EloChart');
+        var totalMatches = @Model.OverallPlayerStatsInfo.lifetime.Matches;
+        var matches = [];
+        @{
+            var lastGameElo = 0;
+            var twentiethGameElo = 0;
+            var eloDifference = 0;
+            var maxDifference = 0;
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (Model.EloDiff[i].elo == null)
+                {
+                    continue;
+                }
+
+                else
+                {
+                    lastGameElo = int.Parse(Model.EloDiff[i].elo);
+                    break;
+                }
+            }
+
+            for (int i = 19; i >= 0; i--)
+            {
+                if (Model.EloDiff[i].elo == null)
+                {
+                    continue;
+                }
+
+                else
+                {
+                    twentiethGameElo = int.Parse(Model.EloDiff[i].elo);
+                    break;
+                }
+            }
+            if (lastGameElo != null && twentiethGameElo != null)
+            { 
+                eloDifference = Math.Abs(lastGameElo - twentiethGameElo); 
+
+                for (var i = 1; i < 20; i++)
+                {
+                    var difference = 0;
+                    var elo = Model.EloDiff[i].elo;
+                    if (elo != null)
+                    {
+                        difference = Math.Abs(lastGameElo - int.Parse(elo)); 
+                    }
+                    if (difference > maxDifference)
+                    {
+                        maxDifference = difference;
+                    }
+                }
+            }
+        }
+
+        for (var i = 0; i < 21; i++) {
+            matches.push(totalMatches - i);
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: matches.reverse(),
+                datasets: [{
+                    label: 'ELO ADJUSTMENT LAST 20',
+                    data: [@string.Join(",", Model.EloDiff.Select(item => item.elo))].reverse(),
+                    backgroundColor: 'red',
+                    borderColor: 'red',
+                    pointHoverRadius: 5,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        min: @(eloDifference < maxDifference ? Math.Min(twentiethGameElo - maxDifference, lastGameElo - eloDifference) - 100 : lastGameElo - eloDifference - 100),
+                        max: @(eloDifference < maxDifference ? Math.Max(lastGameElo + eloDifference, lastGameElo + maxDifference) + 75 : lastGameElo + maxDifference + 75),
+
+                            ticks: {
+
+                                stepSize: 25 ,                    
+                                callback: function(value) {
+                                        if (value !== 0) {
+                                            var roundedValue = Math.round(value / 10) * 10;
+                                            return roundedValue.toString();
+                                        }
+                                        return value;
+                                }
+                            }
+                    }
+                }
+            }
+        });
+    </script>
+</div>
+
 <div class="row matchespanel">
     <div class="col-md-12 PlayerInfo">
         @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
@@ -429,6 +539,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $(".match-row").click(function () {

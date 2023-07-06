@@ -168,7 +168,7 @@ input[type="submit"]:hover {
 }
 
 .navbarcolor {
-    background-color: #f50;
+    background-color: #ff3c22;
 }
 
 .logo {
@@ -177,6 +177,15 @@ input[type="submit"]:hover {
 
 .Result {
     font-weight:bold;
+}
+
+#EloChart {
+    width: 100%;
+    height: auto;
+}
+
+.EloGraph {
+    margin-top:35px;
 }
 
 .matchesTable {
