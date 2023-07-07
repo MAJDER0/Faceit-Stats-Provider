@@ -1,6 +1,4 @@
-﻿// ...
-
-using Faceit_Stats_Provider.Models;
+﻿using Faceit_Stats_Provider.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,6 +8,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -34,6 +33,7 @@ namespace Faceit_Stats_Provider.Controllers
             List<MatchStats.Round> matchstats = new List<MatchStats.Round>();
             OverallPlayerStats.Rootobject overallplayerstats;
             List<EloDiff.Root> eloDiff;
+            List<EloDiff.Root> allhistory;
 
             string errorString;
 
@@ -60,6 +60,18 @@ namespace Faceit_Stats_Provider.Controllers
                 overallplayerstats = overallplayerstatsTask.Result!;
                 eloDiff = eloDiffTask.Result!;
 
+                //allhistory = new List<EloDiff.Root>();
+
+                //var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
+
+                //for (int i = 0; i < pages; i++)
+                //{
+
+                //    var response = await client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                //        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={i}&size=100");
+
+                //    allhistory.AddRange(response);
+                //}
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -88,6 +100,7 @@ namespace Faceit_Stats_Provider.Controllers
                 overallplayerstats = null;
                 matchstats = null;
                 eloDiff = null;
+                allhistory = null;
             }
 
             if (playerinf is null)
@@ -102,7 +115,8 @@ namespace Faceit_Stats_Provider.Controllers
                 MatchHistory = matchhistory,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
-                ErrorMessage = errorString
+                ErrorMessage = errorString,
+                //AllHistory = allhistory
             };
 
             return View(ConnectionStatus);
