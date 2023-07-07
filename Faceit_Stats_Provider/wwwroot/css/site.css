@@ -104,11 +104,11 @@ input {
     width: 50%;
 }
 
-    .Last20Stats p.title {
-        font-size: 25px;
-        font-weight: bold;
-        color: darkmagenta;
-    }
+.Last20Stats p.title {
+    font-size: 25px;
+    font-weight: bold;
+    color: darkmagenta;
+}
 
 .SwitchToggle {
     width:100%;

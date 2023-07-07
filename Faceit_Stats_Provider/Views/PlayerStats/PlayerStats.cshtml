@@ -159,76 +159,114 @@
 
             </div>
             <div class="Last20Stats">
-                <p class="title">LAST 20</p>
-                @if (Model.Last20MatchesStats != null)
-                {
-                    double totalKdRatio = 0;
-                    double totalKrRatio = 0;
-                    double totalAverageKills = 0;
-                    double totalAverageAssists = 0;
-                    double gameCount = 0;
-                    double wins = 0;
+                @{
+                    void RenderLast20Stats(List<MatchStats.Round> MatchesStats,string nickname, bool include1v1 = false)
+                    {                      
+                            <p class="title">LAST 20</p>
 
-                    @foreach (var match in Model.Last20MatchesStats)
-                    {
-                        foreach (var team in match.teams)
+                            @if (MatchesStats != null)
                         {
-                            foreach (var player in team.players)
-                            {
-                                if (player.nickname == Model.Playerinfo.nickname)
-                                {
-                                    double kills = double.Parse(player.player_stats.Kills);
-                                    double deaths = double.Parse(player.player_stats.Deaths);
-                                    double Assists = double.Parse(player.player_stats.Assists);
-                                    double kdRatio = kills / deaths;
-                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
-                                    totalAverageKills += kills;
-                                    totalAverageAssists += Assists;
-                                    totalKrRatio += KrRatio;
-                                    totalKdRatio += kdRatio;
-                                    gameCount++;
+                            double totalKdRatio = 0;
+                            double totalKrRatio = 0;
+                            double totalAverageKills = 0;
+                            double totalAverageAssists = 0;
+                            double gameCount = 0;
+                            double wins = 0;
 
-                                    if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname) ||
-                                            match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                @foreach (var match in MatchesStats)
+                            {
+                                foreach (var team in match.teams)
+                                {
+                                    foreach (var player in team.players)
                                     {
-                                        wins++;
+                                        if (player.nickname == nickname && (!include1v1 || match.game_mode != "1v1"))
+                                        {
+                                            double kills = double.Parse(player.player_stats.Kills);
+                                            double deaths = double.Parse(player.player_stats.Deaths);
+                                            double Assists = double.Parse(player.player_stats.Assists);
+                                            double kdRatio = kills / deaths;
+                                            double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                            totalAverageKills += kills;
+                                            totalAverageAssists += Assists;
+                                            totalKrRatio += KrRatio;
+                                            totalKdRatio += kdRatio;
+                                            gameCount++;
+
+                                            if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == nickname) ||
+                                            match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == nickname))
+                                            {
+                                                wins++;
+                                            }
+                                        }
                                     }
                                 }
                             }
+
+                            double averageKdRatio = totalKdRatio / gameCount;
+                            double averageKrRatio = totalKrRatio / gameCount;
+                            double averageKills = totalAverageKills / gameCount;
+                            double averageAssists = totalAverageAssists / gameCount;
+                            double winratio = (wins / gameCount) * 100;
+
+
+                            string averageKdRatioFormatted = averageKdRatio.ToString("F2");
+                            string averageKrRatioFormatted = averageKrRatio.ToString("F2");
+                            string averageKillsFormatted = averageKills.ToString("F0");
+                            string averageAssistsFormatted = averageAssists.ToString("F0");
+
+                                <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+
+                                <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+
+                                <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+
+                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+
+                                <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
                         }
                     }
-
-                    double averageKdRatio = totalKdRatio / gameCount;
-                    double averageKrRatio = totalKrRatio / gameCount;
-                    double averageKills = totalAverageKills / gameCount;
-                    double averageAssists = totalAverageAssists / gameCount;
-                    double winratio = (wins / gameCount)*100;
-
-
-                    string averageKdRatioFormatted = averageKdRatio.ToString("F2");
-                    string averageKrRatioFormatted = averageKrRatio.ToString("F2");
-                    string averageKillsFormatted = averageKills.ToString("F0");
-                    string averageAssistsFormatted = averageAssists.ToString("F0");
-
-                    <p>K/D RATIO: <span class="Result" style="color:@(averageKdRatio>=1 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
-
-                    <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
-
-                    <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
-
-                    <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
-
-                    <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
                 }
+
+                <div id="Last20Stats">
+                    @{
+                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.nickname, false);
+                    }
+                </div>
+
+                <div id="Last20StatsNo1v1">
+                    @{
+                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.nickname, true);
+                    }
+                </div>
+
             </div>
+
             <div class="SwitchToggle">
                 <div class="Include1v1">
                         <p>Include 1v1</p>
                         <label class="switch">
-                        <input type="checkbox" checked>
+                        <input type="checkbox" id="toggleSwitch" checked>
                         <span class="slider round"></span>
                         </label>
                 </div>
+                <script>
+                    const toggleSwitch = document.getElementById('toggleSwitch');
+                    const last20Stats = document.getElementById('Last20Stats');
+                    const last20StatsNo1v1 = document.getElementById('Last20StatsNo1v1');
+
+                    toggleSwitch.addEventListener('change', function () {
+                        if (this.checked) {
+                            last20Stats.style.display = 'block'; 
+                            last20StatsNo1v1.style.display = 'none'; 
+                        } else {
+                            last20Stats.style.display = 'none'; 
+                            last20StatsNo1v1.style.display = 'block'; 
+                        }
+                    });
+
+                    
+                    toggleSwitch.dispatchEvent(new Event('change'));
+                </script>
             </div>
         </div>
     </div>
@@ -247,6 +285,24 @@
         var totalMatches = @Model.OverallPlayerStatsInfo.lifetime.Matches;
         var matches = [];
         @{
+            List<int?> Last20Elo = new List<int?>();
+
+            foreach (var elo in Model.EloDiff)
+            {
+                if (elo.elo != null)
+                {
+                    Last20Elo.Add(int.Parse(elo.elo));
+                }
+                else
+                {
+                    Last20Elo.Add(null);
+                }
+            }
+
+            Last20Elo.RemoveAt(Last20Elo.Count - 1);
+        }
+       
+        @{
             var lastGameElo = 0;
             var twentiethGameElo = 0;
             var eloDifference = 0;
@@ -254,28 +310,28 @@
 
             for (int i = 0; i < 20; i++)
             {
-                if (Model.EloDiff[i].elo == null)
+                if (Last20Elo[i] == null)
                 {
                     continue;
                 }
 
                 else
                 {
-                    lastGameElo = int.Parse(Model.EloDiff[i].elo);
+                    lastGameElo = int.Parse(Last20Elo[i].ToString());
                     break;
                 }
             }
 
             for (int i = 19; i >= 0; i--)
             {
-                if (Model.EloDiff[i].elo == null)
+                if (Last20Elo[i] == null)
                 {
                     continue;
                 }
 
                 else
                 {
-                    twentiethGameElo = int.Parse(Model.EloDiff[i].elo);
+                    twentiethGameElo = int.Parse(Last20Elo[i].ToString());
                     break;
                 }
             }
@@ -286,10 +342,10 @@
                 for (var i = 1; i < 20; i++)
                 {
                     var difference = 0;
-                    var elo = Model.EloDiff[i].elo;
+                    var elo = Last20Elo[i];
                     if (elo != null)
                     {
-                        difference = Math.Abs(lastGameElo - int.Parse(elo)); 
+                        difference = Math.Abs(lastGameElo - int.Parse(elo.ToString())); 
                     }
                     if (difference > maxDifference)
                     {
@@ -299,7 +355,7 @@
             }
         }
 
-        for (var i = 0; i < 21; i++) {
+        for (var i = 0; i < 20; i++) {
             matches.push(totalMatches - i);
         }
 
@@ -309,7 +365,7 @@
                 labels: matches.reverse(),
                 datasets: [{
                     label: 'ELO ADJUSTMENT LAST 20',
-                    data: [@string.Join(",", Model.EloDiff.Select(item => item.elo))].reverse(),
+                    data: [@string.Join(",", Last20Elo.Select(item=>item))].reverse(),
                     backgroundColor: 'red',
                     borderColor: 'red',
                     pointHoverRadius: 5,
@@ -328,7 +384,7 @@
 
                             ticks: {
 
-                                stepSize: 25 ,                    
+                                stepSize: 100 ,                    
                                 callback: function(value) {
                                         if (value !== 0) {
                                             var roundedValue = Math.round(value / 10) * 10;
@@ -476,7 +532,7 @@
                                         @foreach (var player in match.teams[0].players)
                                         {
                                             <tr>
-                                                <td> <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color: @(player.nickname == Model.Playerinfo.nickname ?                                                                   "#6BBE49" : "white")">@player.nickname</a></td>
+                                                <td> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.nickname == Model.Playerinfo.nickname ? "#6BBE49" : "white")">@player.nickname</a></td>
                                                 <td>@player.player_stats.Kills</td>
                                                 <td>@player.player_stats.Assists</td>
                                                 <td>@player.player_stats.Deaths</td>
