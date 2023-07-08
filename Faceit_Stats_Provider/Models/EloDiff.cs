@@ -1,4 +1,6 @@
-﻿namespace Faceit_Stats_Provider.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Faceit_Stats_Provider.Models
 {
     public class EloDiff
     {
@@ -12,7 +14,9 @@
         public class Root
         {
             public Id _id { get; set; }
-            public string status { get; set; }
+            [JsonPropertyName("gameMode")]
+            public string mode { get; set; }
+            [JsonPropertyName("elo")]
             public string elo { get; set; }
         }
 

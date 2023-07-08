@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -39,6 +40,8 @@ namespace Faceit_Stats_Provider.Controllers
 
             try
             {
+                Stopwatch z = new Stopwatch();
+                z.Start();
                 if (!_memoryCache.TryGetValue(nickname, out playerinf))
                 {
                     playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
@@ -60,18 +63,24 @@ namespace Faceit_Stats_Provider.Controllers
                 overallplayerstats = overallplayerstatsTask.Result!;
                 eloDiff = eloDiffTask.Result!;
 
-                //allhistory = new List<EloDiff.Root>();
+                allhistory = new List<EloDiff.Root>();
 
-                //var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
+                var pages = (int)Math.Floor(double.Parse(overallplayerstats.lifetime.Matches) / 100);
 
-                //for (int i = 0; i < pages; i++)
-                //{
+                var AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
+                    .Select(async i =>
+                    {
+                        var response = await client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={i}&size=100");
 
-                //    var response = await client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                //        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={i}&size=100");
+                        lock (allhistory)
+                        {
+                            allhistory.AddRange(response);
+                        }
+                    })
+                    .ToList();
 
-                //    allhistory.AddRange(response);
-                //}
+                await Task.WhenAll(AllLifeTimeMatchesTask);
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -91,6 +100,11 @@ namespace Faceit_Stats_Provider.Controllers
                 }
 
                 errorString = null;
+
+                z.Stop();
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.WriteLine(z.ElapsedMilliseconds);
+                Console.ResetColor();
             }
             catch (Exception ex)
             {
@@ -116,7 +130,7 @@ namespace Faceit_Stats_Provider.Controllers
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
-                //AllHistory = allhistory
+                AllHistory = allhistory
             };
 
             return View(ConnectionStatus);
