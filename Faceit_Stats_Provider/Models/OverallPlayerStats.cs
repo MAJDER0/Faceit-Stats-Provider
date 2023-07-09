@@ -71,11 +71,14 @@ namespace Faceit_Stats_Provider.Models
             public string AverageKRRatio { get; set; }
             public string AverageQuadroKills { get; set; }
             public string Matches { get; set; }
+            [JsonPropertyName("Win Rate %")]           
             public string WinRate { get; set; }
             public string Rounds { get; set; }
             public string TotalHeadshots { get; set; }
+            [JsonPropertyName("Average K/R Ratio")]
             public string KRRatio { get; set; }
             public string Deaths { get; set; }
+            [JsonPropertyName("Average K/D Ratio")]
             public string KDRatio { get; set; }
             public string AverageAssists { get; set; }
             public string AveragePentaKills { get; set; }

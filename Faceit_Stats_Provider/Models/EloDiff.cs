@@ -16,8 +16,9 @@ namespace Faceit_Stats_Provider.Models
             public Id _id { get; set; }
             [JsonPropertyName("gameMode")]
             public string mode { get; set; }
+
             [JsonPropertyName("elo")]
-            public string elo { get; set; }
+            public object elo { get; set; }
         }
 
 

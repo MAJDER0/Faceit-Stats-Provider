@@ -10,6 +10,7 @@ namespace Faceit_Stats_Provider.Models
         public OverallPlayerStats.Rootobject OverallPlayerStatsInfo { get; set; }
         public List<EloDiff.Root> EloDiff { get; set; }
         public List<EloDiff.Root> AllHistory { get; set; }
+        public int? HighestElo { get; set; }
         public string ErrorMessage { get; set; }
 
         public class Rootobject

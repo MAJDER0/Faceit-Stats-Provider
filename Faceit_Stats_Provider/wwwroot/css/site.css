@@ -114,10 +114,12 @@ input {
     width:100%;
     border-top: 1px solid red;
     text-align: center;
+    margin-left:-3%;
 }
 
 .Include1v1 {
     margin-top: 3%;
+    margin-left:3%;
     display: inline-block;
 }
 
@@ -184,8 +186,12 @@ input[type="submit"]:hover {
     height: auto;
 }
 
+#MapsPlayedChart {
+    width:100%;
+}
+
 .EloGraph {
-    margin-top:35px;
+    margin-top: 35px;
 }
 
 .matchesTable {
@@ -223,25 +229,53 @@ input[type="submit"]:hover {
         border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
     }
 
-.matchesTableStats {
+.MapsTable {
     background-color: transparent;
     border: none;
     color: white;
 }
 
-.matchesTableStats thead {
-    background-color: rgba(0, 0, 0, 1);
-    font-weight: bold;
-    font-size: 14px;
-    color: darkmagenta;
+    .MapsTable thead {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-weight: bold;
+        font-size: 16px;
+        color: darkmagenta;
+    }
+
+/* Style the table rows */
+.matchesTable tbody tr {
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
 }
 
+
+.MapsTable th,
+.MapsTable td {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+
+.MapsTable tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+.MapsTable tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+.MapStatsRow {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 10%;
+}
 
 .switch {
     position: relative;
     display: inline-block;
-    width: 40px; 
-    height: 20px; 
+    width: 40px;
+    height: 20px;
 }
 
     .switch input {

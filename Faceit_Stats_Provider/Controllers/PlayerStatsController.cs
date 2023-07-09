@@ -17,9 +17,10 @@ namespace Faceit_Stats_Provider.Controllers
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMemoryCache _memoryCache;
-
+        private readonly Random _random;
         public PlayerStatsController(IHttpClientFactory clientFactory, IMemoryCache cache)
         {
+            _random = new Random();
             _clientFactory = clientFactory;
             _memoryCache = cache;
         }
@@ -64,35 +65,56 @@ namespace Faceit_Stats_Provider.Controllers
                 eloDiff = eloDiffTask.Result!;
 
                 allhistory = new List<EloDiff.Root>();
+                var allhistoryTask = new List<Task<List<EloDiff.Root>>>();
 
-                var pages = (int)Math.Floor(double.Parse(overallplayerstats.lifetime.Matches) / 100);
+                var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
 
-                var AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
-                    .Select(async i =>
-                    {
-                        var response = await client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={i}&size=100");
+                var matchdiff = $"{nickname}_matchdiff";
+                List<EloDiff.Root>[] arrayOfResults;
 
-                        lock (allhistory)
-                        {
-                            allhistory.AddRange(response);
-                        }
-                    })
-                    .ToList();
+                if (!_memoryCache.TryGetValue(matchdiff, out List<EloDiff.Root> cachedEloDiff))
+                {
+                    List<Task<List<EloDiff.Root>>> AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
+                    .Select(i => client2.GetFromJsonAsync<List<EloDiff.Root>>(string.Format("v1/stats/time/users/{0}/games/csgo?page={1}&size=100", playerinf.player_id, i))).ToList();
 
-                await Task.WhenAll(AllLifeTimeMatchesTask);
+                    arrayOfResults = await Task.WhenAll(AllLifeTimeMatchesTask);
+
+                    allhistory.AddRange(arrayOfResults.SelectMany(x => x));
+
+                    _memoryCache.Set(matchdiff, cachedEloDiff, TimeSpan.FromMinutes(10));
+                }
+                else
+                {
+                    allhistory = cachedEloDiff.ToList();
+                }
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
                 if (!_memoryCache.TryGetValue(matchstatsCacheKey, out List<MatchStats.Round> cachedMatchStats))
                 {
-                    List<Task<MatchStats.Rootobject>> tasks = matchhistory.items.Select(match => client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats")).ToList();
+                    try
+                    {
+                        var tasks = matchhistory.items.Select(async match =>
+                        {
+                            return client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
+                        }).ToList();
+                        try
+                        {
+                            var results = await Task.WhenAll(tasks);
 
-                    await Task.WhenAll(tasks);
+                            matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.Result!.rounds));
 
-                    matchstats.AddRange(tasks.SelectMany(task => task.Result.rounds));
+                            _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(10));
+                        }
+                        catch (Exception)
+                        {
 
-                    _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(4));
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Blad");
+                    }
                 }
                 else
                 {
