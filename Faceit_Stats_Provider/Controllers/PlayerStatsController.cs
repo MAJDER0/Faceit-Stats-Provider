@@ -64,29 +64,29 @@ namespace Faceit_Stats_Provider.Controllers
                 overallplayerstats = overallplayerstatsTask.Result!;
                 eloDiff = eloDiffTask.Result!;
 
-                allhistory = new List<EloDiff.Root>();
-                var allhistoryTask = new List<Task<List<EloDiff.Root>>>();
+                //allhistory = new List<EloDiff.Root>();
+                //var allhistoryTask = new List<Task<List<EloDiff.Root>>>();
 
-                var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
+                //var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
 
-                var matchdiff = $"{nickname}_matchdiff";
-                List<EloDiff.Root>[] arrayOfResults;
+                //var matchdiff = $"{nickname}_matchdiff";
+                //List<EloDiff.Root>[] arrayOfResults;
 
-                if (!_memoryCache.TryGetValue(matchdiff, out List<EloDiff.Root> cachedEloDiff))
-                {
-                    List<Task<List<EloDiff.Root>>> AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
-                    .Select(i => client2.GetFromJsonAsync<List<EloDiff.Root>>(string.Format("v1/stats/time/users/{0}/games/csgo?page={1}&size=100", playerinf.player_id, i))).ToList();
+                //if (!_memoryCache.TryGetValue(matchdiff, out List<EloDiff.Root> cachedEloDiff))
+                //{
+                //    List<Task<List<EloDiff.Root>>> AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
+                //    .Select(i => client2.GetFromJsonAsync<List<EloDiff.Root>>(string.Format("v1/stats/time/users/{0}/games/csgo?page={1}&size=100", playerinf.player_id, i))).ToList();
 
-                    arrayOfResults = await Task.WhenAll(AllLifeTimeMatchesTask);
+                //    arrayOfResults = await Task.WhenAll(AllLifeTimeMatchesTask);
 
-                    allhistory.AddRange(arrayOfResults.SelectMany(x => x));
+                //    allhistory.AddRange(arrayOfResults.SelectMany(x => x));
 
-                    _memoryCache.Set(matchdiff, cachedEloDiff, TimeSpan.FromMinutes(10));
-                }
-                else
-                {
-                    allhistory = cachedEloDiff.ToList();
-                }
+                //    _memoryCache.Set(matchdiff, cachedEloDiff, TimeSpan.FromMinutes(10));
+                //}
+                //else
+                //{
+                //    allhistory = cachedEloDiff.ToList();
+                //}
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -152,7 +152,7 @@ namespace Faceit_Stats_Provider.Controllers
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
-                AllHistory = allhistory
+                //AllHistory = allhistory
             };
 
             return View(ConnectionStatus);

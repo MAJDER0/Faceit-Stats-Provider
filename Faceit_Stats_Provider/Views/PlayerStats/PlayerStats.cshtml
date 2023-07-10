@@ -154,17 +154,17 @@
                     <p>HEADSHOTS: <span class="Result" style="color:@(int.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots)>=45 ?  "#6BBE49" : "#F20707")">                                                                    @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</span></p>
 
                     <p>K/D RATIO: <span class="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
-                <p>
-                    @{int highestElo = Model.AllHistory
-                            .Where(item => item.elo != null) .Select(item =>
-                            {
-                                int.TryParse(item.elo.ToString(), out int eloValue);
-                                return eloValue;
+                    <p>
+                        @*                    @{int highestElo = Model.AllHistory
+                    .Where(item => item.elo != null) .Select(item =>
+                    {
+                    int.TryParse(item.elo.ToString(), out int eloValue);
+                    return eloValue;
 
-                            }).Max();}
+                    }).Max();}*@
 
-                         Highest Elo:  <span class="Result">@highestElo</span>
-                </p>
+                        Highest Elo: @* <span class="Result">@highestElo</span>*@
+                    </p>
                 }
 
             </div>
@@ -172,9 +172,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string nickname, bool include1v1 = false)
                     {
-                                                        <p class="title">LAST 20</p>
+                        <p class="title">LAST 20</p>
 
-                                                        @if (MatchesStats != null)
+                        @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -183,7 +183,7 @@
                             double gameCount = 0;
                             double wins = 0;
 
-                                                            @foreach (var match in MatchesStats)
+                            @foreach (var match in MatchesStats)
                             {
                                 foreach (var team in match.teams)
                                 {
@@ -224,17 +224,17 @@
                             string averageKillsFormatted = averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                                                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                                                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                                                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                                                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                                                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                                                            <p>BALANCE: <span class="Result"></span></p>
+                            <p>BALANCE: <span class="Result"></span></p>
                         }
                     }
                 }
@@ -386,7 +386,7 @@
             }
         }
 
-                        for (var i = 0; i < 20; i++) {
+                                for (var i = 0; i < 20; i++) {
             matches.push(totalMatches - i);
         }
 
@@ -647,6 +647,7 @@
                     }
                 </tbody>
             </table>
+            <button id="loadMoreButton" class="load-more-button">LOAD MORE</button>
         }
     </div>
 </div>
@@ -654,7 +655,7 @@
 <div class="MapStatsRow">
 
     @{
-        List<string> maps = new List<string>() { "DE_OVERPASS", "DE_DUST2", "DE_MIRAGE", "DE_CBBLE", "DE_CACHE", "DE_TRAIN", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
+        List<string> maps = new List<string>() { "DE_OVERPASS", "DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
 
         var displayedMaps = Model.OverallPlayerStatsInfo.segments
         .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper())).OrderByDescending(x => x.label)
@@ -662,7 +663,7 @@
     }
 
     <div class="col-md-6 MapsRadarChart">
-        <canvas id="MapsPlayedChart" height="300"></canvas>
+        <canvas id="MapsPlayedChart"></canvas>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -673,6 +674,7 @@
 
         var labels = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => map.label)))');
         var matches = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => map.stats.Matches)))');
+        var KD = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => double.Parse(map.stats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture))))');
 
         var data = {
             labels: labels,
@@ -686,54 +688,86 @@
                 pointBorderColor: "#fff",
                 pointHoverBackgroundColor: "#fff",
                 pointHoverBorderColor: "rgba(200,0,0,1)"
+            },
+            {
+                label: "KD",
+                data: KD,
+                backgroundColor: "rgba(0,0,200,0.2)",  // Blue color
+                borderColor: "rgba(0,0,200,1)",  // Blue color
+                borderWidth: 2,
+                pointBackgroundColor: "rgba(0,0,200,1)",  // Blue color
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "rgba(0,0,200,1)"  // Blue color
             }]
         };
 
         var radarChart = new Chart(MapsGraph, {
             type: 'radar',
             data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
         });
     </script>
 
 
-    <div class="col-md-6">
 
-        <table class="table MapsTable">
-            <thead>
-                <tr>
-                    <th>IMG</th>                
-                    <th>MAP</th>
-                    <th>MATCHES</th>
-                    <th>WIN RATE</th>
-                    <th>AVG K/D</th>
-                    <th>AVG K/R</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var map in displayedMaps)
-                {
-                    <tr>
-                        <td>
-                            <img src="@map.img_small" />
-                        </td>
+    <div class="col-md-6 ActiveFaceitMapPoolContainer">
 
-                        <td>@map.label</td>
-                        <td>@map.stats.Matches</td>
-
-                        <td>
-                            <p class="Result" style="color: @(double.Parse(map.stats.WinRate) >= 50.00 ? "#6BBE49" : "#F20707")">@map.stats.WinRate</p>
-                        </td>
-                        <td>
-                            <p class="Result" style="color: @(double.Parse(map.stats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.KDRatio</p>
-                        </td>
-                        <td>
-                            <p class="Result" style="color: @(double.Parse(map.stats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.KRRatio</p>
-                        </td>
+        <div class="table-container">
+            <table class="table MapsTable">
+                <thead>
+                    <tr style="display:none;">
+                        <th>IMG</th>
+                        <th>MAP</th>
+                        <th>MATCHES</th>
+                        <th>WIN RATE</th>
+                        <th>AVG K/D</th>
+                        <th>AVG K/R</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var map in displayedMaps)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@map.img_small" />
+                            </td>
 
+                            <td>@map.label</td>
+                            <td>@map.stats.Matches</td>
+
+                            <td>
+                                <p class="Result" style="color: @(double.Parse(map.stats.WinRate) >= 50.00 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</p>
+                            </td>
+                            <td>
+                                <p class="Result" style="color: @(double.Parse(map.stats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.KDRatio</p>
+                            </td>
+                            <td>
+                                <p class="Result" style="color: @(double.Parse(map.stats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.KRRatio</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    var tableContainer = $(".table-container");
+
+                    $(window).scroll(function () {
+                        var scrollPosition = $(this).scrollTop() + $(this).height();
+                        var tablePosition = tableContainer.offset().top;
+
+                        if (scrollPosition > tablePosition) {
+                            tableContainer.addClass("visible");
+                        }
+                    });
+                });
+            </script>
+        </div>
     </div>
 
 </div>
