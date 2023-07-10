@@ -258,9 +258,8 @@ input[type="submit"]:hover {
 }
 
     .MapsTable thead {
-        background-color: rgba(0, 0, 0, 0.7);
-        font-weight: bold;
-        font-size: 16px;
+        background-color: rgba(0, 0, 0, 0);
+        font-size: 15px;
         color: darkmagenta;
     }
 
@@ -273,6 +272,7 @@ input[type="submit"]:hover {
 .MapsTable th,
 .MapsTable td {
     border-color: rgba(255, 255, 255, 0.2);
+     /*border-bottom: none;*/
 }
 
 
@@ -284,12 +284,29 @@ input[type="submit"]:hover {
 .MapsTable tbody tr:last-child td {
     border-bottom: none;
 }
-.table-container {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 0.5s, transform 0.5s;
+
+    .MapsTable thead th{
+        border: none;
+    }
+
+.TableMapTitle {
+    text-align: center;
+    margin-bottom: 30px; /* Adjust the margin as needed */
+    margin-top:-10%;
 }
 
+    .TableMapTitle > h2 {
+        color: #F2F2F2;
+        font-size: 25px;
+        /*font-weight:bold;*/
+        margin: 0;
+    }
+
+.table-container {
+    opacity: 0;
+    transform: translateY(50px); /* Adjust the translateY value as needed */
+    transition: opacity 0.5s, transform 0.5s;
+}
     .table-container.visible {
         opacity: 1;
         transform: translateY(0);
@@ -298,7 +315,7 @@ input[type="submit"]:hover {
 .MapStatsRow {
     display: flex;
     align-items: flex-start;
-    margin-top: 10%;
+    margin-top:6%;
 }
 
 .switch {
@@ -333,7 +350,7 @@ input[type="submit"]:hover {
         width: 16px; 
         left: 2px;
         bottom: 2px;
-        background-color: white;
+        background-color: #F2F2F2;
         -webkit-transition: .4s;
         transition: .4s;
     }
@@ -380,7 +397,7 @@ input:checked + .slider:before {
 
     .load-more-button:hover {
         background-color: rgba(0, 0, 0, 1);
-        color: red;
+        color: #ff3c22;
     }
 
 
