@@ -61,30 +61,38 @@ namespace Faceit_Stats_Provider.Models
             public string QuadroKills { get; set; }
             public string TripleKills { get; set; }
             public string MVPs { get; set; }
+            [JsonPropertyName("Average Triple Kills")]
             public string AverageTripleKills { get; set; }
             public string PentaKills { get; set; }
             public string AverageMVPs { get; set; }
+            [JsonPropertyName("Average Headshots %")]
             public string AverageHeadshots { get; set; }
             public string Assists { get; set; }
-            public string AverageKills { get; set; }
+            [JsonPropertyName("Average Kills")]
+            public string AverageKills { get; set; }           
+            [JsonPropertyName("Headshots per Match")]
             public string HeadshotsperMatch { get; set; }
+            [JsonPropertyName("Average K/R Ratio")]
             public string AverageKRRatio { get; set; }
+            [JsonPropertyName("Average Quadro Kills")]
             public string AverageQuadroKills { get; set; }
             public string Matches { get; set; }
             [JsonPropertyName("Win Rate %")]           
             public string WinRate { get; set; }
             public string Rounds { get; set; }
             public string TotalHeadshots { get; set; }
-            [JsonPropertyName("Average K/R Ratio")]
-            public string KRRatio { get; set; }
-            public string Deaths { get; set; }
-            [JsonPropertyName("Average K/D Ratio")]
+            public string KRRatio { get; set; }           
+            public string Deaths { get; set; }            
             public string KDRatio { get; set; }
+            [JsonPropertyName("Average Assists")]
             public string AverageAssists { get; set; }
+            [JsonPropertyName("Average Penta Kills")]
             public string AveragePentaKills { get; set; }
             public string Headshots { get; set; }
             public string Wins { get; set; }
+            [JsonPropertyName("Average Deaths")]
             public string AverageDeaths { get; set; }
+            [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
         }
 

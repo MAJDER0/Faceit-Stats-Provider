@@ -682,8 +682,8 @@
     <script>
         var labels = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => map.label)))');
         var matches = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => map.stats.Matches)))');
-        var KD = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => double.Parse(map.stats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture))))');
-        var KR = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => double.Parse(map.stats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture))))');
+        var KD = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture))))');
+        var KR = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture))))');
 
     var data = {
         labels: labels,
@@ -794,7 +794,7 @@
                 <tbody>
                     @foreach (var map in displayedMaps)
                     {
-                        <tr>
+                        <tr class="map-row">
                             <td>
                                 <img src="@map.img_small" />
                             </td>
@@ -806,12 +806,44 @@
                                 <p class="Result" style="color: @(double.Parse(map.stats.WinRate) >= 50.00 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</p>
                             </td>
                             <td>
-                                <p class="Result" style="color: @(double.Parse(map.stats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.KDRatio</p>
+                                <p class="Result" style="color: @(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</p>
                             </td>
                             <td>
-                                <p class="Result" style="color: @(double.Parse(map.stats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.KRRatio</p>
+                                <p class="Result" style="color: @(double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.AverageKRRatio</p>
                             </td>
                         </tr>
+
+                        <tr class="MapStatsInfo" style="display: none;">
+                            <td colspan="8">
+                                <table class="table MapsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>AVERAGE KILLS</th>
+                                            <th>AVERAGE DEATHS</th>
+                                            <th>AVERAGE ASSISTS</th>
+                                            <th>HEADSHOTS PER GAME</th>
+                                            <th>AVERAGE HEADSHOTS%</th>
+                                            <th>AVERAGE TRIPLE</th>
+                                            <th>AVERAGE QUADRO</th>
+                                            <th>AVERAGE PENTA</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                          <td><p class="Result">@map.stats.AverageKills</p></td>
+                                          <td><p class="Result">@map.stats.AverageDeaths</p></td>
+                                          <td><p class="Result">@map.stats.AverageAssists</p></td>
+                                          <td><p class="Result">@map.stats.HeadshotsperMatch</p></td>
+                                          <td><p class="Result">@map.stats.AverageHeadshots</p></td>
+                                          <td><p class="Result">@map.stats.AverageTripleKills</p></td>
+                                          <td><p class="Result">@map.stats.AverageQuadroKills</p></td>
+                                          <td><p class="Result">@map.stats.AveragePentaKills</p></td>
+                                        </tr>
+                                            
+                                    </tbody>
+                                </table>
+                            </tr>
                     }
                 </tbody>
             </table>
@@ -841,6 +873,14 @@
     $(document).ready(function () {
         $(".match-row").click(function () {
             $(this).next(".scoreboard").toggle();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $(".map-row").click(function () {
+            $(this).next(".MapStatsInfo").toggle();
         });
     });
 </script>
