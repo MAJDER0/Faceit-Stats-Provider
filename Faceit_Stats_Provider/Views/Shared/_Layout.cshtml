@@ -23,42 +23,49 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a>
-                    </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>STATS</span></a>
-                    </ul>
+                    @if (!(bool)ViewData["PlayerStats"])
+                    {
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>LOBBY ANALYZER</span></a>
-                    </ul>
+                    }
+                    else{
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HAVE WE MET?</span></a>
-                    </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a></li>
+                        </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>ANALYZE DEMO</span></a>
-                    </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>STATS</span></a></li>
+                        </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>DISCORD BOT</span></a>
-                    </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>LOBBY ANALYZER</span></a></li>
+                        </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>EXTENSION</span></a>
-                    </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HAVE WE MET?</span></a></li>
+                        </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>FAQ</span></a>
-                    </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>ANALYZE DEMO</span></a></li>
+                        </ul>
 
-                    <ul class="navbar-nav flex-grow-1">
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>LOGIN VIA FACEIT</span></a>
-                    </ul>
-                    
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>DISCORD BOT</span></a></li>
+                        </ul>
+
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>EXTENSION</span></a></li>
+                        </ul>
+
+                        <ul class="navbar-nav flex-grow-1">
+                            <li> <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>FAQ</span></a></li>
+                        </ul>
+
+                        <ul class="navbar-nav flex-grow-1">
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>LOGIN VIA FACEIT</span></a></li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>

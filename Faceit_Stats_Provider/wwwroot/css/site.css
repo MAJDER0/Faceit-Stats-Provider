@@ -410,6 +410,30 @@ input:checked + .slider:before {
     }
 
 
+.SeeCompleteStatistics-button {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    transition: color 0.3s;
+    height: 120%;
+    width: 17%;
+    margin:auto;
+}
+
+    .SeeCompleteStatistics-button:hover {
+        background-color: rgba(0, 0, 0, 1);
+        color: #ff3c22;
+    }
+
+.button-container {
+    text-align: center;
+}
+
 
 .bg {
     background: #0D0D0D no-repeat;

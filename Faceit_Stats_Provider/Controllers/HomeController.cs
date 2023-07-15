@@ -16,6 +16,7 @@ namespace Faceit_Stats_Provider.Controllers
 
         public IActionResult Index()
         {
+            ViewData["PlayerStats"] = true;
             return View();
         }
 

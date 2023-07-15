@@ -824,8 +824,6 @@
                                             <th>HEADSHOTS PER GAME</th>
                                             <th>AVERAGE HEADSHOTS%</th>
                                             <th>AVERAGE TRIPLE</th>
-                                            <th>AVERAGE QUADRO</th>
-                                            <th>AVERAGE PENTA</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -837,8 +835,6 @@
                                           <td><p class="Result">@map.stats.HeadshotsperMatch</p></td>
                                           <td><p class="Result">@map.stats.AverageHeadshots</p></td>
                                           <td><p class="Result">@map.stats.AverageTripleKills</p></td>
-                                          <td><p class="Result">@map.stats.AverageQuadroKills</p></td>
-                                          <td><p class="Result">@map.stats.AveragePentaKills</p></td>
                                         </tr>
                                             
                                     </tbody>
@@ -848,6 +844,7 @@
                     }
                 </tbody>
             </table>
+
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
                 $(document).ready(function () {
@@ -864,8 +861,13 @@
                 });
             </script>
         </div>
-    </div>
+    </div>   
+</div>
 
+<div class="row">
+    <div class="col-12 button-container">
+        <button class="SeeCompleteStatistics-button">SEE COMPLETE STATISTICS</button>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

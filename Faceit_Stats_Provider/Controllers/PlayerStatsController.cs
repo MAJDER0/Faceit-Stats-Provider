@@ -155,6 +155,8 @@ namespace Faceit_Stats_Provider.Controllers
                 //AllHistory = allhistory
             };
 
+            ViewData["PlayerStats"] = false;
+
             return View(ConnectionStatus);
         }
 
