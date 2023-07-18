@@ -400,7 +400,7 @@ input:checked + .slider:before {
     margin-left: 45%;
     transition: background-color 0.3s;
     transition: color 0.3s;
-    height:3%;
+    height:31px;
     width:10%;
 }
 
