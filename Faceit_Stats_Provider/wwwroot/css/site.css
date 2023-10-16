@@ -117,13 +117,13 @@ input {
     margin-left:-3%;
 }
 
-.Include1v1 {
+.Ranked5v5Games {
     margin-top: 3%;
-    margin-left:3%;
+    margin-left: 3%;
     display: inline-block;
 }
 
-    .Include1v1 > p {
+    .Ranked5v5Games > p {
         float: left;
         margin-top: -3%;
         font-size: 20px;

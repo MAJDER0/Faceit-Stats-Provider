@@ -19,7 +19,16 @@
                 {
                     <a href="https://steamcommunity.com/profiles/@Model.Playerinfo.steam_id_64" target="_blank">
 
-                        <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                        @{
+                            if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
+                            {
+                                <img src="~/NoPicture.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                            }
+                            else 
+                            {
+                                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                            }
+                        }
                     </a>
                 }
                 else
@@ -135,7 +144,7 @@
             }
             else
             {
-                <p class="EloInfoUnderCanvas">ELO: @Model.Playerinfo.games.csgo.faceit_elo</p>
+                <p class="EloInfoUnderCanvas">CS2 ELO: @Model.Playerinfo.games.cs2.faceit_elo</p>
             }
         </div>
     </div>
@@ -179,7 +188,7 @@
             </div>
             <div class="Last20Stats">
                 @{
-                    void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string nickname, bool include1v1 = false)
+                    void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string nickname, bool RankedGame = false)
                     {
                                 <p class="title">LAST 20</p>
 
@@ -192,13 +201,13 @@
                             double gameCount = 0;
                             double wins = 0;
 
-                                    @foreach (var match in MatchesStats)
+                            @foreach (var match in MatchesStats)
                             {
                                 foreach (var team in match.teams)
                                 {
                                     foreach (var player in team.players)
                                     {
-                                        if (player.nickname == nickname && (!include1v1 || match.game_mode != "1v1"))
+                                        if (player.nickname == nickname && (!RankedGame || match.game_mode != "Wingman"))
                                         {
                                             double kills = double.Parse(player.player_stats.Kills);
                                             double deaths = double.Parse(player.player_stats.Deaths);
@@ -254,7 +263,7 @@
                     }
                 </div>
 
-                <div id="Last20StatsNo1v1">
+                <div id="RankedGames">
                     @{
                         RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.nickname, true);
                     }
@@ -263,8 +272,8 @@
 
             <div class="SwitchToggle">
 
-                <div class="Include1v1">
-                    <p>Include 1v1</p>
+                <div class="Ranked5v5Games">
+                    <p>RANKED GAMES</p>
                     <label class="switch">
                         <input type="checkbox" id="toggleSwitch" checked>
                         <span class="slider round"></span>
@@ -273,13 +282,13 @@
                 <script>
                     const toggleSwitch = document.getElementById('toggleSwitch');
                     const last20Stats = document.getElementById('Last20Stats');
-                    const last20StatsNo1v1 = document.getElementById('Last20StatsNo1v1');
-                    const v1TableMatches = document.getElementsByClassName('v1Match');
+                    const RankedGames = document.getElementById('RankedGames');
+                    const v1TableMatches = document.getElementsByClassName('UnrankedMatch');
 
                     toggleSwitch.addEventListener('change', function () {
                         if (this.checked) {
                             last20Stats.style.display = 'block';
-                            last20StatsNo1v1.style.display = 'none';
+                            RankedGames.style.display = 'none';
 
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'table-row';
@@ -287,7 +296,7 @@
 
                         } else {
                             last20Stats.style.display = 'none';
-                            last20StatsNo1v1.style.display = 'block';
+                            RankedGames.style.display = 'block';
 
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'none';
@@ -297,15 +306,6 @@
 
                     toggleSwitch.dispatchEvent(new Event('change'));
                 </script>
-
-                <div class="Include1v1">
-                    <p>Include Hubs</p>
-                    <label class="switch">
-                        <input type="checkbox" id="toggleSwitchHubs" checked>
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-
             </div>
 
         </div>
@@ -348,48 +348,56 @@
             var eloDifference = 0;
             var maxDifference = 0;
 
-            for (int i = 0; i < 20; i++)
+            if (Last20Elo.Count() < 20)
             {
-                if (Last20Elo[i] == null)
-                {
-                    continue;
-                }
 
-                else
-                {
-                    lastGameElo = int.Parse(Last20Elo[i].ToString());
-                    break;
-                }
             }
-
-            for (int i = 19; i >= 0; i--)
+            else 
             {
-                if (Last20Elo[i] == null)
+            
+                for (int i = 0; i < 20; i++)
                 {
-                    continue;
-                }
-
-                else
-                {
-                    twentiethGameElo = int.Parse(Last20Elo[i].ToString());
-                    break;
-                }
-            }
-            if (lastGameElo != null && twentiethGameElo != null)
-            {
-                eloDifference = Math.Abs(lastGameElo - twentiethGameElo);
-
-                for (var i = 1; i < 20; i++)
-                {
-                    var difference = 0;
-                    var elo = Last20Elo[i];
-                    if (elo != null)
+                    if (Last20Elo[i] == null)
                     {
-                        difference = Math.Abs(lastGameElo - int.Parse(elo.ToString()));
+                        continue;
                     }
-                    if (difference > maxDifference)
+
+                    else
                     {
-                        maxDifference = difference;
+                        lastGameElo = int.Parse(Last20Elo[i].ToString());
+                        break;
+                    }
+                }
+
+                for (int i = 19; i >= 0; i--)
+                {
+                    if (Last20Elo[i] == null)
+                    {
+                        continue;
+                    }
+
+                    else
+                    {
+                        twentiethGameElo = int.Parse(Last20Elo[i].ToString());
+                        break;
+                    }
+                }
+                if (lastGameElo != null && twentiethGameElo != null)
+                {
+                    eloDifference = Math.Abs(lastGameElo - twentiethGameElo);
+
+                    for (var i = 1; i < 20; i++)
+                    {
+                        var difference = 0;
+                        var elo = Last20Elo[i];
+                        if (elo != null)
+                        {
+                            difference = Math.Abs(lastGameElo - int.Parse(elo.ToString()));
+                        }
+                        if (difference > maxDifference)
+                        {
+                            maxDifference = difference;
+                        }
                     }
                 }
             }
@@ -555,25 +563,26 @@
                                 @{
                                     index++;
                                 }
-                        </td>
-                        }
-                        if (match.game_mode == "1v1")
-                        {
-                        <tr class="match-row v1Match">
-                                @{
-                                    RenderMatchInTable();
-                                }
-                        </tr>
+                            </td>
                         }
 
-                        else
-                        {
-                        <tr class="match-row" id="v5Match">
-                                @{
-                                    RenderMatchInTable();
-                                }
-                        </tr>
-                        }
+                            if (match.game_mode == "Wingman")
+                            {
+                                <tr class="match-row UnrankedMatch">
+                                    @{
+                                        RenderMatchInTable();
+                                    }
+                                </tr>
+                            }
+
+                            else
+                            {
+                                <tr class="match-row" id="v5Match">
+                                    @{
+                                        RenderMatchInTable();
+                                    }
+                                </tr>
+                            }                       
 
                     <tr class="scoreboard match-row" style="display: none;">
                         <td colspan="9">
@@ -656,7 +665,54 @@
                     }
                 </tbody>
             </table>
+
+            <div id="matchesList">
+                <!-- Display the initial matches here -->
+                @foreach (var match in Model.MatchHistory.items)
+                {
+                    <div class="match-item">
+                        <!-- Display match details here -->
+                    </div>
+                }
+            </div>
+
             <button id="loadMoreButton" class="load-more-button">LOAD MORE</button>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            <script>
+                var offset = 20; // Initial offset for loading more matches
+
+                // Function to load more matches
+                function loadMoreMatches() {
+                    $.ajax({
+                        type: 'GET',
+                        url: '@Url.Action("LoadMoreMatches")',
+                        data: { playerid: '@Model.Playerinfo.player_id', offset, limit: 10, size: 21 },
+                        success: function (data) {
+                            if (data) {
+                                // Append the new matches to the list
+                                $('#matchesList').append(data);
+                                offset += 1; // Increase the page for the next load
+
+                                // Hide the "Load More" button if there are no more matches to load
+                                if (data.length < 10) {
+                                    $('#loadMoreButton').hide();
+                                }
+                            }
+                        },
+                        error: function () {
+                            alert('Error loading more matches.');
+                        }
+                    });
+                }
+
+                // Attach click event handler to the "Load More" button
+                $('#loadMoreButton').click(function () {
+                    loadMoreMatches();
+                });
+            </script>
+
         }
     </div>
 </div>

@@ -13,6 +13,7 @@ namespace Faceit_Stats_Provider.Models
         public int? HighestElo { get; set; }
         public string ErrorMessage { get; set; }
 
+
         public class Rootobject
         {
             public string player_id { get; set; }
@@ -32,6 +33,8 @@ namespace Faceit_Stats_Provider.Models
             public string membership_type { get; set; }
             public string cover_featured_image { get; set; }
             public Infractions infractions { get; set; }
+            public bool verified { get; set; }
+            public DateTime activated_at { get; set; }
         }
 
         public class Platforms
@@ -41,10 +44,11 @@ namespace Faceit_Stats_Provider.Models
 
         public class Games
         {
+            public Cs2 cs2 { get; set; }
             public Csgo csgo { get; set; }
         }
 
-        public class Csgo
+        public class Cs2
         {
             public string region { get; set; }
             public string game_player_id { get; set; }
@@ -60,6 +64,22 @@ namespace Faceit_Stats_Provider.Models
         {
         }
 
+        public class Csgo
+        {
+            public string region { get; set; }
+            public string game_player_id { get; set; }
+            public int skill_level { get; set; }
+            public int faceit_elo { get; set; }
+            public string game_player_name { get; set; }
+            public string skill_level_label { get; set; }
+            public Regions1 regions { get; set; }
+            public string game_profile_id { get; set; }
+        }
+
+        public class Regions1
+        {
+        }
+
         public class Settings
         {
             public string language { get; set; }
@@ -68,5 +88,6 @@ namespace Faceit_Stats_Provider.Models
         public class Infractions
         {
         }
+
     }
 }

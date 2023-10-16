@@ -10,6 +10,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -36,7 +37,7 @@ namespace Faceit_Stats_Provider.Controllers
             OverallPlayerStats.Rootobject overallplayerstats;
             List<EloDiff.Root> eloDiff;
             List<EloDiff.Root> allhistory;
-
+          
             string errorString;
 
             try
@@ -50,13 +51,13 @@ namespace Faceit_Stats_Provider.Controllers
                 }
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
-                ($"v4/players/{playerinf.player_id}/history?game=csgo&from=120&offset=0&limit=20");
+                ($"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
-                ($"v4/players/{playerinf.player_id}/stats/csgo");
+                ($"v4/players/{playerinf.player_id}/stats/cs2");
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=21");
+                    $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=21");
 
                 await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
@@ -94,13 +95,14 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     try
                     {
-                        var tasks = matchhistory.items.Select(async match =>
+                        var task = matchhistory.items.Select(async match =>
                         {
                             return client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
                         }).ToList();
+
                         try
                         {
-                            var results = await Task.WhenAll(tasks);
+                            var results = await Task.WhenAll(task);
 
                             matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.Result!.rounds));
 
@@ -164,5 +166,37 @@ namespace Faceit_Stats_Provider.Controllers
         {
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
+
+        public async Task<ActionResult> LoadMoreMatches(string playerid, int page, int limit)
+        {
+            try
+            {
+                var client = _clientFactory.CreateClient("Faceit");
+
+                // Calculate the offset based on the page and limit
+                var offset = page * limit;
+
+                // Make an API request to fetch additional match data
+                var matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
+                    $"v4/players/{playerid}/history?game=cs2&from=120&offset={offset}&limit={limit}");
+
+                if (matchhistory != null)
+                {
+                    // Extract the match data from matchhistory, e.g., matchhistory.items
+                    var nextMatches = matchhistory.items;
+
+                    // Return the matches as a partial view
+                    return PartialView("MatchListPartial", nextMatches);
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle errors if the API request fails
+                Console.WriteLine($"Error fetching more matches: {ex.Message}");
+            }
+
+            return PartialView("MatchListPartial", new List<MatchHistory.Item>());
+        }
+
     }
 }
