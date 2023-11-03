@@ -460,7 +460,7 @@
         }
         else
         {
-            <table class="table matchesTable">
+            <table class="table matchesTable maintable">
                 <thead>
                     <tr>
                         <th>RESULT</th>
@@ -667,11 +667,11 @@
             </table>
 
             <div id="matchesList">
-                <!-- Display the initial matches here -->
+                
                 @foreach (var match in Model.MatchHistory.items)
                 {
                     <div class="match-item">
-                        <!-- Display match details here -->
+                        
                     </div>
                 }
             </div>
@@ -681,21 +681,18 @@
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
             <script>
-                var offset = 20; // Initial offset for loading more matches
-
                 // Function to load more matches
+                var playerid = '@Model.Playerinfo.player_id'; // Get the playerid from the Razor view
                 function loadMoreMatches() {
                     $.ajax({
                         type: 'GET',
                         url: '@Url.Action("LoadMoreMatches")',
-                        data: { playerid: '@Model.Playerinfo.player_id', offset, limit: 10, size: 21 },
                         success: function (data) {
                             if (data) {
-                                // Append the new matches to the list
-                                $('#matchesList').append(data);
-                                offset += 1; // Increase the page for the next load
+                                $('.maintable').css('margin-bottom', '6%');
 
-                                // Hide the "Load More" button if there are no more matches to load
+                                $('#matchesList').append(data);
+
                                 if (data.length < 10) {
                                     $('#loadMoreButton').hide();
                                 }
@@ -920,11 +917,11 @@
     </div>   
 </div>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-12 button-container">
         <button class="SeeCompleteStatistics-button">SEE COMPLETE STATISTICS</button>
     </div>
-</div>
+</div> -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

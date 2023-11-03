@@ -165,6 +165,14 @@ input {
     margin-top: 60px;
 }
 
+.matchesList{
+    margin-top:-6%;
+}
+
+.maintable {
+
+}
+
 input[type="submit"]:hover {
     background: #ff3c22;
 }
@@ -389,6 +397,7 @@ input:checked + .slider:before {
 
 
 .load-more-button {
+    position: relative;
     background-color: rgba(0, 0, 0, 0.4);
     color: white;
     border: none;
