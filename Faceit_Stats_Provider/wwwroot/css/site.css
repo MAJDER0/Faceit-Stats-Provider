@@ -137,8 +137,14 @@ input {
 }
 
 .EloInfoUnderCanvas {
-    padding-left: 24%;
-    font-size: 20px;
+    padding-left: 17%;
+    font-size: 25px;
+}
+
+.EloInfoUnderCanvas2 {
+    padding-left: 19%;
+    font-size: 19px;
+    margin-top:-3%;
 }
 
 .PlayerNotFound {
