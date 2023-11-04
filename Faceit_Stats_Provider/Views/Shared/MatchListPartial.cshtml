@@ -11,7 +11,7 @@
         }
         else if (Model.Playerinfo is null)
         {
-            <div class="h4">jak to widzisz to znaczy ze jest null</div>
+            <div class="h4">No more matches</div>
         }
         else
         {
@@ -108,10 +108,10 @@
                                     <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
                                 }
                         </td>
-                            <td>
-                                @{
-                                    int elodifference = (int.Parse(Model.EloDiff[index+20].elo.ToString()) - int.Parse(Model.EloDiff[index + 21].elo.ToString()));
-                                }
+                                <td>
+                                    @{
+                                        int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index+1].elo.ToString()));
+                                    }
                                 <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
                                     @(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-")))@Math.Abs(elodifference)
                             </p>

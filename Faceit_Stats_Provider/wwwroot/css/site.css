@@ -419,7 +419,7 @@ input:checked + .slider:before {
     }
 
 
-.SeeCompleteStatistics-button {
+/*.SeeCompleteStatistics-button {
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
@@ -432,17 +432,17 @@ input:checked + .slider:before {
     height: 120%;
     width: 17%;
     margin:auto;
-}
+}*/
 
     .SeeCompleteStatistics-button:hover {
         background-color: rgba(0, 0, 0, 1);
         color: #ff3c22;
     }
 
-.button-container {
+/*.button-container {
     text-align: center;
 }
-
+*/
 
 .bg {
     background: #0D0D0D no-repeat;

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "oWNoEnhx/j3GtXyeftfGV3Dz7t/B4N4D9b0HEoLSmks=",
+  "Hash": "DRUKynCmDca1NX86EUkyviWjOA9cv+kGXszwZjD/V8U=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -1171,6 +1171,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\niewypelnione3.png"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\NoPicLogo.png",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "NoPicLogo.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\NoPicLogo.png"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\NoPicture.png",

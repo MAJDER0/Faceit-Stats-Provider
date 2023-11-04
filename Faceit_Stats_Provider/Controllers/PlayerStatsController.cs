@@ -19,7 +19,6 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly IMemoryCache _memoryCache;
         private readonly Random _random;
-        int offset = 0;
         static string playerid = "";
 
         public PlayerStatsController(IHttpClientFactory clientFactory, IMemoryCache cache)
@@ -55,7 +54,7 @@ namespace Faceit_Stats_Provider.Controllers
                 }
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
-                ($"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset={offset}&limit=20");
+                ($"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
                 ($"v4/players/{playerinf.player_id}/stats/cs2");
@@ -171,22 +170,26 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
 
-        public async Task<ActionResult> LoadMoreMatches(string nickname)
+        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID)
         {
             try
             {
-                nickname = playerid;
-
-                offset += 20;
                 var client = _clientFactory.CreateClient("Faceit");
                 var client2 = _clientFactory.CreateClient("FaceitV1");
+
+                if (!_memoryCache.TryGetValue(nickname, out playerid))
+                {
+                    var x = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
+                    _memoryCache.Set(nickname, x.nickname, TimeSpan.FromMinutes(5));
+                    playerid = x.nickname;
+                }
 
                 // Calculate the offset based on the page and limit
                 var playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
 
                 // Make an API request to fetch additional match data (MatchHistory)
                 var matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                    $"v4/players/24f68939-d90a-4e47-8e43-7e5137c86f48/history?game=cs2&from=120&offset={offset}&limit=5");
+                    $"v4/players/{playerID}/history?game=cs2&from=120&offset={offset}&limit=10");
 
                 if (matchhistory != null)
                 {
@@ -200,7 +203,7 @@ namespace Faceit_Stats_Provider.Controllers
                     }).ToList();
 
                     var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/24f68939-d90a-4e47-8e43-7e5137c86f48/games/cs2?page=0&size={offset+21}");
+                        $"v1/stats/time/users/{playerID}/games/cs2?page=1&size={offset}");
 
                     foreach (var result in await Task.WhenAll(task))
                     {
