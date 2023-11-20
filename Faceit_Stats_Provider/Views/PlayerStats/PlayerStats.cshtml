@@ -279,21 +279,21 @@
 
                                         if (Model.EloDiff[0].elo is null)
                                         {
-                                           for (int j = 0; j <= 19; j++)
-                                           {
-                                              if (Model.EloDiff[j].elo is not null)
-                                              {
-                                                 firstEloToRetrieve = int.Parse(Model.EloDiff[j].elo.ToString());
-                                                 break;
-                                              }
-                                           }
+                                            for (int j = 0; j <= 19; j++)
+                                            {
+                                                if (Model.EloDiff[j].elo is not null)
+                                                {
+                                                    firstEloToRetrieve = int.Parse(Model.EloDiff[j].elo.ToString());
+                                                    break;
+                                                }
+                                            }
                                         }
 
                                         else {
-                                             firstEloToRetrieve = int.Parse(Model.EloDiff[0].elo.ToString());
+                                            firstEloToRetrieve = int.Parse(Model.EloDiff[0].elo.ToString());
                                         }
 
-                                        balance = firstEloToRetrieve - lastEloToRetrieve;                                       
+                                        balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
                                 }
                             </span>

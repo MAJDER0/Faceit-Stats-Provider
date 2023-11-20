@@ -184,7 +184,7 @@ input[type="submit"]:hover {
 }
 
 .navbarcolor {
-    background-color: rgba(13,13,13,0.5);
+    background-color: rgba(13,13,13,0);
 }
 
 .navbar-brand > span {

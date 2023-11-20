@@ -24,14 +24,21 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 
-                    @if (!(bool)ViewData["PlayerStats"])
+                    @{
+                        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                        var currentArea = ViewContext.RouteData.Values["area"]?.ToString();
+                        var currentPath = $"{currentArea}/{currentController}/{currentAction}";
+                    }
+
+                    @if (currentPath != "/Home/Index")
                     {
                         <ul class="navbar-nav flex-grow-1">
-                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>                          
                         </ul>
                     }
-                    else{
-
+                    else
+                    {
                         <ul class="navbar-nav flex-grow-1">
                             <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a></li>
                         </ul>
