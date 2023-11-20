@@ -22,11 +22,11 @@
                         @{
                             if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
                             {
-                                <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                            <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                             else
                             {
-                                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                            <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                         }
                     </a>
@@ -191,9 +191,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string nickname, bool RankedGame = false)
                     {
-                        <p class="title">LAST 20</p>
+                                    <p class="title">LAST 20</p>
 
-                        @if (MatchesStats != null)
+                                    @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -202,32 +202,39 @@
                             double gameCount = 0;
                             double wins = 0;
 
+                            int matchCounter = 0;
+
                             @foreach (var match in MatchesStats)
                             {
-                                foreach (var team in match.teams)
+                                if (match.teams is not null)
                                 {
-                                    foreach (var player in team.players)
+                                    foreach (var team in match.teams)
                                     {
-                                        if (player.nickname == nickname && (!RankedGame || match.game_mode != "Wingman"))
+                                        foreach (var player in team.players)
                                         {
-                                            double kills = double.Parse(player.player_stats.Kills);
-                                            double deaths = double.Parse(player.player_stats.Deaths);
-                                            double Assists = double.Parse(player.player_stats.Assists);
-                                            double kdRatio = kills / deaths;
-                                            double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
-                                            totalAverageKills += kills;
-                                            totalAverageAssists += Assists;
-                                            totalKrRatio += KrRatio;
-                                            totalKdRatio += kdRatio;
-                                            gameCount++;
 
-                                            if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == nickname) ||
-                                            match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == nickname))
+                                            if (player.nickname == nickname && (!RankedGame || Model.EloDiff[matchCounter].elo is not null))
                                             {
-                                                wins++;
+                                                double kills = double.Parse(player.player_stats.Kills);
+                                                double deaths = double.Parse(player.player_stats.Deaths);
+                                                double Assists = double.Parse(player.player_stats.Assists);
+                                                double kdRatio = kills / deaths;
+                                                double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                                totalAverageKills += kills;
+                                                totalAverageAssists += Assists;
+                                                totalKrRatio += KrRatio;
+                                                totalKdRatio += kdRatio;
+                                                gameCount++;
+
+                                                if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == nickname) ||
+                                                match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == nickname))
+                                                {
+                                                    wins++;
+                                                }
                                             }
                                         }
                                     }
+                                    matchCounter++;
                                 }
                             }
 
@@ -243,18 +250,18 @@
                             string averageKillsFormatted = averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                                        <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                                        <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                                        <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                                        <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                                        <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                            <span>
-                                @{
+                                        <span>
+                                            @{
                                     int balance = 9999;
                                     int lastEloToRetrieve = 0;
                                     int firstEloToRetrieve = 0;
@@ -295,26 +302,26 @@
 
                                         balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
-                                }
-                            </span>
+                                            }
+                                        </span>
 
-                            <p>
-                                BALANCE: @{
+                                        <p>
+                                            BALANCE: @{
                                     if (balance != 9999)
                                     {
-                                        <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
-                                            @(
+                                                                <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
+                                                                    @(
                                         balance > 0 ? '+' : (balance < 0 ? "-" : "")
-                                                )@Math.Abs(balance)
-                                        </span>
+                                                                        )@Math.Abs(balance)
+                                                                </span>
                                     }
 
                                     else
                                     {
-                                        <span class="Result">-</span>
+                                                                <span class="Result">-</span>
                                     }
-                                }
-                            </p>
+                                            }
+                                        </p>
 
 
                         }
@@ -337,7 +344,7 @@
             <div class="SwitchToggle">
 
                 <div class="Ranked5v5Games">
-                    <p>RANKED GAMES</p>
+                    <p>UNRANKED GAMES</p>
                     <label class="switch">
                         <input type="checkbox" id="toggleSwitch" checked>
                         <span class="slider round"></span>
@@ -552,140 +559,167 @@
                         }
                     }
 
+                    @{
+                        int matchCounter = 0;
+                    }
+
                     @foreach (var match in Model.Last20MatchesStats)
                     {
                         void RenderMatchInTable()
                         {
-                        <td>
-                                @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname) ||
-                               match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
-                                {
-                                <p style="color:#6BBE49;" class="Result">WIN</p>
-                                }
-                                else
-                                {
-                                <p style="color:#F20707;" class="Result">LOSS</p>
-                                }
-                        </td>
-                        <td>@match.round_stats.Score</td>
-                        <td>@match.round_stats.Map</td>
-                        <td>@match.game_mode</td>
-                        <td>
-                                @if (match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
-                                {
-                                <p>@match.teams[0].team_stats.Team</p>
-                                }
-                                else if (match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
-                                {
-                                <p>@match.teams[1].team_stats.Team</p>
-                                }
-                        </td>
-                        <td>
-                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
-                                }
-                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
-                                }
-                        </td>
-                        <td>
-                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
-                                }
-                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
-                                }
-                        </td>
-                        <td>
-                                @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
-                                }
-                                else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
-                                {
-                                    var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
-                                <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
-                                }
-                        </td>
+                            @if (match.round_stats is not null)
+                            {
+                                <td>
+                                    @if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname) ||
+                                         match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        <p style="color:#6BBE49;" class="Result">WIN</p>
+                                    }
+                                    else
+                                    {
+                                        <p style="color:#F20707;" class="Result">LOSS</p>
+                                    }
 
-                        <td>
-                                @{
-                                    int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
-                                }
-                            <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707")))">
-                                    @(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-")))@Math.Abs(elodifference)
-                            </p>
-                                @{
-                                    index++;
-                                }
-                        </td>
+                                </td>
+                                <td>@match.round_stats.Score</td>
+                                <td>@match.round_stats.Map</td>
+                                <td>@match.game_mode</td>
+                                <td>
+                                    @if (match.teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        <p>@match.teams[0].team_stats.Team</p>
+                                    }
+                                    else if (match.teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        <p>@match.teams[1].team_stats.Team</p>
+                                    }
+                                </td>
+                                <td>
+                                    @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                    }
+                                    else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p>@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                    }
+                                </td>
+                                <td>
+                                    @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
+                                    }
+                                    else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KRRatio</p>
+                                    }
+                                </td>
+                                <td>
+                                    @if (match.teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
+                                    }
+                                    else if (match.teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    {
+                                        var playerStats = match.teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ?                                                                                        "#6BBE49" : "#F20707")">@playerStats.KDRatio</p>
+                                    }
+                                </td>
+
+                                <td>
+                                    @{
+                                        int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
+                                    }
+                                    <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707")))">
+                                        @(
+                            elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))
+                            )@Math.Abs(elodifference)
+                                    </p>
+                                    @{
+                                        index++;
+                                    }
+                                </td>
+                            }
+
+                            else {
+                                <td>
+                                    <p class="Result" style="color:#F20707">Cancelled/Walkover</p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            }
                         }
 
-                        if (match.game_mode == "Wingman")
-                        {
-                        <tr class="match-row UnrankedMatch">
-                                @{
-                                    RenderMatchInTable();
-                                }
-                        </tr>
+                        if (Model.EloDiff[matchCounter].elo == "0" || Math.Abs(int.Parse(Model.EloDiff[matchCounter].elo.ToString()) - int.Parse(Model.EloDiff[matchCounter + 1].elo.ToString())) > 60)
+                            {
+                            <tr class="match-row UnrankedMatch">
+                                    @{
+                                        RenderMatchInTable();
+                                    }
+                                </tr>
+                            }
+
+                            else
+                            {
+                                <tr class="match-row" id="v5Match">
+                                    @{
+                                        RenderMatchInTable();
+                                    }
+                            </tr>
                         }
 
-                        else
-                        {
-                        <tr class="match-row" id="v5Match">
-                                @{
-                                    RenderMatchInTable();
-                                }
-                        </tr>
-                        }
-
-                    <tr class="scoreboard match-row" style="display: none;">
-                        <td colspan="9">
-                            <table class="table matchesTableStats">
-                                <thead>
-                                    <tr>
-                                        <th>PLAYER</th>
-                                        <th>KILLS</th>
-                                        <th>ASSISTS</th>
-                                        <th>DEATHS</th>
-                                        <th>K/R</th>
-                                        <th>K/D</th>
-                                        <th>HEADSHOTS</th>
-                                        <th>HEADSHOTS %</th>
-                                        <th>MVPs</th>
-                                        <th>TRIPLE KILLS</th>
-                                        <th>QUADRO KILLS</th>
-                                        <th>PENTA KILLS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        @foreach (var player in match.teams[0].players)
-                                        {
+                        <tr class="scoreboard match-row" style="display: none;">
+                            <td colspan="9">
+                                <table class="table matchesTableStats">
+                                    <thead>
                                         <tr>
-                                            <td> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.nickname == Model.Playerinfo.nickname ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                            <td>@player.player_stats.Kills</td>
-                                            <td>@player.player_stats.Assists</td>
-                                            <td>@player.player_stats.Deaths</td>
-                                            <td>@player.player_stats.KRRatio</td>
-                                            <td>@player.player_stats.KDRatio</td>
-                                            <td>@player.player_stats.Headshots</td>
-                                            <td>@player.player_stats.HeadshotsPercentage</td>
-                                            <td>@player.player_stats.MVPs</td>
-                                            <td>@player.player_stats.TripleKills</td>
-                                            <td>@player.player_stats.QuadroKills</td>
-                                            <td>@player.player_stats.PentaKills</td>
+                                            <th>PLAYER</th>
+                                            <th>KILLS</th>
+                                            <th>ASSISTS</th>
+                                            <th>DEATHS</th>
+                                            <th>K/R</th>
+                                            <th>K/D</th>
+                                            <th>HEADSHOTS</th>
+                                            <th>HEADSHOTS %</th>
+                                            <th>MVPs</th>
+                                            <th>TRIPLE KILLS</th>
+                                            <th>QUADRO KILLS</th>
+                                            <th>PENTA KILLS</th>
                                         </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (match.teams is not null)
+                                        {
+                                            @foreach (var player in match.teams[0].players)
+                                            {
+                                                <tr>
+                                                    <td> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.nickname == Model.Playerinfo.nickname ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                                    <td>@player.player_stats.Kills</td>
+                                                    <td>@player.player_stats.Assists</td>
+                                                    <td>@player.player_stats.Deaths</td>
+                                                    <td>@player.player_stats.KRRatio</td>
+                                                    <td>@player.player_stats.KDRatio</td>
+                                                    <td>@player.player_stats.Headshots</td>
+                                                    <td>@player.player_stats.HeadshotsPercentage</td>
+                                                    <td>@player.player_stats.MVPs</td>
+                                                    <td>@player.player_stats.TripleKills</td>
+                                                    <td>@player.player_stats.QuadroKills</td>
+                                                    <td>@player.player_stats.PentaKills</td>
+                                                </tr>
+                                            }
                                         }
-                                </tbody>
+                                    </tbody>
                             </table>
                             <table class="table matchesTableStats">
                                 <thead>
@@ -705,27 +739,32 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @foreach (var player in match.teams[1].players)
+                                        @if (match.teams is not null)
                                         {
-                                        <tr>
-                                            <td> <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color: @(player.nickname == Model.Playerinfo.nickname ?                                                                   "#6BBE49" : "white")">@player.nickname</a></td>
-                                            <td>@player.player_stats.Kills</td>
-                                            <td>@player.player_stats.Assists</td>
-                                            <td>@player.player_stats.Deaths</td>
-                                            <td>@player.player_stats.KRRatio</td>
-                                            <td>@player.player_stats.KDRatio</td>
-                                            <td>@player.player_stats.Headshots</td>
-                                            <td>@player.player_stats.HeadshotsPercentage</td>
-                                            <td>@player.player_stats.MVPs</td>
-                                            <td>@player.player_stats.TripleKills</td>
-                                            <td>@player.player_stats.QuadroKills</td>
-                                            <td>@player.player_stats.PentaKills</td>
-                                        </tr>
+                                            @foreach (var player in match.teams[1].players)
+                                            {
+                                                <tr>
+                                                    <td> <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color: @(player.nickname == Model.Playerinfo.nickname ?                                                                   "#6BBE49" : "white")">@player.nickname</a></td>
+                                                    <td>@player.player_stats.Kills</td>
+                                                    <td>@player.player_stats.Assists</td>
+                                                    <td>@player.player_stats.Deaths</td>
+                                                    <td>@player.player_stats.KRRatio</td>
+                                                    <td>@player.player_stats.KDRatio</td>
+                                                    <td>@player.player_stats.Headshots</td>
+                                                    <td>@player.player_stats.HeadshotsPercentage</td>
+                                                    <td>@player.player_stats.MVPs</td>
+                                                    <td>@player.player_stats.TripleKills</td>
+                                                    <td>@player.player_stats.QuadroKills</td>
+                                                    <td>@player.player_stats.PentaKills</td>
+                                                </tr>
+                                            }
                                         }
-                                </tbody>
+                                    </tbody>
                             </table>
                         </td>
-                    </tr>
+                        </tr>
+
+                        matchCounter++;
                     }
                 </tbody>
             </table>

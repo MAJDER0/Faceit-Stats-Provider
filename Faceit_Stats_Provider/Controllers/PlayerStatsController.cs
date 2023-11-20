@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Reflection;
+using System.Net;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -100,21 +101,45 @@ namespace Faceit_Stats_Provider.Controllers
                     {
                         var task = matchhistory.items.Select(async match =>
                         {
-                            return client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
+                            try
+                            {
+                                var response = await client.GetAsync($"v4/matches/{match.match_id}/stats");
+                                response.EnsureSuccessStatusCode(); // This will throw if the status code is not success (2xx)
+
+                                return await response.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+                            }
+                            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                            {
+                                // Log or handle the 404 error
+                                Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
+                                //return new MatchStats.Rootobject
+                                //{
+                                //    rounds = new MatchStats.Round[1]
+                                //    {
+                                //        new MatchStats.Round
+                                //        {
+                                //            competition_id ="",
+                                //            best_of = "Walkover",
+                                //            game_id = "",
+                                //            game_mode = "",
+                                //            match_id = "",
+                                //            match_round = "",
+                                //            played = "",
+                                //            round_stats = null,
+                                //            teams = null,
+                                //            elo = ""
+                                //        }
+                                //    }
+                                //};
+
+                                return null;
+                            }
                         }).ToList();
 
-                        try
-                        {
-                            var results = await Task.WhenAll(task);
+                        // Continue with the successful results
+                        var results = await Task.WhenAll(task);
+                        matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.rounds));
 
-                            matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.Result!.rounds));
-
-                            _memoryCache.Set(matchstatsCacheKey, matchstats, TimeSpan.FromMinutes(10));
-                        }
-                        catch (Exception)
-                        {
-
-                        }
                     }
                     catch
                     {
