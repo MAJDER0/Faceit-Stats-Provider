@@ -256,9 +256,44 @@
                             <span>
                                 @{
                                     int balance = 9999;
+                                    int lastEloToRetrieve = 0;
+                                    int firstEloToRetrieve = 0;
+
                                     if (Model.EloDiff.Count() >= 20)
                                     {
-                                        balance = int.Parse(Model.EloDiff[0].elo.ToString()) - int.Parse(Model.EloDiff[19].elo.ToString());
+                                        if (Model.EloDiff[19].elo is null)
+                                        {
+                                            for (int i = 19; i >= 0; i--)
+                                            {
+                                                if (Model.EloDiff[i].elo is not null)
+                                                {
+                                                    lastEloToRetrieve = int.Parse(Model.EloDiff[i].elo.ToString());
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        else {
+                                            lastEloToRetrieve = int.Parse(Model.EloDiff[19].elo.ToString());
+                                        }
+
+                                        if (Model.EloDiff[0].elo is null)
+                                        {
+                                           for (int j = 0; j <= 19; j++)
+                                           {
+                                              if (Model.EloDiff[j].elo is not null)
+                                              {
+                                                 firstEloToRetrieve = int.Parse(Model.EloDiff[j].elo.ToString());
+                                                 break;
+                                              }
+                                           }
+                                        }
+
+                                        else {
+                                             firstEloToRetrieve = int.Parse(Model.EloDiff[0].elo.ToString());
+                                        }
+
+                                        balance = firstEloToRetrieve - lastEloToRetrieve;                                       
                                     }
                                 }
                             </span>
