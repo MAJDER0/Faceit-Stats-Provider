@@ -112,25 +112,25 @@ namespace Faceit_Stats_Provider.Controllers
                             {
                                 // Log or handle the 404 error
                                 Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
-                                //return new MatchStats.Rootobject
-                                //{
-                                //    rounds = new MatchStats.Round[1]
-                                //    {
-                                //        new MatchStats.Round
-                                //        {
-                                //            competition_id ="",
-                                //            best_of = "Walkover",
-                                //            game_id = "",
-                                //            game_mode = "",
-                                //            match_id = "",
-                                //            match_round = "",
-                                //            played = "",
-                                //            round_stats = null,
-                                //            teams = null,
-                                //            elo = ""
-                                //        }
-                                //    }
-                                //};
+                                return new MatchStats.Rootobject
+                                {
+                                    rounds = new MatchStats.Round[1]
+                                    {
+                                        new MatchStats.Round
+                                        {
+                                            competition_id ="",
+                                            best_of = "Walkover",
+                                            game_id = "",
+                                            game_mode = "",
+                                            match_id = "",
+                                            match_round = "",
+                                            played = "",
+                                            round_stats = null,
+                                            teams = null,
+                                            elo = ""
+                                        }
+                                    }
+                                };
 
                                 return null;
                             }

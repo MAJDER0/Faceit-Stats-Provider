@@ -119,7 +119,13 @@ input {
 
 .Ranked5v5Games {
     margin-top: 3%;
-    margin-left: 3%;
+    margin-left-1%;
+    display: inline-block;
+}
+
+.WalkoverGames {
+    margin-top: 3%;
+    margin-left: 5%;
     display: inline-block;
 }
 
@@ -129,6 +135,13 @@ input {
         font-size: 20px;
         margin-right: 10px;
     }
+
+.WalkoverGames > p {
+    float: left;
+    margin-top: -3%;
+    font-size: 20px;
+    margin-right: 10px;
+}
 
 .InfoUnderCanvas > p {
     color: red;
@@ -272,7 +285,6 @@ input[type="submit"]:hover {
         font-size: 14px;
         color: darkmagenta;
     }
-
 
 .MapsTable {
     background-color: transparent;
