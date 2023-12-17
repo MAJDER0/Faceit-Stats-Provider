@@ -13,6 +13,9 @@ namespace Faceit_Stats_Provider.Models
         {
             public string best_of { get; set; }
             public object competition_id { get; set; }
+            public object competition_name { get; set; }
+            public bool calculate_elo { get; set; }
+            public string eloaftergame { get; set; }
             public string game_id { get; set; }
             public string game_mode { get; set; }
             public string match_id { get; set; }

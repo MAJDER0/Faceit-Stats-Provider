@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Reflection;
 using System.Net;
+using MatchType = Faceit_Stats_Provider.Models.MatchType;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -40,6 +41,7 @@ namespace Faceit_Stats_Provider.Controllers
             OverallPlayerStats.Rootobject overallplayerstats;
             List<EloDiff.Root> eloDiff;
             List<EloDiff.Root> allhistory;
+            List<MatchType.Rootobject> matchtype;
 
             string errorString;
 
@@ -54,11 +56,11 @@ namespace Faceit_Stats_Provider.Controllers
                     playerid = playerinf.player_id;
                 }
 
-                var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>
-                ($"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
+                var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
+                    $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
-                var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>
-                ($"v4/players/{playerinf.player_id}/stats/cs2");
+                var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
+                    $"v4/players/{playerinf.player_id}/stats/cs2");
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=21");
@@ -68,30 +70,6 @@ namespace Faceit_Stats_Provider.Controllers
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
                 eloDiff = eloDiffTask.Result!;
-
-                //allhistory = new List<EloDiff.Root>();
-                //var allhistoryTask = new List<Task<List<EloDiff.Root>>>();
-
-                //var pages = (int)Math.Ceiling(double.Parse(overallplayerstats.lifetime.Matches) / 100);
-
-                //var matchdiff = $"{nickname}_matchdiff";
-                //List<EloDiff.Root>[] arrayOfResults;
-
-                //if (!_memoryCache.TryGetValue(matchdiff, out List<EloDiff.Root> cachedEloDiff))
-                //{
-                //    List<Task<List<EloDiff.Root>>> AllLifeTimeMatchesTask = Enumerable.Range(0, pages)
-                //    .Select(i => client2.GetFromJsonAsync<List<EloDiff.Root>>(string.Format("v1/stats/time/users/{0}/games/csgo?page={1}&size=100", playerinf.player_id, i))).ToList();
-
-                //    arrayOfResults = await Task.WhenAll(AllLifeTimeMatchesTask);
-
-                //    allhistory.AddRange(arrayOfResults.SelectMany(x => x));
-
-                //    _memoryCache.Set(matchdiff, cachedEloDiff, TimeSpan.FromMinutes(10));
-                //}
-                //else
-                //{
-                //    allhistory = cachedEloDiff.ToList();
-                //}
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -103,14 +81,34 @@ namespace Faceit_Stats_Provider.Controllers
                         {
                             try
                             {
-                                var response = await client.GetAsync($"v4/matches/{match.match_id}/stats");
-                                response.EnsureSuccessStatusCode(); // This will throw if the status code is not success (2xx)
+                                // Fetch data from v4/matches/{match.match_id}
+                                var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
+                                matchResponse.EnsureSuccessStatusCode();
 
-                                return await response.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+                                var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
+                                var calculateElo = matchData?.calculate_elo ?? false;
+
+                                // Fetch data from v4/matches/{match.match_id}/stats
+                                var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
+                                statsResponse.EnsureSuccessStatusCode();
+
+                                var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+
+                                // Set the calculate_elo property based on the fetched data
+                                if (matchStats != null)
+                                {
+                                    foreach (var round in matchStats.rounds)
+                                    {
+                                        round.calculate_elo = calculateElo;
+                                        round.competition_name = matchData?.competition_name;
+                                        round.match_id = matchData?.match_id;
+                                    }
+                                }
+
+                                return matchStats;
                             }
                             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
                             {
-                                // Log or handle the 404 error
                                 Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
                                 return new MatchStats.Rootobject
                                 {
@@ -131,15 +129,12 @@ namespace Faceit_Stats_Provider.Controllers
                                         }
                                     }
                                 };
-
-                                return null;
                             }
                         }).ToList();
 
                         // Continue with the successful results
                         var results = await Task.WhenAll(task);
                         matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.rounds));
-
                     }
                     catch
                     {
@@ -182,7 +177,6 @@ namespace Faceit_Stats_Provider.Controllers
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
-                //AllHistory = allhistory
             };
 
             ViewData["PlayerStats"] = false;

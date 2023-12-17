@@ -358,33 +358,34 @@
                     </label>
                 </div>
 
-                <script>
-                    const toggleSwitch = document.getElementById('toggleSwitch');
-                    const last20Stats = document.getElementById('Last20Stats');
-                    const rankedGames = document.getElementById('RankedGames');
-                    const v1TableMatches = document.getElementsByClassName('UnrankedMatch');
+                    <script>
+                        const toggleSwitch = document.getElementById('toggleSwitch');
+                        const last20Stats = document.getElementById('Last20Stats');
+                        const rankedGames = document.getElementById('RankedGames');
+                        const v1TableMatches = document.getElementsByClassName('UnrankedMatch');
+                        //const WalkoverMatch = document.getElementsByClassName('Walkover');
 
-                    toggleSwitch.addEventListener('change', function () {
-                        if (this.checked) {
-                            last20Stats.style.display = 'none';
-                            rankedGames.style.display = 'block';
+                        toggleSwitch.addEventListener('change', function () {
+                            if (this.checked) {
+                                last20Stats.style.display = 'none';
+                                rankedGames.style.display = 'block';
 
-                            for (let i = 0; i < v1TableMatches.length; i++) {
-                                v1TableMatches[i].style.display = 'none';
+                                for (let i = 0; i < v1TableMatches.length; i++) {
+                                    v1TableMatches[i].style.display = 'none';
+                                }
+
+                            } else {
+                                last20Stats.style.display = 'block';
+                                rankedGames.style.display = 'none';
+
+                                for (let i = 0; i < v1TableMatches.length; i++) {
+                                    v1TableMatches[i].style.display = 'table-row';
+                                }
                             }
-
-                        } else {
-                            last20Stats.style.display = 'block';
-                            rankedGames.style.display = 'none';
-
-                            for (let i = 0; i < v1TableMatches.length; i++) {
-                                v1TableMatches[i].style.display = 'table-row';
-                            }
-                        }
-                    });
-                    // Set the initial state based on the default checked attribute
-                    toggleSwitch.dispatchEvent(new Event('change'));
-                </script>
+                        });
+                        // Set the initial state based on the default checked attribute
+                        toggleSwitch.dispatchEvent(new Event('change'));
+                    </script>
             </div>
         </div>
     </div>
@@ -655,7 +656,7 @@
 
                             else {
                                 <td>
-                                    <p class="Result" style="color:#F20707">Cancelled/Walkover</p>
+                                    <p class="Result" style="color:#F20707">Walkover</p>
                                 </td>
                                 <td></td>
                                 <td></td>
@@ -698,7 +699,7 @@
                             </script>
                         }
 
-                        else if (Model.EloDiff[matchCounter].elo == "0" || Math.Abs(int.Parse(Model.EloDiff[matchCounter].elo.ToString()) - int.Parse(Model.EloDiff[matchCounter + 1].elo.ToString())) > 60)
+                        else if (Model.EloDiff[matchCounter].elo == "0" || Math.Abs(int.Parse(Model.EloDiff[matchCounter].elo.ToString()) - int.Parse(Model.EloDiff[matchCounter + 1].elo.ToString())) > 60 || Model.Last20MatchesStats[matchCounter].calculate_elo != true)
                         {
                         <tr class="match-row UnrankedMatch">
                                 @{
@@ -714,7 +715,7 @@
                                         RenderMatchInTable();
                                     }
                             </tr>
-                        }
+                            }
 
                         <tr class="scoreboard match-row" style="display: none;">
                             <td colspan="9">
@@ -867,7 +868,7 @@
 <div class="MapStatsRow">
 
     @{
-        List<string> maps = new List<string>() { "DE_OVERPASS", "DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
+        List<string> maps = new List<string>() { "OVERPASS", "DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "DE_ANUBIS" };
 
         var displayedMaps = Model.OverallPlayerStatsInfo.segments
         .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
