@@ -193,7 +193,7 @@
                     {
                                             <p class="title">LAST 20</p>
 
-                                            @if (MatchesStats != null)
+                        @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -204,9 +204,9 @@
 
                             int matchCounter = 0;
 
-                                    @foreach (var match in MatchesStats)
+                            @foreach (var match in MatchesStats)
                             {
-                                if (match.teams is not null)
+                                if (match.teams is not null && match.best_of != "Walkover")
                                 {
                                     foreach (var team in match.teams)
                                     {
@@ -256,7 +256,7 @@
 
                                                 <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=18 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
                                                 <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
@@ -699,6 +699,15 @@
                             </script>
                         }
 
+                        else if (Model.Last20MatchesStats[matchCounter].calculate_elo == true)
+                        {
+                        <tr class="match-row" id="v5Match">
+                                @{
+                                    RenderMatchInTable();
+                                }
+                        </tr>
+                        }
+
                         else if (Model.EloDiff[matchCounter].elo == "0" || Math.Abs(int.Parse(Model.EloDiff[matchCounter].elo.ToString()) - int.Parse(Model.EloDiff[matchCounter + 1].elo.ToString())) > 60 || Model.Last20MatchesStats[matchCounter].calculate_elo != true)
                         {
                         <tr class="match-row UnrankedMatch">
@@ -707,15 +716,6 @@
                                 }
                         </tr>
                         }
-
-                            else
-                            {
-                                <tr class="match-row" id="v5Match">
-                                    @{
-                                        RenderMatchInTable();
-                                    }
-                            </tr>
-                            }
 
                         <tr class="scoreboard match-row" style="display: none;">
                             <td colspan="9">

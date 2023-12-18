@@ -125,10 +125,11 @@ namespace Faceit_Stats_Provider.Controllers
                                             new MatchStats.Round
                                             {
                                                 competition_id ="",
+                                                competition_name = match.competition_name,
                                                 best_of = "Walkover",
                                                 game_id = "",
                                                 game_mode = "",
-                                                match_id = "",
+                                                match_id = match.match_id,
                                                 match_round = "",
                                                 played = "",
                                                 round_stats = null,
