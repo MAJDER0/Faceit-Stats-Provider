@@ -64,7 +64,7 @@ namespace Faceit_Stats_Provider.Controllers
                     $"v4/players/{playerinf.player_id}/stats/cs2");
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                    $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=21");
+                    $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
                 await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
@@ -73,8 +73,6 @@ namespace Faceit_Stats_Provider.Controllers
                 eloDiff = eloDiffTask.Result!;
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
-
-                int WalkoverCount = 0;
 
                 if (!_memoryCache.TryGetValue(matchstatsCacheKey, out List<MatchStats.Round> cachedMatchStats))
                 {
@@ -120,8 +118,6 @@ namespace Faceit_Stats_Provider.Controllers
                             {
                                 Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
 
-                                WalkoverCount++;
-
                                 return new MatchStats.Rootobject
                                 {
                                     rounds = new MatchStats.Round[1]
@@ -145,7 +141,12 @@ namespace Faceit_Stats_Provider.Controllers
 
                         }).ToList();
 
+                        var results = await Task.WhenAll(task);
+
                         int offset = 20;
+
+                        int WalkoverCount = results.Count(matchStats =>
+                            matchStats?.rounds.Any(round => round?.best_of == "Walkover") ?? false);
 
                         // Fetch additional non-Walkover matches
                         if (WalkoverCount > 0)
@@ -155,54 +156,70 @@ namespace Faceit_Stats_Provider.Controllers
                             var AdditionalMatches = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
                                 $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset={offset}&limit=10");
 
-                            if (AdditionalMatches != null) {
+                            if (AdditionalMatches != null)
+                            {
 
-                                    var AddMatches = AdditionalMatches.items.Select(async match =>
+                                var AddMatches = AdditionalMatches.items.Select(async match =>
+                                {
+                                    try
                                     {
-                                        try{
 
-                                            // Fetch data from v4/matches/{match.match_id}
-                                            var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
-                                            matchResponse.EnsureSuccessStatusCode();
+                                        // Fetch data from v4/matches/{match.match_id}
+                                        var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
+                                        matchResponse.EnsureSuccessStatusCode();
 
 
-                                            var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
-                                            var calculateElo = matchData?.calculate_elo ?? false;
+                                        var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
+                                        var calculateElo = matchData?.calculate_elo ?? false;
 
-                                            // Fetch data from v4/matches/{match.match_id}/stats
-                                            var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
-                                            statsResponse.EnsureSuccessStatusCode();
+                                        // Fetch data from v4/matches/{match.match_id}/stats
+                                        var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
+                                        statsResponse.EnsureSuccessStatusCode();
 
-                                            var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+                                        var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
 
-                                            // Set the calculate_elo property based on the fetched data
-                                            if (matchStats != null)
+                                        // Set the calculate_elo property based on the fetched data
+                                        if (matchStats != null)
+                                        {
+                                            foreach (var round in matchStats.rounds)
                                             {
-                                                foreach (var round in matchStats.rounds)
-                                                {
-                                                    round.calculate_elo = calculateElo;
-                                                    round.competition_name = matchData?.competition_name;
-                                                    round.match_id = matchData?.match_id;
-                                                }
+                                                round.calculate_elo = calculateElo;
+                                                round.competition_name = matchData?.competition_name;
+                                                round.match_id = matchData?.match_id;
                                             }
-
-                                            return matchStats;
                                         }
 
-                                        catch { 
-                                            return null;
-                                        }
+                                        return matchStats;
+                                    }
 
-                                    }).ToList();
+                                    catch
+                                    {
+                                        return null;
+                                    }
 
-                                var FinalAdditionList = AddMatches.Take(WalkoverCount);
+                                }).ToList();
 
-                                task.AddRange(FinalAdditionList);
+                                var SecondResults = await Task.WhenAll(AddMatches);
+
+                                var FinalAdditionList = SecondResults
+                                    .Where(matchStats => matchStats != null)
+                                    .SelectMany(matchStats => matchStats.rounds)
+                                    .Where(round => round?.best_of != "Walkover")
+                                    .Take(WalkoverCount);
+
+                                // Create a new MatchStats.Rootobject to encapsulate FinalAdditionList
+                                var finalAdditionStats = new MatchStats.Rootobject
+                                {
+                                    rounds = FinalAdditionList.ToArray() // Assuming rounds is an array property in MatchStats.Rootobject
+                                };
+
+                                // Add finalAdditionStats to the results list
+                                results = results.Concat(new[] { finalAdditionStats }).ToArray();
+
                             }
                         }
 
-                        // Continue with the successful results
-                        var results = await Task.WhenAll(task);
+
                         matchstats.AddRange(results.Where(x => x is not null).SelectMany(x => x!.rounds));
                     }
                     catch
