@@ -49,8 +49,8 @@
                         void RenderMatchInTable()
                         {
                         <td>
-                                @if (match.rounds[0].round_stats.Winner == match.rounds[0].teams[0].team_id && match.rounds[0].teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname) ||
-                                   match.rounds[0].round_stats.Winner == match.rounds[0].teams[1].team_id && match.rounds[0].teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    @if (match.rounds[0].round_stats.Winner == match.rounds[0].teams[0].team_id && match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id) ||
+                                   match.rounds[0].round_stats.Winner == match.rounds[0].teams[1].team_id && match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
                                 {
                                 <p style="color:#6BBE49;" class="Result">WIN</p>
                                 }
@@ -63,48 +63,48 @@
                             <td><p style="margin-left: -6%;">@match.rounds[0].round_stats.Map</p></td>
                             <td><p style="margin-left: 4%;">@match.rounds[0].game_mode</p></td>
                         <td>
-                                @if (match.rounds[0].teams[0].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    @if (match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id))
                                 {
                                 <p>@match.rounds[0].teams[0].team_stats.Team</p>
                                 }
-                                else if (match.rounds[0].teams[1].players.Any(p => p.nickname == Model.Playerinfo.nickname))
+                                    else if (match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
                                 {
                                 <p>@match.rounds[0].teams[1].team_stats.Team</p>
                                 }
                         </td>
                         <td>
-                                @if (match.rounds[0].teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
                                 }
-                                else if (match.rounds[0].teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
                                 }
                         </td>
                         <td>
-                                @if (match.rounds[0].teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: 10%;">@playerStats.KRRatio</p>
                                 }
-                                else if (match.rounds[0].teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707");  margin-left: 10%;" >@playerStats.KRRatio</p>
                                 }
                         </td>
                         <td>
-                                @if (match.rounds[0].teams[0].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[0].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
                                 }
-                                else if (match.rounds[0].teams[1].players.Any(player => player.nickname == Model.Playerinfo.nickname))
+                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                 {
-                                    var playerStats = match.rounds[0].teams[1].players.First(player => player.nickname == Model.Playerinfo.nickname).player_stats;
+                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
                                     <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
                                 }
                         </td>
@@ -158,7 +158,7 @@
                                         {
                                         <tr>
                                             <td>
-                                                <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:@(player.nickname == Model.Playerinfo.nickname ? "#6BBE49" : "white")">
+                                                    <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
                                                         @player.nickname
                                                 </a>
                                             </td>
@@ -199,7 +199,7 @@
                                         {
                                         <tr>
                                             <td>
-                                                <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color:@(player.nickname == Model.Playerinfo.nickname ? "#6BBE49" : "white")">
+                                                    <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
                                                         @player.nickname
                                                 </a>
                                             </td>
