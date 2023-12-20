@@ -19,6 +19,12 @@ namespace Faceit_Stats_Provider.Models
 
             [JsonPropertyName("elo")]
             public object elo { get; set; }
+
+            [JsonPropertyName("matchId")]
+            public string match_Id { get; set; }
+
+            [JsonPropertyName("playerId")]
+            public string player_Id { get; set; }
         }
 
 
