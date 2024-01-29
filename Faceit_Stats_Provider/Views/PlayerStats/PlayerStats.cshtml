@@ -22,11 +22,11 @@
                         @{
                             if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
                             {
-                                <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                                                    <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                             else
                             {
-                                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                                                    <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                         }
                     </a>
@@ -191,9 +191,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string id, bool RankedGame = false, bool FiveVsFiveGame = false)
                     {
-                        <p class="title">LAST 20</p>
+                                                            <p class="title">LAST 20</p>
 
-                        @if (MatchesStats != null)
+                                                    @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -204,7 +204,7 @@
 
                             int matchCounter = 0;
 
-                            @foreach (var match in MatchesStats)
+                                                        @foreach (var match in MatchesStats)
                             {
                                 if (match.teams is not null && match.best_of != "Walkover")
                                 {
@@ -212,46 +212,50 @@
                                     {
                                         foreach (var player in team.players)
                                         {
-
-                                            if (player.player_id == id && (!RankedGame || Model.EloDiff[matchCounter].elo is not null) && FiveVsFiveGame == false)
+                                            if (matchCounter < 20)
                                             {
-                                                double kills = double.Parse(player.player_stats.Kills);
-                                                double deaths = double.Parse(player.player_stats.Deaths);
-                                                double Assists = double.Parse(player.player_stats.Assists);
-                                                double kdRatio = kills / deaths;
-                                                double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
-                                                totalAverageKills += kills;
-                                                totalAverageAssists += Assists;
-                                                totalKrRatio += KrRatio;
-                                                totalKdRatio += kdRatio;
-                                                gameCount++;
 
-                                                if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
-                                                match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.player_id == id))
+                                                if (player.player_id == id && (!RankedGame || Model.Last20MatchesStats[matchCounter].calculate_elo == true) && FiveVsFiveGame == false)
                                                 {
-                                                    wins++;
+                                                    double kills = double.Parse(player.player_stats.Kills);
+                                                    double deaths = double.Parse(player.player_stats.Deaths);
+                                                    double Assists = double.Parse(player.player_stats.Assists);
+                                                    double kdRatio = kills / deaths;
+                                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                                    totalAverageKills += kills;
+                                                    totalAverageAssists += Assists;
+                                                    totalKrRatio += KrRatio;
+                                                    totalKdRatio += kdRatio;
+                                                    gameCount++;
+
+                                                    if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
+                                                    match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.player_id == id))
+                                                    {
+                                                        wins++;
+                                                    }
+                                                }
+
+                                                if (player.player_id == id && RankedGame == false && FiveVsFiveGame == true && Model.Last20MatchesStats[matchCounter].game_mode == "5v5")
+                                                {
+                                                    double kills = double.Parse(player.player_stats.Kills);
+                                                    double deaths = double.Parse(player.player_stats.Deaths);
+                                                    double Assists = double.Parse(player.player_stats.Assists);
+                                                    double kdRatio = kills / deaths;
+                                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                                    totalAverageKills += kills;
+                                                    totalAverageAssists += Assists;
+                                                    totalKrRatio += KrRatio;
+                                                    totalKdRatio += kdRatio;
+                                                    gameCount++;
+
+                                                    if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
+                                                    match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.player_id == id))
+                                                    {
+                                                        wins++;
+                                                    }
                                                 }
                                             }
 
-                                            if (player.player_id == id && FiveVsFiveGame==true)
-                                            {
-                                                double kills = double.Parse(player.player_stats.Kills);
-                                                double deaths = double.Parse(player.player_stats.Deaths);
-                                                double Assists = double.Parse(player.player_stats.Assists);
-                                                double kdRatio = kills / deaths;
-                                                double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
-                                                totalAverageKills += kills;
-                                                totalAverageAssists += Assists;
-                                                totalKrRatio += KrRatio;
-                                                totalKdRatio += kdRatio;
-                                                gameCount++;
-
-                                                if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
-                                                match.round_stats.Winner == match.teams[1].team_id && match.teams[1].players.Any(p => p.player_id == id))
-                                                {
-                                                    wins++;
-                                                }
-                                            }
                                         }
                                     }
                                     matchCounter++;
@@ -267,21 +271,21 @@
 
                             string averageKdRatioFormatted = averageKdRatio.ToString("F2");
                             string averageKrRatioFormatted = averageKrRatio.ToString("F2");
-                            string averageKillsFormatted = averageKills.ToString("F0");
+                            string averageKillsFormatted = (averageKills % 1 >= 0.5) ? Math.Ceiling(averageKills).ToString("F0") : averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                                                                <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                                                                <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                                                                <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                                                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                                                                <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                            <span>
-                                @{
+                                                                <span>
+                                                                    @{
                                     int balance = 9999;
                                     int lastEloToRetrieve = 0;
                                     int firstEloToRetrieve = 0;
@@ -324,26 +328,26 @@
 
                                         balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
-                                }
-                            </span>
+                                                                    }
+                                                                </span>
 
-                            <p>
-                                BALANCE: @{
+                                                                <p>
+                                                                    BALANCE: @{
                                     if (balance != 9999)
                                     {
-                                        <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
-                                            @(
+                                                                                                                <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
+                                                                                                                    @(
                                         balance > 0 ? '+' : (balance < 0 ? "-" : "")
-                                                )@Math.Abs(balance)
-                                        </span>
+                                                                                                                        )@Math.Abs(balance)
+                                                                                                                </span>
                                     }
 
                                     else
                                     {
-                                        <span class="Result">-</span>
+                                                                                                                <span class="Result">-</span>
                                     }
-                                }
-                            </p>
+                                                                    }
+                                                                </p>
 
 
                         }
@@ -359,6 +363,12 @@
                 <div id="RankedGames">
                     @{
                         RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, true,false);
+                    }
+                </div>
+
+                <div id="5v5MatchesOnlyStats">
+                    @{
+                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, false, true);
                     }
                 </div>
 
@@ -392,38 +402,76 @@
 
                 <script>
                     const toggleSwitch = document.getElementById('toggleSwitch');
+                    const toggle5V5Games = document.getElementById('toggle5V5Games');
                     const last20Stats = document.getElementById('Last20Stats');
                     const rankedGames = document.getElementById('RankedGames');
+                    const All5v5games = document.getElementById('5v5MatchesOnlyStats');
 
-                    const v5unrankedMatches = document.getElementsByClassName('v5MatchUnranked');
+                    const v5ALLmatches = document.getElementsByClassName('v5MatchALL');
+                    const v5Elo = document.getElementsByClassName('v5Match');
                     const v1TableMatches = document.getElementsByClassName('UnrankedMatch');
 
                     toggleSwitch.addEventListener('change', function () {
                         if (this.checked) {
                             last20Stats.style.display = 'none';
+                            All5v5games.style.display = 'none';
                             rankedGames.style.display = 'block';
 
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'none';
                             }
-                            for (let i = 0; i < v5unrankedMatches.length; i++) {
-                                v5unrankedMatches[i].style.display = 'none';
+                            for (let i = 0; i < v5ALLMatches.length; i++) {
+                                v5ALLMatches[i].style.display = 'none';
                             }
+
+                            for (let i = 0; i < v5Elo.length; i++) {
+                                v5Elo[i].style.display = 'block';
+                            }
+
                         } else {
                             last20Stats.style.display = 'block';
+                            All5v5games.style.display = 'none';
                             rankedGames.style.display = 'none';
 
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'table-row';
                             }
-                              for (let i = 0; i < v5unrankedMatches.length; i++) {
-                                v5unrankedMatches[i].style.display = 'table-row';
+                              for (let i = 0; i < v5ALLmatches.length; i++) {
+                                v5ALLmatches[i].style.display = 'table-row';
                             }
+
+                            toggle5V5Games.checked = false;
+                        }
+                    });
+
+                    toggle5V5Games.addEventListener('change', function () {
+                        if (this.checked) {
+                            last20Stats.style.display = 'none';
+                            All5v5games.style.display = 'block';
+                            rankedGames.style.display = 'none';
+
+                            for (let i = 0; i < v1TableMatches.length; i++) {
+                                v1TableMatches[i].style.display = 'none';
+                            }
+
+                        } else {
+                            last20Stats.style.display = 'block';
+                            All5v5games.style.display = 'none';
+                            rankedGames.style.display = 'none';
+
+                                for (let i = 0; i < v1TableMatches.length; i++) {
+                                    v1TableMatches[i].style.display = 'table-row';
+                                }
+
+                                toggleSwitch.checked = false;
+
+
                         }
                     });
 
                     // Set the initial state based on the default checked attributes
                     toggleSwitch.dispatchEvent(new Event('change'));
+                    toggle5V5Games.dispatchEvent(new Event('change'));
                 </script>
             </div>
         </div>
@@ -699,12 +747,12 @@
                                         @{
                                             if (match.competition_name.ToString().Contains("BLAST"))
                                             {
-                                            <p class="Result">BLAST</p>
+                                                                                <p class="Result">BLAST</p>
                                             }
 
                                             else
                                             {
-                                            <p class="Result">Walkover</p>
+                                                                                <p class="Result">Walkover</p>
                                             }
                                         }
                                 </td>
@@ -795,9 +843,9 @@
 
                         }
 
-                        else if (Model.Last20MatchesStats[matchCounter].calculate_elo == false && Model.Last20MatchesStats[matchCounter].game_mode=="5v5")
+                        else if (Model.Last20MatchesStats[matchCounter].game_mode=="5v5")
                         {
-                        <tr class="match-row v5MatchUnranked">
+                        <tr class="match-row v5MatchALL">
                                 @{
                                     RenderMatchInTable();
                                 }
