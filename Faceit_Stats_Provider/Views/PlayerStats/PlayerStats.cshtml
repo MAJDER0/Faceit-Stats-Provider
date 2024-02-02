@@ -203,6 +203,7 @@
                             double wins = 0;
 
                             int matchCounter = 0;
+                            int matchCounterWithWalkovers = 0;
 
                                                         @foreach (var match in MatchesStats)
                             {
@@ -235,7 +236,7 @@
                                                     }
                                                 }
 
-                                                if (player.player_id == id && RankedGame == false && FiveVsFiveGame == true && Model.Last20MatchesStats[matchCounter].game_mode == "5v5")
+                                                if (player.player_id == id && RankedGame == false && FiveVsFiveGame == true && Model.Last20MatchesStats[matchCounterWithWalkovers].game_mode == "5v5")
                                                 {
                                                     double kills = double.Parse(player.player_stats.Kills);
                                                     double deaths = double.Parse(player.player_stats.Deaths);
@@ -260,6 +261,7 @@
                                     }
                                     matchCounter++;
                                 }
+                                matchCounterWithWalkovers++;
                             }
 
                             double averageKdRatio = totalKdRatio / gameCount;
@@ -970,7 +972,7 @@
             <script>
                 var nickname = '@Model.Playerinfo.nickname';
                 var playerID = '@Model.Playerinfo.player_id';
-                var offset = '@Model.Last20MatchesStats.Count()';
+                var offset = @Model.Last20MatchesStats.Count();
 
                 function loadMoreMatches() {
                     $.ajax({
