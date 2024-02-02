@@ -15,7 +15,7 @@
         }
         else
         {
-            <table class="table matchesTable">
+                <table class="table matchesTable">
 
                 <thead style="visibility: hidden;">
                     <tr>
@@ -44,97 +44,210 @@
                         }
                     }
 
-                                        @foreach (var match in Model.MatchStats)
+                    @foreach (var match in Model.MatchStats)
                     {
                         void RenderMatchInTable()
                         {
-                        <td>
-                                    @if (match.rounds[0].round_stats.Winner == match.rounds[0].teams[0].team_id && match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id) ||
-                                   match.rounds[0].round_stats.Winner == match.rounds[0].teams[1].team_id && match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
+                                if (match.rounds[0].best_of != "Walkover")
                                 {
-                                <p style="color:#6BBE49;" class="Result">WIN</p>
+
+                                    <td>
+                                        @if (match.rounds[0].round_stats.Winner == match.rounds[0].teams[0].team_id && match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id) ||
+                             match.rounds[0].round_stats.Winner == match.rounds[0].teams[1].team_id && match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            <p style="color:#6BBE49;" class="Result">WIN</p>
+                                        }
+                                        else
+                                        {
+                                            <p style="color:#F20707;" class="Result">LOSS</p>
+                                        }
+                                    </td>
+                                    <td><p style="margin-left: -4%;">@match.rounds[0].round_stats.Score<p></td>
+                                    <td><p style="margin-left: -6%;">@match.rounds[0].round_stats.Map</p></td>
+                                    <td><p style="margin-left: 4%;">@match.rounds[0].game_mode</p></td>
+                                    <td>
+                                        @if (match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            <p>@match.rounds[0].teams[0].team_stats.Team</p>
+                                        }
+                                        else if (match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            <p>@match.rounds[0].teams[1].team_stats.Team</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                        }
+                                        else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: 10%;">@playerStats.KRRatio</p>
+                                        }
+                                        else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707");  margin-left: 10%;" >@playerStats.KRRatio</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
+                                        }
+                                        else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
+                                        {
+                                            var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                            int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
+                                        }
+                                        <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
+                                            @(
+                                        elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))
+                                        )@Math.Abs(elodifference)
+                                        </p>
+                                        @{
+                                            index++;
+                                        }
+                                    </td>
                                 }
-                                else
+
+                                 else
                                 {
-                                <p style="color:#F20707;" class="Result">LOSS</p>
-                                }
-                        </td>
-                            <td><p style="margin-left: -4%;">@match.rounds[0].round_stats.Score<p></td>
-                            <td><p style="margin-left: -6%;">@match.rounds[0].round_stats.Map</p></td>
-                            <td><p style="margin-left: 4%;">@match.rounds[0].game_mode</p></td>
-                        <td>
-                                    @if (match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id))
-                                {
-                                <p>@match.rounds[0].teams[0].team_stats.Team</p>
-                                }
-                                    else if (match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
-                                {
-                                <p>@match.rounds[0].teams[1].team_stats.Team</p>
-                                }
-                        </td>
-                        <td>
-                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
-                                }
-                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
-                                }
-                        </td>
-                        <td>
-                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: 10%;">@playerStats.KRRatio</p>
-                                }
-                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707");  margin-left: 10%;" >@playerStats.KRRatio</p>
-                                }
-                        </td>
-                        <td>
-                                    @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
-                                }
-                                    else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
-                                {
-                                        var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                    <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
-                                }
-                        </td>
                                 <td>
+                                        @{
+                                            if (match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                                            {
+                                                                                        <p class="Result">BLAST</p>
+                                            }
+
+                                            else
+                                            {
+                                                                                        <p class="Result">Walkover</p>
+                                            }
+                                        }
+                                </td>
+                                <td></td>
+                                <td>
+                                    <p class="Result">@match.rounds[0].competition_name</p>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    <a href="https://www.faceit.com/en/cs2/room/@match.rounds[0].match_id" target="_blank">
+                                        <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
+                                    </a>
+                                </td>
+                                
+                            }
+                         }
+
+                            if (match.rounds[0].best_of == "Walkover" && !match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                            {
+                            <tr class="match-row Walkover" style="display: none;">
+
                                     @{
-                                        int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index+1].elo.ToString()));
+                                        RenderMatchInTable();
                                     }
-                                <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
-                                    @(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-")))@Math.Abs(elodifference)
-                            </p>
+                                <script>
+                                    const WalkoverGame = document.getElementsByClassName('Walkover');
+
+                                    toggleWalkoverSwitch.addEventListener('change', function () {
+                                        if (this.checked) {
+                                            for (let i = 0; i < WalkoverGame.length; i++) {
+                                                WalkoverGame[i].style.display = 'table-row';
+                                            }
+                                        } else {
+                                            for (let i = 0; i < WalkoverGame.length; i++) {
+                                                WalkoverGame[i].style.display = 'none';
+                                            }
+                                        }
+                                    });
+
+                                    toggleWalkoverSwitch.dispatchEvent(new Event('change'));
+                                </script>
+                            </tr>
+                            }
+                        else if (match.rounds[0].best_of == "Walkover" && match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                        {
+                        <tr class="match-row Walkover BLAST" style="display: none;">
+
                                 @{
-                                    index++;
+                                    RenderMatchInTable();
                                 }
-                            </td>
+                        </tr>
+
+
+                        <script>
+                            const WalkoverGame = document.getElementsByClassName('BLAST');
+
+                            toggleWalkoverSwitch.addEventListener('change', function () {
+                                if (this.checked) {
+                                    for (let i = 0; i < WalkoverGame.length; i++) {
+                                        WalkoverGame[i].style.display = 'table-row';
+                                    }
+                                } else {
+                                    for (let i = 0; i < WalkoverGame.length; i++) {
+                                        WalkoverGame[i].style.display = 'none';
+                                    }
+                                }
+                            });
+
+                            toggleWalkoverSwitch.dispatchEvent(new Event('change'));
+                        </script>
+
                         }
 
-                        if (match.rounds[0].game_mode == "Wingman")
+                            else if (match.rounds[0].calculate_elo == true)
                         {
-                            <tr class="match-row2 UnrankedMatch">
-                                    @{RenderMatchInTable();}
-                            </tr>
+                        <tr class="match-row v5Match">
+                                @{
+                                    RenderMatchInTable();
+                                }
+                        </tr>
+
                         }
+
+                            else if (match.rounds[0].game_mode == "5v5")
+                        {
+                        <tr class="match-row v5MatchALL">
+                                @{
+                                    RenderMatchInTable();
+                                }
+                        </tr>
+
+                        }
+
                         else
                         {
-                            <tr class="match-row2" id="v5Match">
-                                    @{RenderMatchInTable();}
-                            </tr>
+                        <tr class="match-row UnrankedMatch">
+                                @{
+                                    RenderMatchInTable();
+                                }
+                        </tr>
+
                         }
 
-                    <tr class="scoreboard2 match-row2" style="display: none;">
+                            
+
+                    <tr class="scoreboard match-row" style="display: none;">
                         <td colspan="9">
                             <table class="table matchesTableStats">
                                 <thead>
@@ -154,29 +267,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @foreach (var player in match.rounds[0].teams[0].players)
-                                        {
-                                        <tr>
-                                            <td>
-                                                    <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
-                                                        @player.nickname
-                                                </a>
-                                            </td>
-                                            <td>@player.player_stats.Kills</td>
-                                            <td>@player.player_stats.Assists</td>
-                                            <td>@player.player_stats.Deaths</td>
-                                            <td>@player.player_stats.KRRatio</td>
-                                            <td>@player.player_stats.KDRatio</td>
-                                            <td>@player.player_stats.Headshots</td>
-                                            <td>@player.player_stats.HeadshotsPercentage</td>
-                                            <td>@player.player_stats.MVPs</td>
-                                            <td>@player.player_stats.TripleKills</td>
-                                            <td>@player.player_stats.QuadroKills</td>
-                                            <td>@player.player_stats.PentaKills</td>
-                                        </tr>
-                                        }
+                                        @if (match.rounds[0].best_of != "Walkover") { 
+                                            @foreach (var player in match.rounds[0].teams[0].players)
+                                            {
+                                            <tr>
+                                                <td>
+                                                        <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
+                                                            @player.nickname
+                                                    </a>
+                                                </td>
+                                                <td>@player.player_stats.Kills</td>
+                                                <td>@player.player_stats.Assists</td>
+                                                <td>@player.player_stats.Deaths</td>
+                                                <td>@player.player_stats.KRRatio</td>
+                                                <td>@player.player_stats.KDRatio</td>
+                                                <td>@player.player_stats.Headshots</td>
+                                                <td>@player.player_stats.HeadshotsPercentage</td>
+                                                <td>@player.player_stats.MVPs</td>
+                                                <td>@player.player_stats.TripleKills</td>
+                                                <td>@player.player_stats.QuadroKills</td>
+                                                <td>@player.player_stats.PentaKills</td>
+                                            </tr>
+                                            }
+                                        }                                      
                                 </tbody>
                             </table>
+
+
                             <table class="table matchesTableStats">
                                 <thead>
                                     <tr>
@@ -195,28 +312,31 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @foreach (var player in match.rounds[0].teams[1].players)
-                                        {
-                                        <tr>
-                                            <td>
-                                                    <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
-                                                        @player.nickname
-                                                </a>
-                                            </td>
-                                            <td>@player.player_stats.Kills</td>
-                                            <td>@player.player_stats.Assists</td>
-                                            <td>@player.player_stats.Deaths</td>
-                                            <td>@player.player_stats.KRRatio</td>
-                                            <td>@player.player_stats.KDRatio</td>
-                                            <td>@player.player_stats.Headshots</td>
-                                            <td>@player.player_stats.HeadshotsPercentage</td>
-                                            <td>@player.player_stats.MVPs</td>
-                                            <td>@player.player_stats.TripleKills</td>
-                                            <td>@player.player_stats.QuadroKills</td>
-                                            <td>@player.player_stats.PentaKills</td>
-                                        </tr>
-                                        }
-                                </tbody>
+                                            @if (match.rounds[0].best_of != "Walkover")
+                                            {
+                                                @foreach (var player in match.rounds[0].teams[1].players)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            <a href="PlayerStats/PlayerStats?nickname=@(player.nickname)" style="text-decoration:none; color:@(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">
+                                                                @player.nickname
+                                                            </a>
+                                                        </td>
+                                                        <td>@player.player_stats.Kills</td>
+                                                        <td>@player.player_stats.Assists</td>
+                                                        <td>@player.player_stats.Deaths</td>
+                                                        <td>@player.player_stats.KRRatio</td>
+                                                        <td>@player.player_stats.KDRatio</td>
+                                                        <td>@player.player_stats.Headshots</td>
+                                                        <td>@player.player_stats.HeadshotsPercentage</td>
+                                                        <td>@player.player_stats.MVPs</td>
+                                                        <td>@player.player_stats.TripleKills</td>
+                                                        <td>@player.player_stats.QuadroKills</td>
+                                                        <td>@player.player_stats.PentaKills</td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
                             </table>
                         </td>
                     </tr>
@@ -230,8 +350,8 @@
 
 <script>
     $(document).ready(function () {
-        $(".match-row2").click(function () {
-            $(this).next(".scoreboard2").toggle();
+        $(".match-row").click(function () {
+            $(this).next(".scoreboard").toggle();
         });
     });
 </script>

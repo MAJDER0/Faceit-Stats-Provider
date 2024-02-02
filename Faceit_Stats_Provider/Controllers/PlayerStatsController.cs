@@ -276,8 +276,38 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
 
-        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID)
+        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID, bool isOffsetModificated)
         {
+            int limit = 10;
+            int page = 1;
+
+            if (offset > 100)
+            {
+                page = (offset / 100)+1;
+
+            }
+
+            if (offset % 2 == 0)
+            {
+                limit = LookForBiggestDivider(offset);
+            }
+
+
+            static int LookForBiggestDivider(int liczba)
+            {
+                // Znajdź największy dzielnik mniejszy od 15
+                for (int dzielnik = Math.Min(liczba / 2, 14); dzielnik >= 2; dzielnik--)
+                {
+                    if (liczba % dzielnik == 0)
+                    {
+                        return dzielnik;
+                    }
+                }
+
+                // Jeśli nie znaleziono, zwróć 2 (najmniejszy parzysty dzielnik)
+                return 2;
+            }
+
             try
             {
                 var client = _clientFactory.CreateClient("Faceit");
@@ -295,7 +325,15 @@ namespace Faceit_Stats_Provider.Controllers
 
                 // Make an API request to fetch additional match data (MatchHistory)
                 var matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                    $"v4/players/{playerID}/history?game=cs2&from=120&offset={offset}&limit=10");
+                    $"v4/players/{playerID}/history?game=cs2&from=1200&offset={offset}&limit={limit}");
+
+                if (isOffsetModificated)
+                {
+                     var AdditionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
+                        $"v4/players/{playerID}/history?game=cs2&from=1200&offset={offset+limit}&limit=1");
+
+                    matchhistory.items = matchhistory.items.Concat(AdditionalMatch.items).ToArray();
+                }
 
                 if (matchhistory != null)
                 {
@@ -305,11 +343,46 @@ namespace Faceit_Stats_Provider.Controllers
                     // Fetch MatchStats for each match in MatchHistory
                     var task = matchhistory.items.Select(async match =>
                     {
-                        return await client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
+                        try
+                        {
+                            return await client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
+                        }
+
+                        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
+
+                            return new MatchStats.Rootobject
+                            {
+                                rounds = new MatchStats.Round[1]
+                                {
+                                      new MatchStats.Round
+                                        {
+                                         competition_id ="",
+                                         competition_name = match.competition_name,
+                                         best_of = "Walkover",
+                                         game_id = "",
+                                         game_mode = "",
+                                         match_id = match.match_id,
+                                         match_round = "",
+                                         played = "",
+                                         round_stats = null,
+                                         teams = null,
+                                         elo = ""
+                                       }
+                                }
+                            };
+                        }
+
+                        catch (Exception innerEx)
+                        {
+                            Console.WriteLine($"Error fetching MatchStats for match {match.match_id}: {innerEx.Message}");
+                            throw; // Rethrow the exception to terminate the Task.WhenAll operation
+                        }
                     }).ToList();
 
                     var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/{playerID}/games/cs2?page=1&size={offset}");
+                        $"v1/stats/time/users/{playerID}/games/cs2?page={page}&size={limit+1}");
 
                     foreach (var result in await Task.WhenAll(task))
                     {
@@ -330,6 +403,7 @@ namespace Faceit_Stats_Provider.Controllers
                     return PartialView("MatchListPartial", viewModel);
                 }
             }
+
             catch (Exception ex)
             {
                 // Handle errors if the API request fails
