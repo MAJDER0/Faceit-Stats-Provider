@@ -1,5 +1,6 @@
 ﻿using Faceit_Stats_Provider.Models;
 using Microsoft.AspNetCore.Mvc;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Net;
 using MatchType = Faceit_Stats_Provider.Models.MatchType;
+using Microsoft.Extensions.FileSystemGlobbing;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -76,7 +78,13 @@ namespace Faceit_Stats_Provider.Controllers
 
                 if (!_memoryCache.TryGetValue(matchstatsCacheKey, out List<MatchStats.Round> cachedMatchStats))
                 {
-              
+                    if (eloDiff != null)
+                    {
+                        var tasks = eloDiff.Select(eloDiffItem =>
+                            EloDiff.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
+
+                        await Task.WhenAll(tasks);
+                    }
 
                     try
                     {
@@ -164,9 +172,8 @@ namespace Faceit_Stats_Provider.Controllers
                                 {
                                     try
                                     {
-
-                                        // Fetch data from v4/matches/{match.match_id}
-                                        var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
+                                            // Fetch data from v4/matches/{match.match_id}
+                                            var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
                                         matchResponse.EnsureSuccessStatusCode();
 
 
