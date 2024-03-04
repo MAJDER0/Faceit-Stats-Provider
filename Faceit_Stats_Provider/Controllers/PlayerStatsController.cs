@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Net;
 using MatchType = Faceit_Stats_Provider.Models.MatchType;
 using Microsoft.Extensions.FileSystemGlobbing;
+using Faceit_Stats_Provider.Classes;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -68,6 +69,29 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
+                //int page = 0;
+                //List<Task<List<EloDiff.Root>>> eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
+
+                //for (int i = 61; i > 0; i--)
+                //{
+                //    eloDiffTasks.Add(client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                //        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                //    page++;
+                //}
+
+                //var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
+
+                //foreach (var eloDiffTaske in allEloDiffResults)
+                //{
+                //    if (eloDiffTaske != null)
+                //    {
+                //        var saveTasks = eloDiffTaske.Select(eloDiffItem =>
+                //            SaveToRedisAsynchronous.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
+
+                //        await Task.WhenAll(saveTasks);
+                //    }
+                //}
+
                 await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
                 matchhistory = matchhistoryTask.Result!;
@@ -78,13 +102,6 @@ namespace Faceit_Stats_Provider.Controllers
 
                 if (!_memoryCache.TryGetValue(matchstatsCacheKey, out List<MatchStats.Round> cachedMatchStats))
                 {
-                    if (eloDiff != null)
-                    {
-                        var tasks = eloDiff.Select(eloDiffItem =>
-                            EloDiff.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
-
-                        await Task.WhenAll(tasks);
-                    }
 
                     try
                     {
