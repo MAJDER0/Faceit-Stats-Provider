@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "YaEkrIqsB/cTfsduHK/EL4v+GwgpAtmJW9vddmLDgLig56TFk2yAFsJrrSxRNGHSeZZJvLAMkRn3pjSFGAujbQ==",
+  "dgSpecHash": "xeEHxeKlp9UAtZCaqPHlDIyoQRC7Wz0TT9D2MQpszMPqf2EQaLvp8Ygl8nKdlXnBw43sHK1V6gBWn8RADl1Xyg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Tomek\\.nuget\\packages\\flurl\\4.0.0\\flurl.4.0.0.nupkg.sha512",
+    "C:\\Users\\Tomek\\.nuget\\packages\\flurl.http\\4.0.2\\flurl.http.4.0.2.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\6.0.0\\microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",

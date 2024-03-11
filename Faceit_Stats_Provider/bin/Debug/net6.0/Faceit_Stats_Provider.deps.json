@@ -8,12 +8,32 @@
     ".NETCoreApp,Version=v6.0": {
       "Faceit_Stats_Provider/1.0.0": {
         "dependencies": {
+          "Flurl.Http": "4.0.2",
           "Newtonsoft.Json": "13.0.3",
           "StackExchange.Redis": "2.7.27",
           "System.Net.Http.Json": "7.0.1"
         },
         "runtime": {
           "Faceit_Stats_Provider.dll": {}
+        }
+      },
+      "Flurl/4.0.0": {
+        "runtime": {
+          "lib/netstandard2.0/Flurl.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "4.0.0.0"
+          }
+        }
+      },
+      "Flurl.Http/4.0.2": {
+        "dependencies": {
+          "Flurl": "4.0.0"
+        },
+        "runtime": {
+          "lib/net6.0/Flurl.Http.dll": {
+            "assemblyVersion": "4.0.2.0",
+            "fileVersion": "4.0.2.0"
+          }
         }
       },
       "Microsoft.Extensions.Logging.Abstractions/6.0.0": {},
@@ -99,6 +119,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Flurl/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rpts69yYgvJqg6PPgqShBQEZ4aNzWQqWpWppcT0oDWxDCIsBqiod4pj6LQZdhk+1OozLFagemldMRACdHF3CsA==",
+      "path": "flurl/4.0.0",
+      "hashPath": "flurl.4.0.0.nupkg.sha512"
+    },
+    "Flurl.Http/4.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9vCqFFyceA11yplkFD8AbCFFTvG1Lrw3tpsgOpL5sLUc28p6zcvGszNleuT6nDymRvtt5eS+rqUX+bRztg1fhA==",
+      "path": "flurl.http/4.0.2",
+      "hashPath": "flurl.http.4.0.2.nupkg.sha512"
     },
     "Microsoft.Extensions.Logging.Abstractions/6.0.0": {
       "type": "package",

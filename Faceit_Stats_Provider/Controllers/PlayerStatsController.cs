@@ -16,6 +16,8 @@ using System.Net;
 using MatchType = Faceit_Stats_Provider.Models.MatchType;
 using Microsoft.Extensions.FileSystemGlobbing;
 using Faceit_Stats_Provider.Classes;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Configuration;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -25,12 +27,18 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly IMemoryCache _memoryCache;
         private readonly Random _random;
         static string playerid = "";
+        private readonly ILogger<ChangeProxyIP> _logger;
+        private readonly IConfiguration _configuration;
 
-        public PlayerStatsController(IHttpClientFactory clientFactory, IMemoryCache cache)
+
+
+        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration)
         {
             _random = new Random();
             _clientFactory = clientFactory;
             _memoryCache = cache;
+            _logger = logger;
+            _configuration = configuration; // Assign IConfiguration
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -69,28 +77,60 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
-                //int page = 0;
-                //List<Task<List<EloDiff.Root>>> eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
+                
+                int page = 0;
 
-                //for (int i = 61; i > 0; i--)
-                //{
-                //    eloDiffTasks.Add(client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                //        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
-                //    page++;
-                //}
+                var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
 
-                //var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
+                //var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
 
-                //foreach (var eloDiffTaske in allEloDiffResults)
-                //{
-                //    if (eloDiffTaske != null)
-                //    {
-                //        var saveTasks = eloDiffTaske.Select(eloDiffItem =>
-                //            SaveToRedisAsynchronous.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
+                //var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
 
-                //        await Task.WhenAll(saveTasks);
-                //    }
-                //}
+                for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
+                {
+                    try
+                    {
+                        // Inject IHttpClientFactory here
+
+
+                        var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                        var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+
+
+                        if (eloDiffClient != null)
+                        {
+                            eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+
+                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                        }
+                        else
+                        {
+                            _logger.LogError("No proxies available.");
+                            return StatusCode(500, "Internal Server Error");
+                        }
+
+                        page++;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                        return StatusCode(500, "Internal Server Error");
+                    }
+                }
+
+                var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
+
+                foreach (var eloDiffTaske in allEloDiffResults)
+                {
+                    if (eloDiffTaske != null)
+                    {
+                        var saveTasks = eloDiffTaske.Select(eloDiffItem =>
+                            SaveToRedisAsynchronous.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
+
+                        await Task.WhenAll(saveTasks);
+                    }
+                }
 
                 await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
@@ -106,37 +146,37 @@ namespace Faceit_Stats_Provider.Controllers
                     try
                     {
                         var task = matchhistory.items.Select(async match =>
-                        {                           
+                        {
 
                             try
                             {
                                 // Fetch data from v4/matches/{match.match_id}
                                 var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
                                 matchResponse.EnsureSuccessStatusCode();
-                                
 
-                                    var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
-                                    var calculateElo = matchData?.calculate_elo ?? false;
 
-                                    // Fetch data from v4/matches/{match.match_id}/stats
-                                    var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
-                                    statsResponse.EnsureSuccessStatusCode();
+                                var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
+                                var calculateElo = matchData?.calculate_elo ?? false;
 
-                                    var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+                                // Fetch data from v4/matches/{match.match_id}/stats
+                                var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
+                                statsResponse.EnsureSuccessStatusCode();
 
-                                    // Set the calculate_elo property based on the fetched data
-                                    if (matchStats != null)
+                                var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+
+                                // Set the calculate_elo property based on the fetched data
+                                if (matchStats != null)
+                                {
+                                    foreach (var round in matchStats.rounds)
                                     {
-                                        foreach (var round in matchStats.rounds)
-                                        {
-                                            round.calculate_elo = calculateElo;
-                                            round.competition_name = matchData?.competition_name;
-                                            round.match_id = matchData?.match_id;
-                                        }
+                                        round.calculate_elo = calculateElo;
+                                        round.competition_name = matchData?.competition_name;
+                                        round.match_id = matchData?.match_id;
                                     }
+                                }
 
-                                    return matchStats;
-                                
+                                return matchStats;
+
                             }
 
                             catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
@@ -189,8 +229,8 @@ namespace Faceit_Stats_Provider.Controllers
                                 {
                                     try
                                     {
-                                            // Fetch data from v4/matches/{match.match_id}
-                                            var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
+                                        // Fetch data from v4/matches/{match.match_id}
+                                        var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
                                         matchResponse.EnsureSuccessStatusCode();
 
 
@@ -307,7 +347,7 @@ namespace Faceit_Stats_Provider.Controllers
 
             if (offset > 100)
             {
-                page = (offset / 100)+1;
+                page = (offset / 100) + 1;
 
             }
 
@@ -353,8 +393,8 @@ namespace Faceit_Stats_Provider.Controllers
 
                 if (isOffsetModificated)
                 {
-                     var AdditionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                        $"v4/players/{playerID}/history?game=cs2&from=1200&offset={offset+limit}&limit=1");
+                    var AdditionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
+                       $"v4/players/{playerID}/history?game=cs2&from=1200&offset={offset + limit}&limit=1");
 
                     matchhistory.items = matchhistory.items.Concat(AdditionalMatch.items).ToArray();
                 }
@@ -406,7 +446,7 @@ namespace Faceit_Stats_Provider.Controllers
                     }).ToList();
 
                     var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/{playerID}/games/cs2?page={page}&size={limit+1}");
+                        $"v1/stats/time/users/{playerID}/games/cs2?page={page}&size={limit + 1}");
 
                     foreach (var result in await Task.WhenAll(task))
                     {

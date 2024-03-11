@@ -32,3 +32,5 @@ C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\bin\Debu
 C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\obj\Debug\net6.0\Faceit_Stats_Provider.csproj.CopyComplete
 C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\bin\Debug\net6.0\Pipelines.Sockets.Unofficial.dll
 C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\bin\Debug\net6.0\StackExchange.Redis.dll
+C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\bin\Debug\net6.0\Flurl.dll
+C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\bin\Debug\net6.0\Flurl.Http.dll
