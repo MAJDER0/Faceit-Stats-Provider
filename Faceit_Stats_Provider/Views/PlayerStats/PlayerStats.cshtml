@@ -1028,7 +1028,7 @@
 <div class="MapStatsRow">
 
     @{
-        List<string> maps = new List<string>() { "OVERPASS", "DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "DE_ANUBIS" };
+        List<string> maps = new List<string>() {"DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "ANUBIS" };
 
         var displayedMaps = Model.OverallPlayerStatsInfo.segments
         .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))

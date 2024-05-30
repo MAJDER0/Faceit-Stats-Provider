@@ -86,38 +86,38 @@ namespace Faceit_Stats_Provider.Controllers
 
                 //var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
 
-                for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
-                {
-                    try
-                    {
-                        // Inject IHttpClientFactory here
+                //for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
+                //{
+                //    try
+                //    {
+                //        // Inject IHttpClientFactory here
 
 
-                        var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                        var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                //        var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                //        var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
 
 
-                        if (eloDiffClient != null)
-                        {
-                            eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                //        if (eloDiffClient != null)
+                //        {
+                //            eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
 
-                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
-                                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
-                        }
-                        else
-                        {
-                            _logger.LogError("No proxies available.");
-                            return StatusCode(500, "Internal Server Error");
-                        }
+                //            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                //                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                //        }
+                //        else
+                //        {
+                //            _logger.LogError("No proxies available.");
+                //            return StatusCode(500, "Internal Server Error");
+                //        }
 
-                        page++;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
-                        return StatusCode(500, "Internal Server Error");
-                    }
-                }
+                //        page++;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                //        return StatusCode(500, "Internal Server Error");
+                //    }
+                //}
 
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
