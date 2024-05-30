@@ -174,15 +174,7 @@
 
                     <p>K/D RATIO: <span class="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
                     <p>
-                        @*                    @{int highestElo = Model.AllHistory
-                    .Where(item => item.elo != null) .Select(item =>
-                    {
-                    int.TryParse(item.elo.ToString(), out int eloValue);
-                    return eloValue;
-
-                    }).Max();}*@
-
-                        HIGHEST ELO: @* <span class="Result">@highestElo</span>*@
+                        HIGHEST ELO: @* <span class="Result"></span>*@
                     </p>
                 }
 

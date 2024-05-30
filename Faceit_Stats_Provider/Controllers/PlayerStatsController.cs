@@ -77,47 +77,47 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
-                
-                int page = 0;
 
+                int page = 0;
                 var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
 
-                //var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                HttpClient eloDiffClient = null;
 
-                //var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
+                {
+                    try
+                    {
+                        // Change proxy when page == 30
+                        if (page == 0 || page == 30)
+                        {
+                            changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                            eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                            if (eloDiffClient != null)
+                            {
+                                eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                            }
+                            else
+                            {
+                                _logger.LogError("No proxies available.");
+                                return StatusCode(500, "Internal Server Error");
+                            }
+                        }
 
-                //for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
-                //{
-                //    try
-                //    {
-                //        // Inject IHttpClientFactory here
+                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
 
+                        page++;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                        return StatusCode(500, "Internal Server Error");
+                    }
+                }
 
-                //        var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                //        var eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
-
-
-                //        if (eloDiffClient != null)
-                //        {
-                //            eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
-
-                //            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
-                //                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
-                //        }
-                //        else
-                //        {
-                //            _logger.LogError("No proxies available.");
-                //            return StatusCode(500, "Internal Server Error");
-                //        }
-
-                //        page++;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
-                //        return StatusCode(500, "Internal Server Error");
-                //    }
-                //}
+                // Await all tasks to complete
+                await Task.WhenAll(eloDiffTasks);
 
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
