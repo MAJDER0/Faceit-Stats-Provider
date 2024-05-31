@@ -320,6 +320,8 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
+            int highestElo = await RedisFetchMaxElo.GetHighestEloAsync(playerinf.player_id);
+
             var ConnectionStatus = new PlayerStats
             {
                 OverallPlayerStatsInfo = overallplayerstats,
@@ -328,6 +330,7 @@ namespace Faceit_Stats_Provider.Controllers
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
+                HighestElo = highestElo,
             };
 
             ViewData["PlayerStats"] = false;

@@ -174,7 +174,7 @@
 
                     <p>K/D RATIO: <span class="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
                     <p>
-                        HIGHEST ELO: @* <span class="Result"></span>*@
+                        HIGHEST ELO: <span class="Result">@Model.HighestElo</span>
                     </p>
                 }
 
