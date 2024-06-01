@@ -11,6 +11,7 @@ namespace Faceit_Stats_Provider.Models
         public List<EloDiff.Root> EloDiff { get; set; }
         public List<EloDiff.Root> AllHistory { get; set; }
         public int? HighestElo { get; set; }
+        public long RedisEloRetrievesCount { get; set; }
         public string ErrorMessage { get; set; }
 
 

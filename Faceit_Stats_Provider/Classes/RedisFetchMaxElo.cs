@@ -1,15 +1,24 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
+using Faceit_Stats_Provider.Models;
 
 public class RedisFetchMaxElo
 {
-    private static readonly ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+    private readonly IConfiguration _configuration;
+    private readonly ConnectionMultiplexer _redis;
 
-    public static async Task<int> GetHighestEloAsync(string userId)
+    public RedisFetchMaxElo(IConfiguration configuration)
+    {
+        _configuration = configuration;
+        _redis = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis")); // Assuming your connection string key in appsettings.json is named "Redis"
+    }
+
+    public async Task<int> GetHighestEloAsync(string userId)
     {
         try
         {
-            IDatabase db = redis.GetDatabase();
+            IDatabase db = _redis.GetDatabase();
             string hashKey = $"user:{userId}:matches";
             var matchKeys = await db.HashKeysAsync(hashKey);
 
@@ -20,10 +29,10 @@ public class RedisFetchMaxElo
                 var jsonData = await db.HashGetAsync(hashKey, matchKey);
                 Console.WriteLine($"Fetched JSON Data: {jsonData}");
 
-                MatchData matchData;
+                RedisMatchData.MatchData matchData;
                 try
                 {
-                    matchData = JsonSerializer.Deserialize<MatchData>(jsonData);
+                    matchData = JsonSerializer.Deserialize<RedisMatchData.MatchData>(jsonData);
                 }
                 catch (JsonException jsonEx)
                 {
@@ -45,10 +54,4 @@ public class RedisFetchMaxElo
             return 0;
         }
     }
-}
-
-public class MatchData
-{
-    public string elo { get; set; }
-    public string match_Id { get; set; }
 }

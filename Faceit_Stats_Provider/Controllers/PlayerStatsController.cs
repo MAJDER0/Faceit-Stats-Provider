@@ -28,17 +28,19 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly Random _random;
         static string playerid = "";
         private readonly ILogger<ChangeProxyIP> _logger;
+        private readonly IConnectionMultiplexer _redis;
         private readonly IConfiguration _configuration;
 
 
 
-        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration)
+        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis)
         {
             _random = new Random();
             _clientFactory = clientFactory;
             _memoryCache = cache;
             _logger = logger;
             _configuration = configuration; // Assign IConfiguration
+            _redis = redis;
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -54,6 +56,7 @@ namespace Faceit_Stats_Provider.Controllers
             List<EloDiff.Root> allhistory;
             List<MatchType.Rootobject> matchtype;
 
+            long RedisEloRetrievesCount = 0;
             string errorString;
 
             try
@@ -76,6 +79,8 @@ namespace Faceit_Stats_Provider.Controllers
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
+
+                RedisEloRetrievesCount = await GetEloRetrievesCountFromRedis(playerinf.player_id);
 
 
                 int page = 0;
@@ -125,8 +130,10 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     if (eloDiffTaske != null)
                     {
+                        var saver = new SaveToRedisAsynchronous(_configuration); // Create an instance
                         var saveTasks = eloDiffTaske.Select(eloDiffItem =>
-                            SaveToRedisAsynchronous.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem));
+                            saver.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem)); // Call the method on the instance
+
 
                         await Task.WhenAll(saveTasks);
                     }
@@ -320,7 +327,8 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
-            int highestElo = await RedisFetchMaxElo.GetHighestEloAsync(playerinf.player_id);
+            var redisFetcher = new RedisFetchMaxElo(_configuration);
+            int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id); 
 
             var ConnectionStatus = new PlayerStats
             {
@@ -331,11 +339,19 @@ namespace Faceit_Stats_Provider.Controllers
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
                 HighestElo = highestElo,
+                RedisEloRetrievesCount = RedisEloRetrievesCount
             };
 
             ViewData["PlayerStats"] = false;
 
             return View(ConnectionStatus);
+        }
+
+        private async Task<long> GetEloRetrievesCountFromRedis(string playerId)
+        {
+            var db = _redis.GetDatabase();
+            string key = $"user:{playerId}:matches";
+            return await db.HashLengthAsync(key);
         }
 
         public IActionResult PlayerNotFound()

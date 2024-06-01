@@ -1,17 +1,27 @@
 ﻿using StackExchange.Redis;
 using System.Text.Json;
 using static Faceit_Stats_Provider.Models.EloDiff;
+using Microsoft.Extensions.Configuration;
 
 namespace Faceit_Stats_Provider.Classes
 {
     public class SaveToRedisAsynchronous
     {
-        public static async Task SaveToRedisAsync(string userId, string matchId, Root data)
+        private readonly IConfiguration _configuration;
+
+        public SaveToRedisAsynchronous(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public async Task SaveToRedisAsync(string userId, string matchId, Root data)
         {
             try
             {
-                // Connect to the Redis server
-                ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("127.0.0.1:6379"); //local (for now) redis ip
+                string connectionString = _configuration.GetConnectionString("Redis"); // Assuming your connection string key in appsettings.json is named "Redis"
+
+                // Connect to the Redis server using the connection string from appsettings.json
+                ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(connectionString);
                 IDatabase db = redis.GetDatabase();
 
                 // Check if match_id already exists in the hash
