@@ -98,7 +98,7 @@ namespace Faceit_Stats_Provider.Controllers
 
                     SendDataToRedisLoopCondition  = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id)/100);
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
-                    //page = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id) / 100);
+                    page = SendDataToRedisLoopCondition;
                 }
                 
                 var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
@@ -106,16 +106,16 @@ namespace Faceit_Stats_Provider.Controllers
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                for (int i = (int)RedisEloRetrievesCount; i >= SendDataToRedisLoopCondition; i--)
+                for (int i = (int)RedisEloRetrievesCount; i > SendDataToRedisLoopCondition; i--)
                 {
                     try
                     {
-                        // Change proxy when page == 30
 
-                        if (page == 0 || page == 30)
+                        if (page == 0 || page%30==0 || page == SendDataToRedisLoopCondition)
                         {
                             changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                             eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+
                             if (eloDiffClient != null)
                             {
                                 eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
