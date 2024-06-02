@@ -80,20 +80,38 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
-                RedisEloRetrievesCount = await GetEloRetrievesCountFromRedis(playerinf.player_id);
+                var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
 
+                bool isPlayerInRedis = await isPlayerInRedisDb.IsPlayerInRedisAsync(playerinf.player_id);
+
+                int SendDataToRedisLoopCondition = 0;
 
                 int page = 0;
+
+                if (!isPlayerInRedis)
+                {
+
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
+                }
+
+                else {
+
+                    SendDataToRedisLoopCondition  = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id)/100);
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
+                    //page = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id) / 100);
+                }
+                
                 var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
 
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                for (int i = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100); i > 0; i--)
+                for (int i = (int)RedisEloRetrievesCount; i >= SendDataToRedisLoopCondition; i--)
                 {
                     try
                     {
                         // Change proxy when page == 30
+
                         if (page == 0 || page == 30)
                         {
                             changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
