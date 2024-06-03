@@ -39,6 +39,13 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
+builder.Services.AddSingleton<ConnectionMultiplexer>(provider =>
+{
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
+    return ConnectionMultiplexer.Connect(configuration);
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

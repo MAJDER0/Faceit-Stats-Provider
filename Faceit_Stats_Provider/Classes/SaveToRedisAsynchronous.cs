@@ -1,28 +1,34 @@
 ﻿using StackExchange.Redis;
+using System;
 using System.Text.Json;
-using static Faceit_Stats_Provider.Models.EloDiff;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Faceit_Stats_Provider.Models;
 
 namespace Faceit_Stats_Provider.Classes
 {
     public class SaveToRedisAsynchronous
     {
         private readonly IConfiguration _configuration;
+        private readonly Lazy<ConnectionMultiplexer> _lazyConnection;
 
         public SaveToRedisAsynchronous(IConfiguration configuration)
         {
             _configuration = configuration;
+            _lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+            {
+                string connectionString = _configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(connectionString);
+            });
         }
 
-        public async Task SaveToRedisAsync(string userId, string matchId, Root data)
+        private ConnectionMultiplexer Connection => _lazyConnection.Value;
+
+        public async Task SaveToRedisAsync(string userId, string matchId, EloDiff.Root data)
         {
             try
             {
-                string connectionString = _configuration.GetConnectionString("Redis"); // Assuming your connection string key in appsettings.json is named "Redis"
-
-                // Connect to the Redis server using the connection string from appsettings.json
-                ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(connectionString);
-                IDatabase db = redis.GetDatabase();
+                IDatabase db = Connection.GetDatabase();
 
                 // Check if match_id already exists in the hash
                 if (!await db.HashExistsAsync($"user:{userId}:matches", matchId))
@@ -46,9 +52,6 @@ namespace Faceit_Stats_Provider.Classes
                     // Handle the case when match_id already exists (skip or update)
                     Console.WriteLine($"Match ID {matchId} already exists in the database. Skipping save operation.");
                 }
-
-                // Close the connection
-                redis.Close();
             }
             catch (Exception ex)
             {
