@@ -11,7 +11,7 @@ public class RedisFetchMaxElo
     public RedisFetchMaxElo(IConfiguration configuration)
     {
         _configuration = configuration;
-        _redis = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis")); // Assuming your connection string key in appsettings.json is named "Redis"
+        _redis = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis")); 
     }
 
     public async Task<int> GetHighestEloAsync(string userId)

@@ -39,19 +39,28 @@ body {
 input {
     position: relative;
     display: inline-block;
+    color: white;
     font-size: 20px;
     box-sizing: border-box;
     transition: .5s;
 }
 
     input[type="text"] {
-        background: #fff;
+        background-color: transparent;
+        border: 1px solid #f50;
+        border-right: none; /* Remove right border */
         width: 340px;
         height: 50px;
-        border: none;
         outline: none;
         padding: 0 25px;
         border-radius: 25px 0 0 25px;
+    }
+
+
+    input[type="text"]:focus {
+        background-color: transparent !important; /* Set the background color to transparent on focus */
+        box-shadow: none !important; /* Remove any box-shadow */
+        outline: none !important; /* Remove outline */
     }
 
     input[type="submit"] {
@@ -60,12 +69,16 @@ input {
         border-radius: 0 25px 25px 0;
         width: 150px;
         height: 50px;
-        border: none;
+        border: 1px solid #f50; 
+        border-left:none;
         outline: none;
         cursor: pointer;
-        background-color: #f50;
+        background-color: transparent;
         color: #fff;
+        transition: .5s; /* Add transition for smooth effect if desired */
     }
+
+
 
 .PlayerNick {
     width: 300px;
