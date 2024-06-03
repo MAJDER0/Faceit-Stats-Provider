@@ -80,60 +80,63 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
-
                 var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
 
                 bool isPlayerInRedis = await isPlayerInRedisDb.IsPlayerInRedisAsync(playerinf.player_id);
 
-
                 int SendDataToRedisLoopCondition = 0;
+
                 int page = 0;
 
                 if (!isPlayerInRedis)
                 {
-                    int totalMatches = int.Parse(overallplayerstatsTask.Result.lifetime.Matches);
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)totalMatches / 100);
+
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                 }
+
                 else
                 {
+
                     SendDataToRedisLoopCondition = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id) / 100);
-                    int totalMatches = int.Parse(overallplayerstatsTask.Result.lifetime.Matches);
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)totalMatches / 100);
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                     page = SendDataToRedisLoopCondition;
                 }
 
-                // Fetch elo differences
                 var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
 
-                if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                HttpClient eloDiffClient = null;
+
+                for (int i = (int)RedisEloRetrievesCount; i > SendDataToRedisLoopCondition; i--)
                 {
-                    var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                    HttpClient eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                    try
+                    {
 
-                    if (eloDiffClient != null)
-                    {
-                        eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                        if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                        {
+                            changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                            eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+
+                            if (eloDiffClient != null)
+                            {
+                                eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                            }
+                            else
+                            {
+                                _logger.LogError("No proxies available.");
+                                return StatusCode(500, "Internal Server Error");
+                            }
+                        }
+
+                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+
+                        page++;
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        _logger.LogError("No proxies available.");
+                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
                         return StatusCode(500, "Internal Server Error");
-                    }
-
-                    for (int i = (int)RedisEloRetrievesCount; i > SendDataToRedisLoopCondition; i--)
-                    {
-                        try
-                        {
-                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
-                                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
-
-                            page++;
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
-                            return StatusCode(500, "Internal Server Error");
-                        }
                     }
                 }
 
