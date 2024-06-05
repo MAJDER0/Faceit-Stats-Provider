@@ -18,6 +18,8 @@ using Microsoft.Extensions.FileSystemGlobbing;
 using Faceit_Stats_Provider.Classes;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Concurrent;
+using static Faceit_Stats_Provider.Models.PlayerStats;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -107,7 +109,14 @@ namespace Faceit_Stats_Provider.Controllers
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                for (int i = (int)RedisEloRetrievesCount; i > SendDataToRedisLoopCondition; i--)
+                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount);
+
+                ParallelOptions parallelOptions = new()
+                {
+                    MaxDegreeOfParallelism = 3
+                };
+
+                Parallel.ForEach(eloRetrievesCount, parallelOptions, (id, _) =>
                 {
                     try
                     {
@@ -124,7 +133,6 @@ namespace Faceit_Stats_Provider.Controllers
                             else
                             {
                                 _logger.LogError("No proxies available.");
-                                return StatusCode(500, "Internal Server Error");
                             }
                         }
 
@@ -136,29 +144,19 @@ namespace Faceit_Stats_Provider.Controllers
                     catch (Exception ex)
                     {
                         _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
-                        return StatusCode(500, "Internal Server Error");
                     }
-                }
+                });
+
 
                 // Await all tasks to complete
                 await Task.WhenAll(eloDiffTasks);
 
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
-                foreach (var eloDiffTaske in allEloDiffResults)
-                {
-                    if (eloDiffTaske != null)
-                    {
-                        var saver = new SaveToRedisAsynchronous(_configuration); // Create an instance
-                        var saveTasks = eloDiffTaske.Select(eloDiffItem =>
-                            saver.SaveToRedisAsync(playerid, eloDiffItem._id.matchId, eloDiffItem)); // Call the method on the instance
+                var lala = allEloDiffResults.SelectMany(x => x);
+                var saver = new SaveToRedisAsynchronous(_configuration); // Create an instance
+                await saver.SavePlayerToRedis(playerid, lala);
 
-
-                        await Task.WhenAll(saveTasks);
-                    }
-                }
-
-                await Task.WhenAll(matchhistoryTask, overallplayerstatsTask, eloDiffTask);
 
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
@@ -346,8 +344,8 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
-            var redisFetcher = new RedisFetchMaxElo(_configuration);
-            int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
+            //var redisFetcher = new RedisFetchMaxElo(_configuration);
+            //int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
 
             var ConnectionStatus = new PlayerStats
             {
@@ -357,7 +355,7 @@ namespace Faceit_Stats_Provider.Controllers
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
-                HighestElo = highestElo,
+                HighestElo = 100,
                 RedisEloRetrievesCount = RedisEloRetrievesCount
             };
 

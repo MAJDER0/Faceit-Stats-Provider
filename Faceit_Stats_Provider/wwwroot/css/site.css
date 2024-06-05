@@ -106,7 +106,7 @@ input[type="submit"] {
 
 .StatsContainer {
     display: flex;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
 }
 
 .OverallStats {
@@ -125,17 +125,17 @@ input[type="submit"] {
     width: 50%;
 }
 
-.Last20Stats p.title {
-    font-size: 25px;
-    font-weight: bold;
-    color: darkmagenta;
-}
+    .Last20Stats p.title {
+        font-size: 25px;
+        font-weight: bold;
+        color: darkmagenta;
+    }
 
 .SwitchToggle {
-    width:100%;
+    width: 100%;
     border-top: 1px solid red;
     text-align: center;
-    margin-left:-3%;
+    margin-left: -3%;
 }
 
 .Ranked5v5Games {
@@ -146,7 +146,7 @@ input[type="submit"] {
 
 .Only5v5Games {
     margin-top: -1%;
-    margin-left:1%;
+    margin-left: 1%;
     display: inline-block;
 }
 
@@ -156,12 +156,12 @@ input[type="submit"] {
     display: inline-block;
 }
 
-    .Ranked5v5Games > p {
-        float: left;
-        margin-top: -3%;
-        font-size: 20px;
-        margin-right: 10px;
-    }
+.Ranked5v5Games > p {
+    float: left;
+    margin-top: -3%;
+    font-size: 20px;
+    margin-right: 10px;
+}
 
 .WalkoverGames > p {
     float: left;
@@ -191,7 +191,7 @@ input[type="submit"] {
 .EloInfoUnderCanvas2 {
     padding-left: 19%;
     font-size: 19px;
-    margin-top:-3%;
+    margin-top: -3%;
 }
 
 .PlayerNotFound {
@@ -218,12 +218,11 @@ input[type="submit"] {
     margin-top: 60px;
 }
 
-.matchesList{
-    margin-top:-8%;
+.matchesList {
+    margin-top: -8%;
 }
 
 .maintable {
-
 }
 
 input[type="submit"]:hover {
@@ -248,7 +247,7 @@ input[type="submit"]:hover {
 }
 
 .Result {
-    font-weight:bold;
+    font-weight: bold;
 }
 
 #EloChart {
@@ -257,12 +256,13 @@ input[type="submit"]:hover {
 }
 
 #MapsPlayedChart {
-    width :100%; 
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
+
 .MapsRadarChart {
-      margin:5%;
-      margin-left:-5%;
+    margin: 5%;
+    margin-left: -5%;
 }
 
 .EloGraph {
@@ -270,7 +270,7 @@ input[type="submit"]:hover {
 }
 
 .ActiveFaceitMapPoolContainer {
-    margin-top:6%;
+    margin-top: 6%;
 }
 
 .matchesTable {
@@ -280,32 +280,32 @@ input[type="submit"]:hover {
 }
 
     .matchesTable thead {
-        background-color: rgba(0, 0, 0, 0.7); 
-        font-weight:bold;
-        font-size:18px;
-        color: darkmagenta; 
+        background-color: rgba(0, 0, 0, 0.7);
+        font-weight: bold;
+        font-size: 18px;
+        color: darkmagenta;
     }
 
     /* Style the table rows */
     .matchesTable tbody tr {
-        background-color: rgba(0, 0, 0, 0.4); 
+        background-color: rgba(0, 0, 0, 0.4);
         cursor: pointer;
     }
 
 
     .matchesTable th,
     .matchesTable td {
-        border-color: rgba(255, 255, 255, 0.2); 
+        border-color: rgba(255, 255, 255, 0.2);
     }
 
-    
+
     .matchesTable tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.6); 
+        background-color: rgba(0, 0, 0, 0.6);
     }
 
-    
+
     .matchesTable tbody tr:last-child {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
 
 .matchesTableStats {
@@ -332,36 +332,36 @@ input[type="submit"]:hover {
         color: darkmagenta;
     }
 
-.MapsTable tbody tr {
-    background-color: rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-}
+    .MapsTable tbody tr {
+        background-color: rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+    }
 
 
-.MapsTable th,
-.MapsTable td {
-    border-color: rgba(255, 255, 255, 0.2);
-     /*border-bottom: none;*/
-}
+    .MapsTable th,
+    .MapsTable td {
+        border-color: rgba(255, 255, 255, 0.2);
+        /*border-bottom: none;*/
+    }
 
 
-.MapsTable tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.6);
-}
+    .MapsTable tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
 
 
-.MapsTable tbody tr:last-child td {
-    border-bottom: none;
-}
+    .MapsTable tbody tr:last-child td {
+        border-bottom: none;
+    }
 
-    .MapsTable thead th{
+    .MapsTable thead th {
         border: none;
     }
 
 .TableMapTitle {
     text-align: center;
     margin-bottom: 30px; /* Adjust the margin as needed */
-    margin-top:-10%;
+    margin-top: -10%;
 }
 
     .TableMapTitle > h2 {
@@ -376,6 +376,7 @@ input[type="submit"]:hover {
     transform: translateY(50px); /* Adjust the translateY value as needed */
     transition: opacity 0.5s, transform 0.5s;
 }
+
     .table-container.visible {
         opacity: 1;
         transform: translateY(0);
@@ -384,11 +385,11 @@ input[type="submit"]:hover {
 .MapStatsRow {
     display: flex;
     align-items: flex-start;
-    margin-top:6%;
+    margin-top: 6%;
 }
 
 .match-row.BLAST {
-    background-color:rgba(85,27,142,0.2);
+    background-color: rgba(85,27,142,0.2);
     cursor: pointer;
 }
 
@@ -420,8 +421,8 @@ input[type="submit"]:hover {
     .slider:before {
         position: absolute;
         content: "";
-        height: 16px; 
-        width: 16px; 
+        height: 16px;
+        width: 16px;
         left: 2px;
         bottom: 2px;
         background-color: #F2F2F2;
@@ -438,14 +439,14 @@ input:focus + .slider {
 }
 
 input:checked + .slider:before {
-    -webkit-transform: translateX(16px); 
-    -ms-transform: translateX(16px); 
-    transform: translateX(19px); 
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(19px);
 }
 
 /* Rounded sliders */
 .slider.round {
-    border-radius: 24px; 
+    border-radius: 24px;
 }
 
     .slider.round:before {
@@ -459,15 +460,15 @@ input:checked + .slider:before {
     color: white;
     border: none;
     outline: none;
-    border-radius:2px;
+    border-radius: 2px;
     font-size: 16px;
     cursor: pointer;
     margin-right: 45%;
     margin-left: 45%;
     transition: background-color 0.3s;
     transition: color 0.3s;
-    height:31px;
-    width:10%;
+    height: 31px;
+    width: 10%;
 }
 
     .load-more-button:hover {
@@ -491,10 +492,10 @@ input:checked + .slider:before {
     margin:auto;
 }*/
 
-    .SeeCompleteStatistics-button:hover {
-        background-color: rgba(0, 0, 0, 1);
-        color: #ff3c22;
-    }
+.SeeCompleteStatistics-button:hover {
+    background-color: rgba(0, 0, 0, 1);
+    color: #ff3c22;
+}
 
 /*.button-container {
     text-align: center;
@@ -573,7 +574,6 @@ input:checked + .slider:before {
 
     .star-field .layer {
         box-shadow: -411px -476px red, 777px -407px #d4d4d4, -387px -477px #fcfcfc, -91px -235px red, 491px -460px red, 892px -128px #f7f7f7, 758px -277px red, 596px 378px red, 647px 423px whitesmoke, 183px 389px red, 524px -237px #f0f0f0, 679px -535px red, 158px 399px #ededed, 157px 249px #ededed, 81px -450px #ebebeb, 719px -360px #c2c2c2, -499px 473px #e8e8e8, -158px -349px red, 870px -134px #cfcfcf, 446px 404px #c2c2c2, 440px 490px #d4d4d4, 414px 507px #e6e6e6, -12px 246px red, -384px 369px #e3e3e3, 641px -413px #fcfcfc, 822px 516px #dbdbdb, 449px 132px #c2c2c2, 727px 146px #f7f7f7, -315px -488px red, 952px -70px #e3e3e3, -869px -29px red, 502px 80px red, 764px 342px red, -150px -380px red, 654px -426px red, -325px -263px red, 755px -447px red, 729px -177px red, -682px -391px red, 554px -176px #ededed, -85px -428px red, 714px 55px #e8e8e8, 359px -285px red, -362px -508px red, 468px -265px #fcfcfc, 74px -500px #c7c7c7, -514px 383px #dbdbdb, 730px -92px #cfcfcf, -112px 287px red, -853px 79px #d6d6d6, 828px 475px red, -681px 13px red, -176px 209px red, 758px 457px #fafafa, -383px -454px red, 813px 179px #d1d1d1, 608px 98px red, -860px -65px #c4c4c4, -572px 272px red, 459px 533px red, 624px -481px red, 790px 477px red, 731px -403px #ededed, 70px -534px red, -23px 510px red, -652px -237px whitesmoke, -690px 367px #d1d1d1, 810px 536px red, 774px 293px #c9c9c9, -362px 97px red, 563px 47px #dedede, 313px 475px red, 839px -491px red, -217px 377px #d4d4d4, -581px 239px red, -857px 72px #cccccc, -23px 340px #dedede, -837px 246px red, 170px -502px #cfcfcf, 822px -443px #e0e0e0, 795px 497px #e0e0e0, -814px -337px #cfcfcf, 206px -339px #f2f2f2, -779px 108px #e6e6e6, 808px 2px #d4d4d4, 665px 41px #d4d4d4, -564px 64px #cccccc, -380px 74px #cfcfcf, -369px -60px red, 47px -495px #e3e3e3, -383px 368px #f7f7f7, 419px 288px red, -598px -50px #c2c2c2, -833px 187px #c4c4c4, 378px 325px red, -703px 375px red, 392px 520px red, -492px -60px red, 759px 288px #ebebeb, 98px -412px #c4c4c4, -911px -277px red;
- 
         transform-style: preserve-3d;
         position: absolute;
         top: 50%;
