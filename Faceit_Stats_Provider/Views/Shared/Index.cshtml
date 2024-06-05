@@ -1,15 +1,9 @@
-﻿@model Faceit_Stats_Provider.Models.PlayerStats
-
-@using (Html.BeginForm("PlayerStats", "PlayerStats", FormMethod.Get))
+﻿@using (Html.BeginForm("PlayerStats", "PlayerStats", FormMethod.Get))
 {
     <div class="row box">
-        <div class="col-sm-12">
+        <div class="col-sm-12 search-container">
             <input type="text" id="animatedInput" placeholder="" name="nickname" />
             <input type="submit" value="Search" />
         </div>
     </div>
-}
-
-@section Scripts {
-    <script src="~/js/main.js"></script>
 }
