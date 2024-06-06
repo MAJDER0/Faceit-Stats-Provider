@@ -1,12 +1,9 @@
-﻿using StackExchange.Redis;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Faceit_Stats_Provider.Models
 {
     public class EloDiff
     {
-
         public class Id
         {
             public string matchId { get; set; }
@@ -19,6 +16,7 @@ namespace Faceit_Stats_Provider.Models
             [JsonPropertyName("gameMode")]
             public string mode { get; set; }
 
+            // Change the type of elo to object
             [JsonPropertyName("elo")]
             public object elo { get; set; }
 
@@ -28,7 +26,5 @@ namespace Faceit_Stats_Provider.Models
             [JsonPropertyName("playerId")]
             public string player_Id { get; set; }
         }
- 
     }
-
 }

@@ -4,9 +4,10 @@
     {
         public class MatchData
         {
-            public string elo { get; set; }
-            public string match_Id { get; set; }
+            public string Elo { get; set; }
+            public string MatchId { get; set; }
         }
 
+        public List<MatchData> Matches { get; set; }
     }
 }

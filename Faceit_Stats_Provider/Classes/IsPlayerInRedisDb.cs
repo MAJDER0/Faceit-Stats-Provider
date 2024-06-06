@@ -1,5 +1,5 @@
-﻿using StackExchange.Redis;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
 
@@ -21,8 +21,8 @@ namespace Faceit_Stats_Provider.Classes
             try
             {
                 IDatabase db = _redis.GetDatabase();
-                string hashKey = $"user:{userId}:matches";
-                return await db.KeyExistsAsync(hashKey);
+                string key = $"userMatchesHistory_{userId}"; // Adjusted key
+                return await db.KeyExistsAsync(key);
             }
             catch (Exception ex)
             {

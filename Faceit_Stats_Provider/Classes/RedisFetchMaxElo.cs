@@ -40,7 +40,7 @@ public class RedisFetchMaxElo
                     continue; // Skip this entry and continue with the next one
                 }
 
-                if (matchData != null && int.TryParse(matchData.elo, out int elo) && elo > highestElo)
+                if (matchData != null && int.TryParse(matchData.Elo, out int elo) && elo > highestElo)
                 {
                     highestElo = elo;
                 }
