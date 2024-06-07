@@ -83,19 +83,23 @@ namespace Faceit_Stats_Provider.Controllers
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
 
                 var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
+
                 bool isPlayerInRedis = await isPlayerInRedisDb.IsPlayerInRedisAsync(playerinf.player_id);
+
                 int SendDataToRedisLoopCondition = 0;
+
                 int page = 0;
 
                 if (!isPlayerInRedis)
                 {
+
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                 }
+
                 else
                 {
-                    var getTotalEloRetrievesCountFromRedis = new GetTotalEloRetrievesCountFromRedis(_configuration, _redis);
-                    long totalEloRetrievesCount = await getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerinf.player_id);
-                    SendDataToRedisLoopCondition = (int)(totalEloRetrievesCount / 100);
+
+                    SendDataToRedisLoopCondition = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id) / 100);
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                     page = SendDataToRedisLoopCondition;
                 }
@@ -103,56 +107,56 @@ namespace Faceit_Stats_Provider.Controllers
                 var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
 
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                HttpClient eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                HttpClient eloDiffClient = null;
 
-                // Set the base address
-                eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount);
 
-                // Perform parallel execution of requests
-                Parallel.ForEach(
-                    Partitioner.Create(SendDataToRedisLoopCondition, RedisEloRetrievesCount),
-                    async (range, loopState) => // Add async modifier here
+                ParallelOptions parallelOptions = new()
+                {
+                    MaxDegreeOfParallelism = 3
+                };
+
+                Parallel.ForEach(eloRetrievesCount, parallelOptions, (id, _) =>
+                {
+                    try
                     {
-                        for (int currentPage = (int)range.Item1; currentPage < range.Item2; currentPage++)
+
+                        if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
                         {
-                            try
+                            changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                            eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+
+                            if (eloDiffClient != null)
                             {
-                                // Change proxy if necessary
-                                if (currentPage == 0 || currentPage % 30 == 0)
-                                {
-                                    changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                                    eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
-                                    eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
-                                }
-
-                                // Make the API request with the absolute URI
-                                var task = eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
-                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={currentPage}&size=100");
-
-                                // Add the task to the list
-                                eloDiffTasks.Add(task);
-
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-                                Console.ResetColor();
+                                eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                                _logger.LogError("No proxies available.");
                             }
                         }
-                    });
+
+                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+
+                        page++;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                    }
+                });
+
 
                 // Await all tasks to complete
                 await Task.WhenAll(eloDiffTasks);
 
-                // Concatenate results from all tasks
-                var allEloDiffResults = eloDiffTasks.SelectMany(task => task.Result);
+                var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
-                var saver = new SaveToRedisAsynchronous(_configuration);
+                var lala = allEloDiffResults.SelectMany(x => x);
+                var saver = new SaveToRedisAsynchronous(_configuration); // Create an instance
+                await saver.SavePlayerToRedis(playerid, lala);
 
-                // Save the fetched data to Redis
-                await saver.SavePlayerToRedis(playerid, allEloDiffResults);
 
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
@@ -358,6 +362,13 @@ namespace Faceit_Stats_Provider.Controllers
             ViewData["PlayerStats"] = false;
 
             return View(ConnectionStatus);
+        }
+
+        private async Task<long> GetEloRetrievesCountFromRedis(string playerId)
+        {
+            var db = _redis.GetDatabase();
+            string key = $"user:{playerId}:matches";
+            return await db.HashLengthAsync(key);
         }
 
         public IActionResult PlayerNotFound()
