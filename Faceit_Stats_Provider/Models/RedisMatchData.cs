@@ -7,7 +7,7 @@ namespace Faceit_Stats_Provider.Models
         public class MatchData
         {
             [JsonPropertyName("elo")]
-            public string Elo { get; set; }
+            public int elo { get; set; }
             public string MatchId { get; set; }
         }
 

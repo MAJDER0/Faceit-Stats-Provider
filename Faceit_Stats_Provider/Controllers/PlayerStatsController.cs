@@ -104,7 +104,7 @@ namespace Faceit_Stats_Provider.Controllers
                     page = SendDataToRedisLoopCondition;
                 }
 
-                var eloDiffTasks = new List<Task<List<EloDiff.Root>>>();
+                var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
 
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
@@ -136,7 +136,7 @@ namespace Faceit_Stats_Provider.Controllers
                             }
                         }
 
-                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<EloDiff.Root>>(
+                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                             $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
 
                         page++;

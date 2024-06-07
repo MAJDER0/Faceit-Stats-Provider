@@ -19,7 +19,7 @@ public class SaveToRedisAsynchronous
 
     private ConnectionMultiplexer Connection => _lazyConnection.Value;
 
-    public async Task SavePlayerToRedis(string userId, IEnumerable<EloDiff.Root> data)
+    public async Task SavePlayerToRedis(string userId, IEnumerable<RedisMatchData.MatchData> data)
     {
         IDatabase db = Connection.GetDatabase();
 
