@@ -96,6 +96,20 @@ input[type="submit"] {
     font-size: 25px;
 }
 
+.DISCLAIMER {
+    width: fit-content;
+    margin-top: 1%;
+    text-align: left;
+    color: rgb(139,0,0);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+    .DISCLAIMER span {
+        color: darkmagenta;
+        font-size: 16px;
+    }
+
 #faceitlvl {
     font-family: 'Play', sans-serif;
 }
