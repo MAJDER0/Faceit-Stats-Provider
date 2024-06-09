@@ -42,7 +42,9 @@ public class GetTotalEloRetrievesCountFromRedis
 
                         if (matchData != null)
                         {
+                            Console.ForegroundColor = ConsoleColor.Blue;
                             Console.WriteLine($"Key: {key}, Count: {matchData.Count}");
+                            Console.ResetColor();
                             totalCount += matchData.Count;
                         }
                     }

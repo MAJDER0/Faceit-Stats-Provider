@@ -111,7 +111,7 @@ namespace Faceit_Stats_Provider.Controllers
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount);
+                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount-SendDataToRedisLoopCondition);
 
                 ParallelOptions parallelOptions = new()
                 {
@@ -362,7 +362,7 @@ namespace Faceit_Stats_Provider.Controllers
                 EloDiff = eloDiff,
                 ErrorMessage = errorString,
                 HighestElo = 100,
-                RedisEloRetrievesCount = RedisEloRetrievesCount
+                //RedisEloRetrievesCount = RedisEloRetrievesCount
             };
 
             ViewData["PlayerStats"] = false;
