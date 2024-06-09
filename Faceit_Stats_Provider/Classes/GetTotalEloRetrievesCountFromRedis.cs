@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,8 +22,10 @@ public class GetTotalEloRetrievesCountFromRedis
     {
         try
         {
+            // Adjust the pattern to match the key structure used in SavePlayerToRedis method
             var server = _redis.GetServer(_redis.GetEndPoints().First());
-            var keys = server.Keys(pattern: $"*{playerId}*").ToArray();
+            var pattern = $"userMatchesHistory_{playerId}";
+            var keys = server.Keys(pattern: pattern).ToArray();
 
             Console.WriteLine($"Found {keys.Length} keys for playerId {playerId}");
 

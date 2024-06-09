@@ -45,6 +45,7 @@ builder.Services.AddSingleton<ConnectionMultiplexer>(provider =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
+builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
 
 var app = builder.Build();
 

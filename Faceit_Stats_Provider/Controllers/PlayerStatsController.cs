@@ -32,10 +32,11 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly ILogger<ChangeProxyIP> _logger;
         private readonly IConnectionMultiplexer _redis;
         private readonly IConfiguration _configuration;
+        private readonly GetTotalEloRetrievesCountFromRedis _getTotalEloRetrievesCountFromRedis;
 
 
 
-        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis)
+        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis)
         {
             _random = new Random();
             _clientFactory = clientFactory;
@@ -43,6 +44,7 @@ namespace Faceit_Stats_Provider.Controllers
             _logger = logger;
             _configuration = configuration; // Assign IConfiguration
             _redis = redis;
+            _getTotalEloRetrievesCountFromRedis = getTotalEloRetrievesCountFromRedis;
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -99,7 +101,7 @@ namespace Faceit_Stats_Provider.Controllers
                 else
                 {
 
-                    SendDataToRedisLoopCondition = (int)(await GetEloRetrievesCountFromRedis(playerinf.player_id) / 100);
+                    SendDataToRedisLoopCondition = (int)(await _getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerinf.player_id) / 100);
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                     page = SendDataToRedisLoopCondition;
                 }
@@ -138,6 +140,10 @@ namespace Faceit_Stats_Provider.Controllers
 
                         eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                             $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Downloading 100");
+                        Console.ResetColor();
 
                         page++;
                     }
@@ -362,13 +368,6 @@ namespace Faceit_Stats_Provider.Controllers
             ViewData["PlayerStats"] = false;
 
             return View(ConnectionStatus);
-        }
-
-        private async Task<long> GetEloRetrievesCountFromRedis(string playerId)
-        {
-            var db = _redis.GetDatabase();
-            string key = $"user:{playerId}:matches";
-            return await db.HashLengthAsync(key);
         }
 
         public IActionResult PlayerNotFound()

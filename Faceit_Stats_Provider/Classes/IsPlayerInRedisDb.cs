@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using System.Linq;
 
 namespace Faceit_Stats_Provider.Classes
 {
@@ -21,8 +24,8 @@ namespace Faceit_Stats_Provider.Classes
             try
             {
                 IDatabase db = _redis.GetDatabase();
-                string hashKey = $"user:{userId}:matches";
-                return await db.KeyExistsAsync(hashKey);
+                string key = $"userMatchesHistory_{userId}";
+                return await db.KeyExistsAsync(key);
             }
             catch (Exception ex)
             {
