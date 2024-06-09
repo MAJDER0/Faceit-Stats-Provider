@@ -350,19 +350,19 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
-            //var redisFetcher = new RedisFetchMaxElo(_configuration);
-            //int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
+            var redisFetcher = new RedisFetchMaxElo(_configuration);
+            int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
 
             var ConnectionStatus = new PlayerStats
             {
+                RedisEloRetrievesCount = RedisEloRetrievesCount,
+                HighestElo = highestElo,
                 OverallPlayerStatsInfo = overallplayerstats,
                 Last20MatchesStats = matchstats,
                 MatchHistory = matchhistory,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
-                ErrorMessage = errorString,
-                HighestElo = 100,
-                //RedisEloRetrievesCount = RedisEloRetrievesCount
+                ErrorMessage = errorString,                                        
             };
 
             ViewData["PlayerStats"] = false;

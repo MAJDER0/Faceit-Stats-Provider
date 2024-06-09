@@ -1,7 +1,11 @@
-﻿using StackExchange.Redis;
-using System.Text.Json;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using StackExchange.Redis;
 using Microsoft.Extensions.Configuration;
 using Faceit_Stats_Provider.Models;
+using System.Text.Json;
 
 public class RedisFetchMaxElo
 {
@@ -16,42 +20,25 @@ public class RedisFetchMaxElo
 
     public async Task<int> GetHighestEloAsync(string userId)
     {
-        try
+        IDatabase db = _redis.GetDatabase();
+        var key = $"userMatchesHistory_{userId}";
+
+        string userMatchesJson = await db.StringGetAsync(key);
+        if (string.IsNullOrEmpty(userMatchesJson))
         {
-            IDatabase db = _redis.GetDatabase();
-            string hashKey = $"user:{userId}:matches";
-            var matchKeys = await db.HashKeysAsync(hashKey);
-
-            int highestElo = 0;
-
-            foreach (var matchKey in matchKeys)
-            {
-                var jsonData = await db.HashGetAsync(hashKey, matchKey);
-                Console.WriteLine($"Fetched JSON Data: {jsonData}");
-
-                RedisMatchData.MatchData matchData;
-                try
-                {
-                    matchData = JsonSerializer.Deserialize<RedisMatchData.MatchData>(jsonData);
-                }
-                catch (JsonException jsonEx)
-                {
-                    Console.WriteLine($"Error deserializing JSON data: {jsonEx.Message}");
-                    continue; // Skip this entry and continue with the next one
-                }
-
-                if (matchData != null &&  matchData.elo > highestElo)
-                {
-                    highestElo = matchData.elo;
-                }
-            }
-
-            return highestElo;
+            // No data found
+            return 0; // Or any default value
         }
-        catch (Exception ex)
+
+        var userMatches = JsonSerializer.Deserialize<IEnumerable<RedisMatchData.MatchData>>(userMatchesJson);
+        if (userMatches == null || !userMatches.Any())
         {
-            Console.WriteLine($"Error fetching highest ELO from Redis: {ex.Message}");
-            return 0;
+            // No matches found
+            return 0; // Or any default value
         }
+
+        // Assuming Elo is an integer property in MatchData
+        var highestElo = userMatches.Max(match => match.elo);
+        return highestElo;
     }
 }
