@@ -2,6 +2,12 @@
     --maincolor: #1f1f1f;
     --darkermain: #161616;
     --orange: #f50;
+    --lgbt-color-red: #E70000;
+    --lgbt-color-orange: #FF8C00;
+    --lgbt-color-yellow: #FFEF00;
+    --lgbt-color-green: #00811F;
+    --lgbt-color-blue: #0044FF;
+    --lgbt-color-violet: #760089;
 }
 
 html {
@@ -106,9 +112,13 @@ input[type="submit"] {
 }
 
     .DISCLAIMER span {
-        color: darkmagenta;
-        font-size: 16px;
+        background-image: linear-gradient(to right, var(--lgbt-color-red), var(--lgbt-color-orange), var(--lgbt-color-yellow), var(--lgbt-color-green), var(--lgbt-color-blue), var(--lgbt-color-violet));
+        display: inline;
+        -webkit-background-clip: text;
+        color: transparent;
+        font-family: 'Oxygen', sans-serif;
     }
+
 
 #faceitlvl {
     font-family: 'Play', sans-serif;
