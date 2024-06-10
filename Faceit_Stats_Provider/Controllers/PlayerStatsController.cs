@@ -137,8 +137,22 @@ namespace Faceit_Stats_Provider.Controllers
                             }
                         }
 
-                        eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                            $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                        if (!isPlayerInRedis)
+                        {
+                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                        }
+
+                        var responeTask = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                            $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100");
+
+                        var response = responeTask.Result;
+
+                        if (!response.Any())
+                        {
+                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                 $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100"));
+                        }
 
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine("Downloading 100");
