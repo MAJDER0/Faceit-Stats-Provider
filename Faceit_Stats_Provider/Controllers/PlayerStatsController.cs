@@ -103,7 +103,6 @@ namespace Faceit_Stats_Provider.Controllers
 
                     SendDataToRedisLoopCondition = (int)(await _getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerinf.player_id) / 100);
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
-                    page = SendDataToRedisLoopCondition;
                 }
 
                 var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
@@ -123,7 +122,7 @@ namespace Faceit_Stats_Provider.Controllers
                     try
                     {
 
-                        if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                        if (page ==0 && page % 30 == 0 || page == SendDataToRedisLoopCondition)
                         {
                             changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                             eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
