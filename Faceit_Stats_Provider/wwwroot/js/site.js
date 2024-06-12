@@ -113,5 +113,12 @@ document.addEventListener("DOMContentLoaded", function () {
     type(); // Start typing immediately
 });
 
+$(document).on('click', '.match-row-second', function () {
+        
+    $(this).next(".scoreboard").toggle();
+
+});
+
+
 
 

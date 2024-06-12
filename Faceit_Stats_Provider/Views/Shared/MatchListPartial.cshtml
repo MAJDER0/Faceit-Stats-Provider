@@ -161,7 +161,7 @@
 
                             if (match.rounds[0].best_of == "Walkover" && !match.rounds[0].competition_name.ToString().Contains("BLAST"))
                             {
-                            <tr class="match-row Walkover" style="display: none;">
+                            <tr class="match-row-second Walkover" style="display: none;">
 
                                     @{
                                         RenderMatchInTable();
@@ -187,7 +187,7 @@
                             }
                         else if (match.rounds[0].best_of == "Walkover" && match.rounds[0].competition_name.ToString().Contains("BLAST"))
                         {
-                        <tr class="match-row Walkover BLAST" style="display: none;">
+                        <tr class="match-row-second Walkover BLAST" style="display: none;">
 
                                 @{
                                     RenderMatchInTable();
@@ -217,7 +217,7 @@
 
                             else if (match.rounds[0].calculate_elo == true)
                         {
-                        <tr class="match-row v5Match">
+                        <tr class="match-row-second v5Match">
                                 @{
                                     RenderMatchInTable();
                                 }
@@ -227,7 +227,7 @@
 
                             else if (match.rounds[0].game_mode == "5v5")
                         {
-                        <tr class="match-row v5MatchALL">
+                        <tr class="match-row-second v5MatchALL">
                                 @{
                                     RenderMatchInTable();
                                 }
@@ -237,7 +237,7 @@
 
                         else
                         {
-                        <tr class="match-row UnrankedMatch">
+                        <tr class="match-row-second UnrankedMatch">
                                 @{
                                     RenderMatchInTable();
                                 }
@@ -245,9 +245,9 @@
 
                         }
 
-                            
 
-                    <tr class="scoreboard match-row" style="display: none;">
+
+                        <tr class="scoreboard match-row-second" style="display: none;">
                         <td colspan="9">
                             <table class="table matchesTableStats">
                                 <thead>
@@ -348,10 +348,3 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $(".match-row").click(function () {
-            $(this).next(".scoreboard").toggle();
-        });
-    });
-</script>
