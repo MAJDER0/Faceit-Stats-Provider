@@ -122,7 +122,7 @@ namespace Faceit_Stats_Provider.Controllers
                     try
                     {
 
-                        if (page ==0 && page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                        if (page ==0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
                         {
                             changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                             eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
@@ -142,17 +142,10 @@ namespace Faceit_Stats_Provider.Controllers
                             eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                                 $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
                         }
-
-                        var responeTask = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                            $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100");
-
-                        var response = responeTask.Result;
-
-                        if (!response.Any())
-                        {
-                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                     
+                           eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                                  $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100"));
-                        }
+                        
 
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine("Downloading 100");
@@ -172,9 +165,9 @@ namespace Faceit_Stats_Provider.Controllers
 
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
-                var lala = allEloDiffResults.SelectMany(x => x);
-                var saver = new SaveToRedisAsynchronous(_configuration); // Create an instance
-                await saver.SavePlayerToRedis(playerid, lala);
+                var EloDiffresultsFiltered = allEloDiffResults.SelectMany(x => x);
+                var saver = new SaveToRedisAsynchronous(_configuration); 
+                await saver.SavePlayerToRedis(playerid, EloDiffresultsFiltered);
 
 
                 matchhistory = matchhistoryTask.Result!;
