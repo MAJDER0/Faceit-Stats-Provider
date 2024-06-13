@@ -417,6 +417,10 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
+.CountryFlag {
+    margin-left:1%;
+}
+
 .switch {
     position: relative;
     display: inline-block;
