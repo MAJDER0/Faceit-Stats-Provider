@@ -80,8 +80,27 @@ namespace Faceit_Stats_Provider.Controllers
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
                     $"v4/players/{playerinf.player_id}/stats/cs2");
 
+                try
+                {
+                    var overallplayerstatsTaskResult = await overallplayerstatsTask;
+                }
+                catch {
+
+                     overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
+                        $"v4/players/{playerinf.player_id}/stats/csgo");
+
+                }
+
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
+
+                var eloDiffTaskResult = await eloDiffTask;
+
+                if (eloDiffTaskResult.Count() == 0)
+                {
+                     eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=31");
+                }
 
                 var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
 

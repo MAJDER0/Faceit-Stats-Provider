@@ -22,11 +22,11 @@
                         @{
                             if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
                             {
-                                                                                                    <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                                                                                            <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                             else
                             {
-                                                                                                    <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                                                                                            <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                         }
                     </a>
@@ -59,8 +59,26 @@
             <canvas id="faceitlvl" width="250" height="250"></canvas>
 
         </a>
+        @{
+            int LevelPossessed = 1;
+            string request = "";
 
-        @switch (@Model.Playerinfo.games.cs2.skill_level)
+            if (Model.Playerinfo != null && Model.Playerinfo.games != null)
+            {
+                if (Model.Playerinfo.games.cs2 != null && Model.Playerinfo.games.cs2.skill_level == null)
+                {
+                    LevelPossessed = Model.Playerinfo.games.csgo.skill_level;
+                    request = "Model.Playerinfo.games.csgo.skill_level";
+                }
+            }
+
+            else
+            {
+                    <p>Player information or game stats are not available.</p>
+            }
+        }
+
+        @switch (LevelPossessed)
         {
             case 10:
                 <script>
@@ -141,7 +159,7 @@
 
 
         <div class="InfoUnderCanvas">
-            @if (@Model.Playerinfo.games.cs2.skill_level == 10)
+            @if (LevelPossessed == 10)
             {
                 <p>MAXIMUM LEVEL HAS BEEN REACHED</p>
             }
@@ -156,7 +174,7 @@
             }
             else
             {
-                <p class="EloInfoUnderCanvas">CS2 ELO: @Model.Playerinfo.games.cs2.faceit_elo</p>
+                <p class="EloInfoUnderCanvas">CS2 ELO: @request</p>
                 <p class="EloInfoUnderCanvas2">CS:GO ELO: @Model.Playerinfo.games.csgo.faceit_elo</p>
             }
         </div>
@@ -195,9 +213,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string id, bool RankedGame = false, bool FiveVsFiveGame = false)
                     {
-                                                                                            <p class="title">LAST 20</p>
+                                                                                                    <p class="title">LAST 20</p>
 
-                                                                                    @if (MatchesStats != null)
+                                                                                            @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -209,7 +227,7 @@
                             int matchCounter = 0;
                             int matchCounterWithWalkovers = 0;
 
-                                                                                        @foreach (var match in MatchesStats)
+                                                                                                @foreach (var match in MatchesStats)
                             {
                                 if (match.teams is not null && match.best_of != "Walkover")
                                 {
@@ -280,18 +298,18 @@
                             string averageKillsFormatted = (averageKills % 1 >= 0.5) ? Math.Ceiling(averageKills).ToString("F0") : averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                                                                                                <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                                                                                                        <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                                                                                                <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                                                                                                        <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                                                                                                <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                                                                                                        <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                                                                                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                                                                                                        <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                                                                                                <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                                                                                                        <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                                                                                                <span>
-                                                                                                    @{
+                                                                                                        <span>
+                                                                                                            @{
                                     int balance = 9999;
                                     int lastEloToRetrieve = 0;
                                     int firstEloToRetrieve = 0;
@@ -334,26 +352,26 @@
 
                                         balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
-                                                                                                    }
-                                                                                                </span>
+                                                                                                            }
+                                                                                                        </span>
 
-                                                                                                <p>
-                                                                                                    BALANCE: @{
+                                                                                                        <p>
+                                                                                                            BALANCE: @{
                                     if (balance != 9999)
                                     {
-                                                                                                                                                                                <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
-                                                                                                                                                                                    @(
+                                                                                                                                                                                                <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
+                                                                                                                                                                                                    @(
                                         balance > 0 ? '+' : (balance < 0 ? "-" : "")
-                                                                                                                                                                                        )@Math.Abs(balance)
-                                                                                                                                                                                </span>
+                                                                                                                                                                                                        )@Math.Abs(balance)
+                                                                                                                                                                                                </span>
                                     }
 
                                     else
                                     {
-                                                                                                                                                                                <span class="Result">-</span>
+                                                                                                                                                                                                <span class="Result">-</span>
                                     }
-                                                                                                    }
-                                                                                                </p>
+                                                                                                            }
+                                                                                                        </p>
 
 
                         }
@@ -753,12 +771,12 @@
                                         @{
                                             if (match.competition_name.ToString().ToUpper().Contains("BLAST"))
                                             {
-                                                                                                                <p class="Result">BLAST</p>
+                                                                                                                        <p class="Result">BLAST</p>
                                             }
 
                                             else
                                             {
-                                                                                                                <p class="Result">Walkover</p>
+                                                                                                                        <p class="Result">Walkover</p>
                                             }
                                         }
                                 </td>
