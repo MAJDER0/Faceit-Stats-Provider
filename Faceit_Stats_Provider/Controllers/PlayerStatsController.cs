@@ -70,10 +70,9 @@ namespace Faceit_Stats_Provider.Controllers
                 if (!_memoryCache.TryGetValue(nickname, out playerinf))
                 {
                     playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
-                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(5));
+                    _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(3));
                     playerid = playerinf.player_id;
-                }
-
+                }            
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
                     $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
@@ -121,37 +120,59 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     try
                     {
+                        // Create a unique cache key for this operation
+                        string cacheKey = $"PlayerData_{playerinf.player_id}_Page_{page}";
 
-                        if (page ==0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                        // Try to get the data from cache
+                        if (!_memoryCache.TryGetValue(cacheKey, out List<RedisMatchData.MatchData> cachedData))
                         {
-                            changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                            eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
+                            // If not found in cache, proceed with the operation
+                            if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
+                            {
+                                changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                                eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
 
-                            if (eloDiffClient != null)
-                            {
-                                eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                                if (eloDiffClient != null)
+                                {
+                                    eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
+                                }
+                                else
+                                {
+                                    _logger.LogError("No proxies available.");
+                                }
                             }
-                            else
+
+                            if (!isPlayerInRedis)
                             {
-                                _logger.LogError("No proxies available.");
+                                var csgoTask = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100");
+                                csgoTask.Wait();
+                                cachedData = csgoTask.Result;
+
+                                // Cache the result
+                                _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3)); 
                             }
+
+                            var cs2Task = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100");
+                            cs2Task.Wait();
+                            cachedData = cs2Task.Result;
+
+                            // Cache the result
+                            _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3));
+
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Downloading 100");
+                            Console.ResetColor();
+
+                            page++;
                         }
-
-                        if (!isPlayerInRedis)
+                        else
                         {
-                            eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("Using cached data for page " + page);
+                            Console.ResetColor();
                         }
-                     
-                           eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                 $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100"));
-                        
-
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("Downloading 100");
-                        Console.ResetColor();
-
-                        page++;
                     }
                     catch (Exception ex)
                     {
