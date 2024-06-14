@@ -61,14 +61,18 @@
         </a>
         @{
             int LevelPossessed = 1;
-            string request = "";
+            var request = Model.Playerinfo.games.csgo.faceit_elo;
 
             if (Model.Playerinfo != null && Model.Playerinfo.games != null)
             {
-                if (Model.Playerinfo.games.cs2 != null && Model.Playerinfo.games.cs2.skill_level == null)
+                if (Model.Playerinfo.games.cs2 == null)
                 {
                     LevelPossessed = Model.Playerinfo.games.csgo.skill_level;
-                    request = "Model.Playerinfo.games.csgo.skill_level";
+                    request = Model.Playerinfo.games.csgo.faceit_elo;
+                }
+                else { 
+                    LevelPossessed = Model.Playerinfo.games.cs2.skill_level;
+                    request = Model.Playerinfo.games.cs2.faceit_elo;
                 }
             }
 
