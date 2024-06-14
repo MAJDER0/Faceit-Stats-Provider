@@ -8,6 +8,7 @@
     ".NETCoreApp,Version=v6.0": {
       "Faceit_Stats_Provider/1.0.0": {
         "dependencies": {
+          "Flurl": "4.0.0",
           "Flurl.Http": "4.0.2",
           "Newtonsoft.Json": "13.0.3",
           "StackExchange.Redis": "2.7.27",

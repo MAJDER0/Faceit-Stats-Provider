@@ -417,6 +417,10 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
+.match-row.BLAST:hover {
+    background-color: rgba(85,27,142,0.18);
+}
+
 .CountryFlag {
     margin-left:1%;
 }

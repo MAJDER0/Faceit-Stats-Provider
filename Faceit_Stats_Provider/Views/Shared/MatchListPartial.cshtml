@@ -130,7 +130,7 @@
                                 {
                                 <td>
                                         @{
-                                            if (match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                                            if (match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                                             {
                                                                                         <p class="Result">BLAST</p>
                                             }
@@ -159,7 +159,7 @@
                             }
                          }
 
-                            if (match.rounds[0].best_of == "Walkover" && !match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                            if (match.rounds[0].best_of == "Walkover" && !match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                             {
                             <tr class="match-row-second Walkover" style="display: none;">
 
@@ -185,7 +185,7 @@
                                 </script>
                             </tr>
                             }
-                        else if (match.rounds[0].best_of == "Walkover" && match.rounds[0].competition_name.ToString().Contains("BLAST"))
+                        else if (match.rounds[0].best_of == "Walkover" && match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                         {
                         <tr class="match-row-second Walkover BLAST" style="display: none;">
 

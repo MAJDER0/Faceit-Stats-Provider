@@ -535,6 +535,7 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
+      "Flurl >= 4.0.0",
       "Flurl.Http >= 4.0.2",
       "Newtonsoft.Json >= 13.0.3",
       "StackExchange.Redis >= 2.7.27",
@@ -581,6 +582,10 @@
       "net6.0": {
         "targetAlias": "net6.0",
         "dependencies": {
+          "Flurl": {
+            "target": "Package",
+            "version": "[4.0.0, )"
+          },
           "Flurl.Http": {
             "target": "Package",
             "version": "[4.0.2, )"
