@@ -78,15 +78,15 @@ namespace Faceit_Stats_Provider.Controllers
                     $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
 
-                    var MatchhHistoryTaskResult = await matchhistoryTask;
+                var MatchhHistoryTaskResult = await matchhistoryTask;
 
-                    if (MatchhHistoryTaskResult.items.Count() == 0)
-                    {
+                if (MatchhHistoryTaskResult.items.Count() == 0)
+                {
                     matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
                         $"v4/players/{playerinf.player_id}/history?game=csgo&from=120&offset=0&limit=20");
 
-                    }
-                              
+                }
+
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
                     $"v4/players/{playerinf.player_id}/stats/cs2");
 
@@ -94,10 +94,11 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     var overallplayerstatsTaskResult = await overallplayerstatsTask;
                 }
-                catch {
+                catch
+                {
 
-                     overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
-                        $"v4/players/{playerinf.player_id}/stats/csgo");
+                    overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
+                       $"v4/players/{playerinf.player_id}/stats/csgo");
 
                 }
 
@@ -108,8 +109,8 @@ namespace Faceit_Stats_Provider.Controllers
 
                 if (eloDiffTaskResult.Count() == 0)
                 {
-                     eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=31");
+                    eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                       $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=31");
                 }
 
                 var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
@@ -145,7 +146,7 @@ namespace Faceit_Stats_Provider.Controllers
                     MaxDegreeOfParallelism = 3
                 };
 
-                Parallel.ForEach(eloRetrievesCount, parallelOptions, (id, _) =>
+                Parallel.ForEach(eloRetrievesCount, parallelOptions, async (id, _) =>
                 {
                     try
                     {
@@ -170,22 +171,24 @@ namespace Faceit_Stats_Provider.Controllers
                                     _logger.LogError("No proxies available.");
                                 }
                             }
-
                             if (!isPlayerInRedis)
                             {
                                 var csgoTask = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                                     $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100");
-                                csgoTask.Wait();
-                                cachedData = csgoTask.Result;
 
-                                // Cache the result
-                                _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3)); 
+                                var cachedDatacsgo = await csgoTask;
+                                _memoryCache.Set(cacheKey, cachedDatacsgo, TimeSpan.FromMinutes(3));
+                                eloDiffTasks.Add(csgoTask);
                             }
 
                             var cs2Task = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
                                 $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100");
-                            cs2Task.Wait();
-                            cachedData = cs2Task.Result;
+
+                            var cs2Data = await cs2Task;
+                            cachedData = cs2Data;
+
+                            eloDiffTasks.Add(cs2Task);
+
 
                             // Cache the result
                             _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3));
