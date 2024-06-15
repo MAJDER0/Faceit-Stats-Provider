@@ -72,7 +72,7 @@ namespace Faceit_Stats_Provider.Controllers
                     playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
                     _memoryCache.Set(nickname, playerinf, TimeSpan.FromMinutes(3));
                     playerid = playerinf.player_id;
-                }            
+                }
 
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
                     $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
@@ -139,7 +139,7 @@ namespace Faceit_Stats_Provider.Controllers
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount-SendDataToRedisLoopCondition);
+                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition);
 
                 ParallelOptions parallelOptions = new()
                 {
@@ -173,21 +173,21 @@ namespace Faceit_Stats_Provider.Controllers
                             }
                             if (!isPlayerInRedis)
                             {
-                                var csgoTask = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100");
+                                /*var csgoTask =*/ eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
 
-                                var cachedDatacsgo = await csgoTask;
-                                _memoryCache.Set(cacheKey, cachedDatacsgo, TimeSpan.FromMinutes(3));
-                                eloDiffTasks.Add(csgoTask);
+                                //var cachedDatacsgo = await csgoTask;
+                                //_memoryCache.Set(cacheKey, cachedDatacsgo, TimeSpan.FromMinutes(3));
+                                //eloDiffTasks.Add(csgoTask);
                             }
 
-                            var cs2Task = eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100");
+                            /*var cs2Task =*/ eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100"));
 
-                            var cs2Data = await cs2Task;
-                            cachedData = cs2Data;
+                            //var cs2Data = await cs2Task;
+                            //cachedData = cs2Data;
 
-                            eloDiffTasks.Add(cs2Task);
+                            //eloDiffTasks.Add(cs2Task);
 
 
                             // Cache the result
@@ -219,7 +219,7 @@ namespace Faceit_Stats_Provider.Controllers
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
 
                 var EloDiffresultsFiltered = allEloDiffResults.SelectMany(x => x);
-                var saver = new SaveToRedisAsynchronous(_configuration); 
+                var saver = new SaveToRedisAsynchronous(_configuration);
                 await saver.SavePlayerToRedis(playerid, EloDiffresultsFiltered);
 
 
@@ -421,7 +421,7 @@ namespace Faceit_Stats_Provider.Controllers
                 MatchHistory = matchhistory,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
-                ErrorMessage = errorString,                                        
+                ErrorMessage = errorString,
             };
 
             ViewData["PlayerStats"] = false;

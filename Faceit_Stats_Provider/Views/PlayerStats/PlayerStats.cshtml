@@ -912,7 +912,10 @@
                                 <tbody>
                                         @if (match.teams is not null)
                                         {
-                                            @foreach (var player in match.teams[0].players)
+                                            var playersTeam0 = match.teams[0].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
+
+
+                                            @foreach (var player in playersTeam0)
                                             {
                                             <tr>
                                                 <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
@@ -952,7 +955,9 @@
                                 <tbody>
                                         @if (match.teams is not null)
                                         {
-                                            @foreach (var player in match.teams[1].players)
+                                            var playersTeam1 = match.teams[1].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
+
+                                            @foreach (var player in playersTeam1)
                                             {
                                             <tr>
                                                 <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>

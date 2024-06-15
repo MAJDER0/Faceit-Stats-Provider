@@ -267,8 +267,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        @if (match.rounds[0].best_of != "Walkover") { 
-                                            @foreach (var player in match.rounds[0].teams[0].players)
+                                        @if (match.rounds[0].best_of != "Walkover") {
+
+                                                var playersTeam0 = match.rounds[0].teams[0].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
+
+
+                                                @foreach (var player in playersTeam0)
                                             {
                                             <tr>
                                                 <td>
@@ -314,7 +318,10 @@
                                 <tbody>
                                             @if (match.rounds[0].best_of != "Walkover")
                                             {
-                                                @foreach (var player in match.rounds[0].teams[1].players)
+                                                var playersTeam1 = match.rounds[0].teams[1].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
+
+
+                                                @foreach (var player in playersTeam1)
                                                 {
                                                     <tr>
                                                         <td>
