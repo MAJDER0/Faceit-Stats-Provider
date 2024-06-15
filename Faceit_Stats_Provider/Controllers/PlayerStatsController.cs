@@ -77,6 +77,16 @@ namespace Faceit_Stats_Provider.Controllers
                 var matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
                     $"v4/players/{playerinf.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
+
+                    var MatchhHistoryTaskResult = await matchhistoryTask;
+
+                    if (MatchhHistoryTaskResult.items.Count() == 0)
+                    {
+                    matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
+                        $"v4/players/{playerinf.player_id}/history?game=csgo&from=120&offset=0&limit=20");
+
+                    }
+                              
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
                     $"v4/players/{playerinf.player_id}/stats/cs2");
 
