@@ -12,6 +12,13 @@
         else if (Model.Playerinfo is null)
         {
             <div class="h4">No more matches</div>
+            
+            <script>
+                $(document).ready(function () {
+                    $('#loadMoreButton').hide(); 
+                });
+            </script>
+
         }
         else
         {
@@ -113,7 +120,8 @@
                                     </td>
                                     <td>
                                         @{
-                                            int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
+                                            int elodifference = 0;
+                                            //int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
                                         }
                                         <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
                                             @(

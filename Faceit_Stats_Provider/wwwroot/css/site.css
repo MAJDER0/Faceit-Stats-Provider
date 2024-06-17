@@ -513,6 +513,9 @@ input:checked + .slider:before {
         color: #ff3c22;
     }
 
+#loadMoreButton {
+    display:block;
+}
 
 /*.SeeCompleteStatistics-button {
     background-color: rgba(0, 0, 0, 0.5);
