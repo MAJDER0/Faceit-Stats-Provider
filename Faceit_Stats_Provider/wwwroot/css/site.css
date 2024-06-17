@@ -516,6 +516,9 @@ input:checked + .slider:before {
 #loadMoreButton {
     display:block;
 }
+.NoMoreMatches {
+    margin-top:4%;
+}
 
 /*.SeeCompleteStatistics-button {
     background-color: rgba(0, 0, 0, 0.5);
