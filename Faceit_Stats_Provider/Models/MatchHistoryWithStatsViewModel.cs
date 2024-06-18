@@ -7,5 +7,6 @@
         public List<EloDiff.Root> EloDiff { get; set; }
         public PlayerStats.Rootobject Playerinfo { get; set; }
         public string ErrorMessage { get; set; }
+        public string Game { get; set; }
     }
 }

@@ -34,6 +34,7 @@
                         <th>STATS</th>
                         <th>K/R</th>
                         <th>K/D</th>
+                        <th>LINK</th>
                         <th>ELO</th>
                     </tr>
                 </thead>
@@ -118,10 +119,15 @@
                                             <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
                                         }
                                     </td>
+
+                                    <td>
+                                        <a href="https://www.faceit.com/en/@Model.Game/room/@match.rounds[0].match_id" target="_blank">
+                                            <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
+                                        </a>
+                                    </td>
                                     <td>
                                         @{
-                                            int elodifference = 0;
-                                            //int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
+                                            int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
                                         }
                                         <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
                                             @(
@@ -153,6 +159,7 @@
                                 <td>
                                     <p class="Result">@match.rounds[0].competition_name</p>
                                 </td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -256,7 +263,7 @@
 
 
                         <tr class="scoreboard match-row-second" style="display: none;">
-                        <td colspan="9">
+                        <td colspan="10">
                             <table class="table matchesTableStats">
                                 <thead>
                                     <tr>

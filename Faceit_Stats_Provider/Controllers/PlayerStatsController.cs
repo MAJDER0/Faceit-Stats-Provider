@@ -62,6 +62,7 @@ namespace Faceit_Stats_Provider.Controllers
 
             long RedisEloRetrievesCount = 0;
             string errorString;
+            string game = "cs2";
 
             try
             {
@@ -84,6 +85,7 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     matchhistoryTask = client.GetFromJsonAsync<MatchHistory.Rootobject>(
                         $"v4/players/{playerinf.player_id}/history?game=csgo&from=120&offset=0&limit=20");
+                    game = "csgo";
 
                 }
 
@@ -421,6 +423,7 @@ namespace Faceit_Stats_Provider.Controllers
                 MatchHistory = matchhistory,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
+                Game = game,
                 ErrorMessage = errorString,
             };
 
@@ -437,7 +440,7 @@ namespace Faceit_Stats_Provider.Controllers
         public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID, bool isOffsetModificated)
         {
             int limit = 10;
-            int page = 1;
+            int page = 1; // doesnt matter can stay static
             string game = "cs2";
 
             if (offset > 100)
@@ -491,11 +494,8 @@ namespace Faceit_Stats_Provider.Controllers
                     var additionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
                         $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset + limit}&limit=1");
 
-
-                    if (additionalMatch?.items != null && additionalMatch.items.Count() > 0)
-                    {
                         matchhistory.items = matchhistory.items.Concat(additionalMatch.items).ToArray();
-                    }
+                    
                 }
 
                 if (matchhistory?.items != null && matchhistory.items.Count() > 0)
@@ -555,7 +555,8 @@ namespace Faceit_Stats_Provider.Controllers
                         Playerinfo = playerinf,
                         MatchHistoryItems = matchhistory.items.ToList(),
                         MatchStats = matchStatsList,
-                        EloDiff = eloDiff
+                        EloDiff = eloDiff,
+                        Game = game
                     };
 
                     return PartialView("MatchListPartial", viewModel);
