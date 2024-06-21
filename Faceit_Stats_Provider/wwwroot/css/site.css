@@ -324,16 +324,14 @@ input[type="submit"]:hover {
         color: darkmagenta;
     }
 
-    /* Style the table rows */
     .matchesTable tbody tr {
         background-color: rgba(0, 0, 0, 0.4);
         cursor: pointer;
     }
 
-
     .matchesTable th,
     .matchesTable td {
-        border-color: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
     }
 
 
@@ -350,6 +348,7 @@ input[type="submit"]:hover {
     background-color: transparent;
     border: none;
     color: white;
+    
 }
 
     .matchesTableStats thead {
@@ -357,6 +356,33 @@ input[type="submit"]:hover {
         font-size: 14px;
         color: darkmagenta;
     }
+
+    .matchesTableStats th,
+    .matchesTableStats td {
+        cursor: default;
+    }
+
+.matchesAdditionalTableStats {
+    background-color: transparent;
+    border: none;
+    color: white;
+}
+
+    .matchesAdditionalTableStats thead {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-size: 14px;
+        color: red;
+    }
+
+    .matchesAdditionalTableStats th,
+    .matchesAdditionalTableStats td {
+        cursor: default;
+    }
+
+
+.more-button {
+    cursor:pointer;
+}
 
 .MapsTable {
     background-color: transparent;

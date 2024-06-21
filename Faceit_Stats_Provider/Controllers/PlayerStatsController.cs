@@ -411,6 +411,7 @@ namespace Faceit_Stats_Provider.Controllers
                 return RedirectToAction("PlayerNotFound");
             }
 
+
             var redisFetcher = new RedisFetchMaxElo(_configuration);
             int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
 

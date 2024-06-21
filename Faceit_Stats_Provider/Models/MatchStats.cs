@@ -71,7 +71,7 @@ namespace Faceit_Stats_Provider.Models
             public string PentaKills { get; set; }
             public string Result { get; set; }
             [JsonPropertyName("Quadro Kills")]
-            public string QuadroKills { get; set; }  
+            public string QuadroKills { get; set; }
             [JsonPropertyName("Headshots %")]
             public string HeadshotsPercentage { get; set; }
             [JsonPropertyName("K/R Ratio")]
@@ -81,6 +81,58 @@ namespace Faceit_Stats_Provider.Models
             public string Assists { get; set; }
             public string MVPs { get; set; }
             public string Kills { get; set; }
+
+
+            [JsonPropertyName("ADR")]
+            public string ADR { get; set; } //
+
+            [JsonPropertyName("1v1Wins")]
+            public string v1Wins { get; set; } //
+
+            [JsonPropertyName("1v2Wins")]
+            public string v2Wins { get; set; } //
+
+            [JsonPropertyName("Sniper Kills")]
+            public string SniperKills { get; set; } //
+
+            [JsonPropertyName("Clutch Kills")]
+            public string ClutchKills { get; set; } //
+
+            [JsonPropertyName("Flash Count")]
+            public string FlashCount { get; set; }//
+
+            [JsonPropertyName("Utility Damage")]
+            public string UtilityDamage { get; set; } //
+
+            [JsonPropertyName("Zeus Kills")]
+            public string ZeusKills { get; set; } //
+            
+            [JsonPropertyName("Pistol Kills")]
+            public string PistolKills { get; set; }//
+
+            [JsonPropertyName("Damage")]
+            public string Damage { get; set; } //
+
+            [JsonPropertyName("Flash Successes")]
+            public string FlashSuccesses { get; set; } // 
+
+            [JsonPropertyName("Entry Count")]
+            public string EntryCount { get; set; } //
+
+            [JsonPropertyName("Entry Wins")]
+            public string EntryWins { get; set; } //
+
+            [JsonPropertyName("First Kills")]
+            public string FirstKills { get; set; } //
+
+            [JsonPropertyName("Double Kills")]
+            public string DoubleKills { get; set; }//
+
+            [JsonPropertyName("Enemies Flashed")]
+            public string EnemiesFlashed { get; set; }//
+
+            [JsonPropertyName("Knife Kills")]
+            public string KnifeKills { get; set; } //
         }
 
     }
