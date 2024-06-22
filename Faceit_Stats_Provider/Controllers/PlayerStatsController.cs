@@ -438,7 +438,7 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
 
-        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID, bool isOffsetModificated)
+        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID, bool isOffsetModificated, int QuantityOfEloRetrieves = 10)
         {
             int limit = 10;
             int page = 1; // doesnt matter can stay static
@@ -542,7 +542,7 @@ namespace Faceit_Stats_Provider.Controllers
                     }).ToList();
 
                     var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/{playerID}/games/{game}?page={page}&size={limit + 1}");
+                        $"v1/stats/time/users/{playerID}/games/{game}?page={page}&size={QuantityOfEloRetrieves + 10}");
 
                     foreach (var result in await Task.WhenAll(task))
                     {
