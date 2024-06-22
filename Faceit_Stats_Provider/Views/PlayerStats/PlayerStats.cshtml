@@ -773,28 +773,22 @@
                                     @{
                                         var eloDiffList = Model.EloDiff;
                                         var targetEloDiff = eloDiffList.FirstOrDefault(eloDiff => eloDiff.match_Id == match.match_id);
-                                        int elodifference=0;
+                                        int elodifference = 0;
 
                                         if (targetEloDiff != null)
-{
+                                        {
                                             int targetIndex = eloDiffList.IndexOf(targetEloDiff);
 
                                             if (targetIndex < eloDiffList.Count - 1)
                                             {
-                                                 elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + 1].elo.ToString());
-                                                // Use the elodifference as needed
+                                                elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + 1].elo.ToString());
+
                                             }
-                                            else
-                                            {
-                                                // Handle the case where the target entry is the last in the list
-                                            }
-                                        }else
-                                        {
-                                            // Handle the case where no matching entry was found
+
                                         }
 
-                                        //int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
                                     }
+
                                 <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707")))">
                                         @(
                                             elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))

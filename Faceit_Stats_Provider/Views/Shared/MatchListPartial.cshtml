@@ -133,23 +133,17 @@
                                         int elodifference=0;
 
                                         if (targetEloDiff != null)
-{
+                                        {       
                                             int targetIndex = eloDiffList.IndexOf(targetEloDiff);
 
                                             if (targetIndex < eloDiffList.Count - 1)
                                             {
                                                  elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + 1].elo.ToString());
-                                                // Use the elodifference as needed
+                                                
                                             }
-                                            else
-                                            {
-                                                // Handle the case where the target entry is the last in the list
-                                            }
-                                        }else
-                                        {
-                                            // Handle the case where no matching entry was found
+                                          
                                         }
-                                            //int elodifference = (int.Parse(Model.EloDiff[index].elo.ToString()) - int.Parse(Model.EloDiff[index + 1].elo.ToString()));
+                                            
                                         }
                                         <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
                                             @(
@@ -293,10 +287,12 @@
                                         @{
                                             bool ShowDifferentStats = false;
 
-                                            //    if (match is not null && match.rounds[0] is not null && match.rounds[0].teams[0] is not null && match.rounds[0].teams[0].players[0].player_stats.ADR is not null)
-                                            //{
-                                            //    ShowDifferentStats = true;
-                                            //}
+                                            var firstPlayerADR = match.rounds[0].teams[0].players.FirstOrDefault()?.player_stats?.ADR;
+
+                                            if (firstPlayerADR != null)
+                                            {
+                                                ShowDifferentStats = true;
+                                            }
 
                                         }
 

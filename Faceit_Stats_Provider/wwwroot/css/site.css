@@ -334,6 +334,15 @@ input[type="submit"]:hover {
         border-color: rgba(255, 255, 255, 0.1);
     }
 
+.faq-link span {
+    color: #ff3c22;
+    font-size: 1rem; /* Smaller font size for FAQ */
+}
+
+    .faq-link span:hover {
+        color: white;
+    }
+
 
     .matchesTable tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.6);
