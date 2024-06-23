@@ -22,11 +22,11 @@
                         @{
                             if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
                             {
-                                                                                                                        <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                             else
                             {
-                                                                                                                        <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                         }
                     </a>
@@ -37,8 +37,10 @@
                 }
 
 
-                <div class="PlayerNick">@Model.Playerinfo.nickname 
-                    <span class="CountryFlag"><img src="https://flagsapi.com/@(Model.Playerinfo.country.ToUpper())/shiny/64.png" width="24px" height="24px">
+                <div class="PlayerNick">
+                    @Model.Playerinfo.nickname
+                    <span class="CountryFlag">
+                        <img src="https://flagsapi.com/@(Model.Playerinfo.country.ToUpper())/shiny/64.png" width="24px" height="24px">
 
                         @if (Model.Playerinfo.player_id == "2faca739-6ec4-4e33-8ee2-e326c6590b53")
                         {
@@ -77,7 +79,8 @@
                     LevelPossessed = Model.Playerinfo.games.csgo.skill_level;
                     request = Model.Playerinfo.games.csgo.faceit_elo;
                 }
-                else { 
+                else
+                {
                     LevelPossessed = Model.Playerinfo.games.cs2.skill_level;
                     request = Model.Playerinfo.games.cs2.faceit_elo;
                 }
@@ -85,7 +88,7 @@
 
             else
             {
-                                <p>Player information or game stats are not available.</p>
+                <p>Player information or game stats are not available.</p>
             }
         }
 
@@ -224,9 +227,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string id, bool RankedGame = false, bool FiveVsFiveGame = false)
                     {
-                                                                                                                <p class="title">LAST 20</p>
+                        <p class="title">LAST 20</p>
 
-                                                                                                        @if (MatchesStats != null)
+                        @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -238,7 +241,7 @@
                             int matchCounter = 0;
                             int matchCounterWithWalkovers = 0;
 
-                                                                                                            @foreach (var match in MatchesStats)
+                            @foreach (var match in MatchesStats)
                             {
                                 if (match.teams is not null && match.best_of != "Walkover")
                                 {
@@ -309,18 +312,18 @@
                             string averageKillsFormatted = (averageKills % 1 >= 0.5) ? Math.Ceiling(averageKills).ToString("F0") : averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                                                                                                                    <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                                                                                                                    <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                                                                                                                    <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                                                                                                                    <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                                                                                                                    <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                                                                                                                    <span>
-                                                                                                                        @{
+                            <span>
+                                @{
                                     int balance = 9999;
                                     int lastEloToRetrieve = 0;
                                     int firstEloToRetrieve = 0;
@@ -363,26 +366,26 @@
 
                                         balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
-                                                                                                                        }
-                                                                                                                    </span>
+                                }
+                            </span>
 
-                                                                                                                    <p>
-                                                                                                                        BALANCE: @{
+                            <p>
+                                <span class="BALANCE" title="How much you lost or gained within the last 20 matches">BALANCE:</span> @{
                                     if (balance != 9999)
                                     {
-                                                                                                                                                                                                                        <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
-                                                                                                                                                                                                                            @(
+                                        <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
+                                            @(
                                         balance > 0 ? '+' : (balance < 0 ? "-" : "")
-                                                                                                                                                                                                                                )@Math.Abs(balance)
-                                                                                                                                                                                                                        </span>
+                                                )@Math.Abs(balance)
+                                        </span>
                                     }
 
                                     else
                                     {
-                                                                                                                                                                                                                        <span class="Result">-</span>
+                                        <span class="Result">-</span>
                                     }
-                                                                                                                        }
-                                                                                                                    </p>
+                                }
+                            </p>
 
 
                         }
@@ -391,13 +394,13 @@
 
                 <div id="Last20Stats">
                     @{
-                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, false,false);
+                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, false, false);
                     }
                 </div>
 
                 <div id="RankedGames">
                     @{
-                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, true,false);
+                        RenderLast20Stats(Model.Last20MatchesStats, Model.Playerinfo.player_id, true, false);
                     }
                 </div>
 
@@ -471,7 +474,7 @@
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'table-row';
                             }
-                              for (let i = 0; i < v5ALLmatches.length; i++) {
+                            for (let i = 0; i < v5ALLmatches.length; i++) {
                                 v5ALLmatches[i].style.display = 'table-row';
                             }
 
@@ -494,11 +497,11 @@
                             All5v5games.style.display = 'none';
                             rankedGames.style.display = 'none';
 
-                                for (let i = 0; i < v1TableMatches.length; i++) {
-                                    v1TableMatches[i].style.display = 'table-row';
-                                }
+                            for (let i = 0; i < v1TableMatches.length; i++) {
+                                v1TableMatches[i].style.display = 'table-row';
+                            }
 
-                                toggleSwitch.checked = false;
+                            toggleSwitch.checked = false;
 
 
                         }
@@ -604,7 +607,7 @@
             }
         }
 
-                                                        for (var i = 0; i < 20; i++) {
+                                                                        for (var i = 0; i < 20; i++) {
             matches.push(totalMatches - i);
         }
 
@@ -769,7 +772,7 @@
                                 </a>
                             </td>
 
-                                <td>
+                            <td>
                                     @{
                                         var eloDiffList = Model.EloDiff;
                                         var targetEloDiff = eloDiffList.FirstOrDefault(eloDiff => eloDiff.match_Id == match.match_id);
@@ -804,36 +807,36 @@
 
                             else
                             {
-                                <td>
-                                        @{
-                                            if (match.competition_name.ToString().ToUpper().Contains("BLAST"))
-                                            {
-                                                                                                                                    <p class="Result">BLAST</p>
-                                            }
-
-                                            else
-                                            {
-                                                                                                                                    <p class="Result">Walkover</p>
-                                            }
+                            <td>
+                                    @{
+                                        if (match.competition_name.ToString().ToUpper().Contains("BLAST"))
+                                        {
+                                        <p class="Result">BLAST</p>
                                         }
-                                </td>
-                                <td></td>
-                                <td>
-                                    <p class="Result">@match.competition_name</p>
-                                </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+
+                                        else
+                                        {
+                                        <p class="Result">Walkover</p>
+                                        }
+                                    }
+                            </td>
+                            <td></td>
+                            <td>
+                                <p class="Result">@match.competition_name</p>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 <a href="https://www.faceit.com/en/cs2/room/@match.match_id" target="_blank">
                                     <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
                                 </a>
                             </td>
-                                <td></td>
+                            <td></td>
 
-                                
+
                             }
                         }
 
@@ -866,10 +869,10 @@
                         </tr>
                         }
 
-                        else if(Model.Last20MatchesStats[matchCounter].best_of == "Walkover" && Model.Last20MatchesStats[matchCounter].competition_name.ToString().ToUpper().Contains("BLAST"))
+                        else if (Model.Last20MatchesStats[matchCounter].best_of == "Walkover" && Model.Last20MatchesStats[matchCounter].competition_name.ToString().ToUpper().Contains("BLAST"))
                         {
                         <tr class="match-row Walkover BLAST" style="display: none;">
-                                 @{
+                                @{
                                     RenderMatchInTable();
                                 }
 
@@ -905,7 +908,7 @@
 
                         }
 
-                        else if (Model.Last20MatchesStats[matchCounter].game_mode=="5v5")
+                        else if (Model.Last20MatchesStats[matchCounter].game_mode == "5v5")
                         {
                         <tr class="match-row v5MatchALL">
                                 @{
@@ -956,7 +959,7 @@
                                             <th>MORE</th>
                                             }
                                     </tr>
-                           
+
                                 </thead>
                                 <tbody>
                                         @if (match.teams is not null)
@@ -966,9 +969,9 @@
 
                                             @foreach (var player in playersTeam0)
                                             {
-                                              <tr>
+                                            <tr>
                                                 <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                                <td style="text-align:center;">@player.player_stats.Kills</td>                                               
+                                                <td style="text-align:center;">@player.player_stats.Kills</td>
                                                 <td style="text-align:center;">@player.player_stats.Deaths</td>
                                                 <td style="text-align:center;">@player.player_stats.Assists</td>
                                                 <td style="text-align:center;">@player.player_stats.KRRatio</td>
@@ -981,20 +984,22 @@
                                                 <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
                                                     @if (ShowDifferentStats)
                                                     {
-                                                        <td class="more-button" style="text-align:center;">more</td>
+                                                    <td class="more-button" style="text-align:center;">
+                                                        <img src="/niewypelnione2red.png" alt="Icon" class="more-button-cursor" height="25px" width="25px" />
+                                                    </td>
                                                     }
-                                                </tr>
+                                            </tr>
 
                                             <tr class="scoreboard match-row" style="display: none;">
                                                 <td colspan="13">
-                                                    
+
                                                     <table class="table matchesAdditionalTableStats">
                                                         <thead>
                                                             <tr>
                                                                 <th>CLUTCH KILLS</th>
                                                                 <th>FIRST KILLS</th>
                                                                 <th>TOTAL DAMAGE</th>
-                                                                <th>ENTRY WINS</th>                                                               
+                                                                <th>ENTRY WINS</th>
                                                                 <th>FLASH COUNT</th>
                                                                 <th>FLASH SUCCESS</th>
                                                                 <th>ENEMIES FLASHED</th>
@@ -1003,7 +1008,7 @@
                                                                 <th>ZEUS KILLS</th>
                                                                 <th>KNIFE KILLS</th>
                                                                 <th>DOUBLE KILLS</th>
-                                                                
+
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -1012,123 +1017,123 @@
                                                         <td style="text-align:center;">@player.player_stats.Damage</td>
                                                         <td style="text-align:center;">@player.player_stats.EntryWins</td>
                                                         <td style="text-align:center;">@player.player_stats.FlashCount</td>
-                                                        <td style="text-align:center;">@player.player_stats.FlashSuccesses</td>                                                        
+                                                        <td style="text-align:center;">@player.player_stats.FlashSuccesses</td>
                                                         <td style="text-align:center;">@player.player_stats.EnemiesFlashed</td>
                                                         <td style="text-align:center;">@player.player_stats.PistolKills</td>
                                                         <td style="text-align:center;">@player.player_stats.SniperKills</td>
                                                         <td style="text-align:center;">@player.player_stats.ZeusKills</td>
                                                         <td style="text-align:center;">@player.player_stats.KnifeKills</td>
                                                         <td style="text-align:center;">@player.player_stats.DoubleKills</td>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
                                             }
                                         }
-                                </tbody>
-                            </table>
-                            <table class="table matchesTableStats">
-                                <thead>                                  
+                    </tbody>
+                </table>
+                <table class="table matchesTableStats">
+                    <thead>
 
-                                    <tr>
-                                        <th>PLAYER</th>
-                                        <th>KILLS</th>
-                                        <th>DEATHS</th>
-                                        <th>ASSISTS</th>
-                                        <th>K/R</th>
-                                        <th>K/D</th>
-                                        <th>@(ShowDifferentStats ? "ADR" : "HEADSHOTS" )</th>                                         
-                                        <th>HEADSHOTS %</th>
-                                        <th>@(ShowDifferentStats ? "ENTRY COUNT" : "MVPs")</th>
-                                        <th>@(ShowDifferentStats ? "1v1 WINS" : "TRIPPLE KILLS")</th>
-                                        <th>@(ShowDifferentStats ? "1v2 WINS" : "QUADRO KILLS")</th>
-                                        <th>@(ShowDifferentStats ? "UTILITY DAMAGE" : "PENTA KILLS")</th>
+                        <tr>
+                            <th>PLAYER</th>
+                            <th>KILLS</th>
+                            <th>DEATHS</th>
+                            <th>ASSISTS</th>
+                            <th>K/R</th>
+                            <th>K/D</th>
+                            <th>@(ShowDifferentStats ? "ADR" : "HEADSHOTS")</th>
+                            <th>HEADSHOTS %</th>
+                            <th>@(ShowDifferentStats ? "ENTRY COUNT" : "MVPs")</th>
+                            <th>@(ShowDifferentStats ? "1v1 WINS" : "TRIPPLE KILLS")</th>
+                            <th>@(ShowDifferentStats ? "1v2 WINS" : "QUADRO KILLS")</th>
+                            <th>@(ShowDifferentStats ? "UTILITY DAMAGE" : "PENTA KILLS")</th>
                                             @if (ShowDifferentStats)
                                             {
-                                                <th>MORE</th>
+                                <th>MORE</th>
                                             }
-                                        </tr>
-                                </thead>
-                                <tbody>
+                        </tr>
+                    </thead>
+                    <tbody>
                                         @if (match.teams is not null)
                                         {
                                             var playersTeam1 = match.teams[1].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
 
                                             @foreach (var player in playersTeam1)
                                             {
-                                            <tr>
-                                                <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                                <td style="text-align:center;">@player.player_stats.Kills</td>                                               
-                                                <td style="text-align:center;">@player.player_stats.Deaths</td>
-                                                <td style="text-align:center;">@player.player_stats.Assists</td>
-                                                <td style="text-align:center;">@player.player_stats.KRRatio</td>
-                                                <td style="text-align:center;">@player.player_stats.KDRatio</td>
-                                                <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
-                                                <td style="text-align:center;">@player.player_stats.HeadshotsPercentage</td>
-                                                <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
-                                                <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
-                                                <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
-                                                <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
+                                <tr>
+                                    <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                    <td style="text-align:center;">@player.player_stats.Kills</td>
+                                    <td style="text-align:center;">@player.player_stats.Deaths</td>
+                                    <td style="text-align:center;">@player.player_stats.Assists</td>
+                                    <td style="text-align:center;">@player.player_stats.KRRatio</td>
+                                    <td style="text-align:center;">@player.player_stats.KDRatio</td>
+                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
+                                    <td style="text-align:center;">@player.player_stats.HeadshotsPercentage</td>
+                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
+                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
+                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
+                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
                                                     @if (ShowDifferentStats)
                                                     {
-                                                        <td class="more-button" style="text-align:center;">more</td>
+                                        <td class="more-button" style="text-align:center;">
+                                            <img src="/niewypelnione2red.png" alt="Icon" height="25px" width="25px" />
+                                        </td>
                                                     }
-                                                </tr>
+                                </tr>
 
-                                            <tr class="scoreboard match-row" style="display: none;">
-                                                <td colspan="13">
-                                                    
-                                                    <table class="table matchesAdditionalTableStats">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>CLUTCH KILLS</th>
-                                                                <th>FIRST KILLS</th>
-                                                                <th>TOTAL DAMAGE</th>
-                                                                <th>ENTRY WINS</th>                                                               
-                                                                <th>FLASH COUNT</th>
-                                                                <th>FLASH SUCCESS</th>
-                                                                <th>ENEMIES FLASHED</th>
-                                                                <th>PISTOL KILLS</th>
-                                                                <th>SNIPER KILLS</th>
-                                                                <th>ZEUS KILLS</th>
-                                                                <th>KNIFE KILLS</th>
-                                                                <th>DOUBLE KILLS</th>
-                                                                
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <td style="text-align:center;">@player.player_stats.ClutchKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.FirstKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.Damage</td>
-                                                        <td style="text-align:center;">@player.player_stats.EntryWins</td>
-                                                        <td style="text-align:center;">@player.player_stats.FlashCount</td>
-                                                        <td style="text-align:center;">@player.player_stats.FlashSuccesses</td>                                                        
-                                                        <td style="text-align:center;">@player.player_stats.EnemiesFlashed</td>
-                                                        <td style="text-align:center;">@player.player_stats.PistolKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.SniperKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.ZeusKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.KnifeKills</td>
-                                                        <td style="text-align:center;">@player.player_stats.DoubleKills</td>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
+                                <tr class="scoreboard match-row" style="display: none;">
+                                    <td colspan="13">
+
+                                        <table class="table matchesAdditionalTableStats">
+                                            <thead>
+                                                <tr>
+                                                    <th>CLUTCH KILLS</th>
+                                                    <th>FIRST KILLS</th>
+                                                    <th>TOTAL DAMAGE</th>
+                                                    <th>ENTRY WINS</th>
+                                                    <th>FLASH COUNT</th>
+                                                    <th>FLASH SUCCESS</th>
+                                                    <th>ENEMIES FLASHED</th>
+                                                    <th>PISTOL KILLS</th>
+                                                    <th>SNIPER KILLS</th>
+                                                    <th>ZEUS KILLS</th>
+                                                    <th>KNIFE KILLS</th>
+                                                    <th>DOUBLE KILLS</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <td style="text-align:center;">@player.player_stats.ClutchKills</td>
+                                            <td style="text-align:center;">@player.player_stats.FirstKills</td>
+                                            <td style="text-align:center;">@player.player_stats.Damage</td>
+                                            <td style="text-align:center;">@player.player_stats.EntryWins</td>
+                                            <td style="text-align:center;">@player.player_stats.FlashCount</td>
+                                            <td style="text-align:center;">@player.player_stats.FlashSuccesses</td>
+                                            <td style="text-align:center;">@player.player_stats.EnemiesFlashed</td>
+                                            <td style="text-align:center;">@player.player_stats.PistolKills</td>
+                                            <td style="text-align:center;">@player.player_stats.SniperKills</td>
+                                            <td style="text-align:center;">@player.player_stats.ZeusKills</td>
+                                            <td style="text-align:center;">@player.player_stats.KnifeKills</td>
+                                            <td style="text-align:center;">@player.player_stats.DoubleKills</td>
+                            </tbody>
+                        </table>
+                        </td>
+                        </tr>
 
                                             }
                                         }
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
+                </tbody>
+                </table>
+                </td>
+                </tr>
 
                         matchCounter++;
                     }
-                </tbody>
+            </tbody>
             </table>
 
             <div id="matchesList">
-
-
             </div>
 
             <button id="loadMoreButton" class="load-more-button">LOAD MORE</button>
@@ -1144,8 +1149,7 @@
                 var QuantityOfEloRetrieves = 10;
 
 
-                if(offset%2==1)
-                {
+                if (offset % 2 == 1) {
                     offset--;
                     isOffsetModificated = true;
                 }
@@ -1182,7 +1186,7 @@
 
                 // Funkcja do aktualizacji offset w zmiennej JavaScript
                 function updateOffset(newOffset) {
-                    
+
                     if (isOffsetModificated) {
                         offset++;
                     }
@@ -1198,7 +1202,7 @@
 <div class="MapStatsRow">
 
     @{
-        List<string> maps = new List<string>() {"DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "ANUBIS","DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
+        List<string> maps = new List<string>() { "DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "ANUBIS", "DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
 
         var displayedMaps = Model.OverallPlayerStatsInfo.segments
         .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))

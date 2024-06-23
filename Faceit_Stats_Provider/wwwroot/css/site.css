@@ -102,7 +102,7 @@ input[type="submit"] {
 .PlayerNick {
     width: 300px;
     text-align: center;
-    color: darkmagenta;
+    color: #5A0273;
     font-weight: bold;
     font-size: 25px;
 }
@@ -132,6 +132,10 @@ input[type="submit"] {
     }
 
 
+.BALANCE {
+    cursor:help;
+}
+
 
 
 #faceitlvl {
@@ -155,7 +159,7 @@ input[type="submit"] {
     .OverallStats p.title {
         font-size: 25px;
         font-weight: bold;
-        color: darkmagenta;
+        color: #5A0273;
     }
 
 .Last20Stats {
@@ -166,7 +170,7 @@ input[type="submit"] {
     .Last20Stats p.title {
         font-size: 25px;
         font-weight: bold;
-        color: darkmagenta;
+        color: #5A0273;
     }
 
 .SwitchToggle {
@@ -243,7 +247,7 @@ input[type="submit"] {
 .ProfilImage {
     border-width: 1px;
     border-style: solid;
-    border-color: darkmagenta;
+    border-color: #5A0273;
 }
 
 .PlayerNotFound .message {
@@ -321,7 +325,7 @@ input[type="submit"]:hover {
         background-color: rgba(0, 0, 0, 0.7);
         font-weight: bold;
         font-size: 18px;
-        color: darkmagenta;
+        color: #5A0273;
     }
 
     .matchesTable tbody tr {
@@ -363,7 +367,7 @@ input[type="submit"]:hover {
     .matchesTableStats thead {
         background-color: rgba(0, 0, 0, 0.7);
         font-size: 14px;
-        color: darkmagenta;
+        color: #5A0273;
     }
 
     .matchesTableStats th,
@@ -380,7 +384,7 @@ input[type="submit"]:hover {
     .matchesAdditionalTableStats thead {
         background-color: rgba(0, 0, 0, 0.7);
         font-size: 14px;
-        color: red;
+        color: #8C1F28;
     }
 
     .matchesAdditionalTableStats th,
@@ -389,7 +393,7 @@ input[type="submit"]:hover {
     }
 
 
-.more-button {
+.more-button-cursor {
     cursor:pointer;
 }
 
@@ -402,7 +406,7 @@ input[type="submit"]:hover {
     .MapsTable thead {
         background-color: rgba(0, 0, 0, 0);
         font-size: 15px;
-        color: darkmagenta;
+        color: #5A0273;
     }
 
     .MapsTable tbody tr {
