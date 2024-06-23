@@ -6,7 +6,7 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     const centerY = canvas.height / 2;
     const circle = canvas.width / 2;
 
-    var x = -3.983;
+    var x = -3.974;
     var dx = AnimationSpeed;
 
     // Draw outer circle
@@ -21,7 +21,7 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     c.beginPath();
     c.arc(centerX, centerY, circle * 0.7, 2.3, 0.90);
     c.lineWidth = circle * 0.2;
-    c.strokeStyle = "RGB(205, 205, 205,0.1)";
+    c.strokeStyle = "rgba(205, 205, 205,0.1)";
     c.fill();
     c.stroke();
 
@@ -32,6 +32,7 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     c.strokeStyle = color;
     c.fill();
     c.stroke();
+
 
     // Draw level text
     c.beginPath();
@@ -51,6 +52,7 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
         c.lineWidth = circle * 0.2;
         c.arc(centerX, centerY, circle * 0.7, 2.3, x);
         c.stroke();
+
 
         if (x <= HowFarAnimationComes) {
             x += dx;

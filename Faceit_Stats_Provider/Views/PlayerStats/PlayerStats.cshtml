@@ -15,12 +15,12 @@
         {
             <div class="PlayerPanel">
 
-                @if (Model.Playerinfo.avatar.Contains("faceit"))
+                @if (Model.Playerinfo.avatar.ToLower().Contains("faceit") || Model.Playerinfo.avatar == "" || Model.Playerinfo.avatar == null)
                 {
                     <a href="https://steamcommunity.com/profiles/@Model.Playerinfo.steam_id_64" target="_blank">
 
                         @{
-                            if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg")
+                            if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg" || Model.Playerinfo.avatar == "" || Model.Playerinfo.avatar == null)
                             {
                                 <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
