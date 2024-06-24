@@ -348,9 +348,57 @@ input[type="submit"]:hover {
     }
 
 
-    .matchesTable tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.6);
-    }
+.nav-starfield {
+    margin-top: 2%; /* Adjusted margin top */
+    color: #f2f2f2;
+    font-size: 1rem; /* Font size matches FAQ */
+}
+
+.starfield-switch {
+    display: flex;
+    align-items: center;
+    margin-left: -20%;
+    margin-top: 3%; /* Adjust margin as needed */
+}
+
+.starfield-check-input {
+    display: none; /* Hide the actual checkbox */
+}
+
+.starfield-check-label {
+    position: relative;
+    display: inline-block;
+    width: 32px; /* Width of the toggle switch */
+    height: 16px; /* Height of the toggle switch */
+    background-color: #303030; /* Default background color */
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer;
+}
+
+.starfield-check-input:checked + .starfield-check-label {
+    background-color: #ff3c22; /* Background color when toggled on */
+}
+
+.starfield-check-label::before {
+    content: '';
+    position: absolute;
+    width: 12px; /* Width of the toggle handle */
+    height: 12px; /* Height of the toggle handle */
+    background-color: #fff; /* Color of the toggle handle */
+    border-radius: 50%; /* Rounded shape */
+    left: 2px; /* Initial position of the toggle handle */
+    top: 2px; /* Adjust vertically */
+    transition: transform 0.3s ease; /* Smooth animation */
+}
+
+.starfield-check-input:checked + .starfield-check-label::before {
+    transform: translateX(16px); /* Position of the toggle handle when checked */
+}
+
+
+.matchesTable tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
 
 
     .matchesTable tbody tr:last-child {
@@ -497,7 +545,7 @@ input[type="submit"]:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: #303030;
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -513,6 +561,7 @@ input[type="submit"]:hover {
         -webkit-transition: .4s;
         transition: .4s;
     }
+
 
 input:checked + .slider {
     background-color: red;
@@ -672,6 +721,10 @@ input:checked + .slider:before {
         width: 10px; /* Increase the size as desired */
         border-radius: 40px; /* Adjust the border radius if needed */
     }
+
+.toggle-on .star-field .layer {
+    display: none; 
+}
 
         .star-field .layer:nth-child(1) {
             animation: sf-fly-by-1 17s linear infinite;
