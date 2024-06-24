@@ -287,7 +287,7 @@
                                         @{
                                             bool ShowDifferentStats = false;
 
-                                            var firstPlayerADR = match.rounds[0].teams[0].players.FirstOrDefault()?.player_stats?.ADR;
+                                                var firstPlayerADR = match?.rounds?.FirstOrDefault()?.teams?.FirstOrDefault()?.players?.FirstOrDefault()?.player_stats?.ADR;
 
                                             if (firstPlayerADR != null)
                                             {

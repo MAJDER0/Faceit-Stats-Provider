@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Concurrent;
 using static Faceit_Stats_Provider.Models.PlayerStats;
+using System.Net.Sockets;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -135,13 +136,20 @@ namespace Faceit_Stats_Provider.Controllers
                     SendDataToRedisLoopCondition = (int)(await _getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerinf.player_id) / 100);
                     RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstatsTask.Result.lifetime.Matches) / 100);
                 }
-
                 var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
 
                 var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
-                var eloRetrievesCount = Enumerable.Range(0, (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition);
+                var retrieveCount = (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition;
+                var eloRetrievesCount = Enumerable.Range(0, 0);
+
+                if (retrieveCount > 0)
+                {
+                    eloRetrievesCount = Enumerable.Range(0, retrieveCount);
+                }
+
+                
 
                 ParallelOptions parallelOptions = new()
                 {
@@ -152,18 +160,13 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     try
                     {
-                        // Create a unique cache key for this operation
                         string cacheKey = $"PlayerData_{playerinf.player_id}_Page_{page}";
 
-                        // Try to get the data from cache
                         if (!_memoryCache.TryGetValue(cacheKey, out List<RedisMatchData.MatchData> cachedData))
                         {
-                            // If not found in cache, proceed with the operation
                             if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
                             {
-                                changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
-                                eloDiffClient = changeProxyIp.GetHttpClientWithRandomProxy();
-
+                                eloDiffClient = GetHttpClientWithRetry(changeProxyIp);
                                 if (eloDiffClient != null)
                                 {
                                     eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
@@ -171,41 +174,26 @@ namespace Faceit_Stats_Provider.Controllers
                                 else
                                 {
                                     _logger.LogError("No proxies available.");
+                                    return; // Exit the loop if no proxies are available
                                 }
                             }
+
                             if (!isPlayerInRedis)
                             {
-                                /*var csgoTask =*/ eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100"));
-
-                                //var cachedDatacsgo = await csgoTask;
-                                //_memoryCache.Set(cacheKey, cachedDatacsgo, TimeSpan.FromMinutes(3));
-                                //eloDiffTasks.Add(csgoTask);
+                                eloDiffTasks.Add(RetryPolicyAsync(() => eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                    $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page={page}&size=100")));
                             }
 
-                            /*var cs2Task =*/ eloDiffTasks.Add(eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100"));
+                            eloDiffTasks.Add(RetryPolicyAsync(() => eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
+                                $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page={page}&size=100")));
 
-                            //var cs2Data = await cs2Task;
-                            //cachedData = cs2Data;
-
-                            //eloDiffTasks.Add(cs2Task);
-
-
-                            // Cache the result
                             _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3));
-
-                            Console.ForegroundColor = ConsoleColor.Yellow;
                             Console.WriteLine("Downloading 100");
-                            Console.ResetColor();
-
                             page++;
                         }
                         else
                         {
-                            Console.ForegroundColor = ConsoleColor.Green;
                             Console.WriteLine("Using cached data for page " + page);
-                            Console.ResetColor();
                         }
                     }
                     catch (Exception ex)
@@ -213,6 +201,7 @@ namespace Faceit_Stats_Provider.Controllers
                         _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
                     }
                 });
+
 
 
                 // Await all tasks to complete
@@ -431,6 +420,50 @@ namespace Faceit_Stats_Provider.Controllers
             ViewData["PlayerStats"] = false;
 
             return View(ConnectionStatus);
+        }
+
+        public static async Task<T> RetryPolicyAsync<T>(Func<Task<T>> action, int maxRetryCount = 3, int delayMilliseconds = 1000)
+        {
+            int retryCount = 0;
+            while (true)
+            {
+                try
+                {
+                    return await action();
+                }
+                catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException || ex is SocketException)
+                {
+                    retryCount++;
+                    if (retryCount > maxRetryCount)
+                    {
+                        throw;
+                    }
+                    await Task.Delay(delayMilliseconds);
+                }
+            }
+        }
+
+        // Method to get HttpClient with retry
+        public static HttpClient GetHttpClientWithRetry(ChangeProxyIP changeProxyIp, int maxRetryCount = 3)
+        {
+            int retryCount = 0;
+            HttpClient client = null;
+
+            while (client == null && retryCount < maxRetryCount)
+            {
+                client = changeProxyIp.GetHttpClientWithRandomProxy();
+                if (client == null)
+                {
+                    retryCount++;
+                }
+            }
+
+            if (client == null)
+            {
+                throw new Exception("Unable to obtain a working proxy after multiple attempts.");
+            }
+
+            return client;
         }
 
         public IActionResult PlayerNotFound()

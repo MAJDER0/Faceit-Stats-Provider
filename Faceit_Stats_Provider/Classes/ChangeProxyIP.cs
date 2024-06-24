@@ -1,28 +1,24 @@
 ﻿using Faceit_Stats_Provider.Models;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using Newtonsoft.Json;
 using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 public class ChangeProxyIP
 {
     private readonly ILogger<ChangeProxyIP> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
+    private List<WebProxy> _proxies;
+    private Random _random = new Random();
 
     public ChangeProxyIP(ILogger<ChangeProxyIP> logger, IHttpClientFactory httpClientFactory)
     {
         _logger = logger;
         _httpClientFactory = httpClientFactory;
+        LoadProxiesFromConfiguration();
     }
 
     public async Task Get()
     {
-        var proxies = LoadProxiesFromConfiguration();
-
-        var randomProxy = GetRandomProxy(proxies);
+        var randomProxy = GetRandomProxy();
         if (randomProxy == null)
         {
             _logger.LogError("No proxies available.");
@@ -35,88 +31,79 @@ public class ChangeProxyIP
 
     public HttpClient GetHttpClientWithRandomProxy()
     {
-        var proxies = LoadProxiesFromConfiguration();
-        var randomProxy = GetRandomProxy(proxies);
-
-        if (randomProxy == null)
+        HttpClient client = null;
+        while (client == null && _proxies.Count > 0)
         {
-            _logger.LogError("No proxies available.");
-            return null;
-        }
-
-        var ip = GetIpWithProxy(randomProxy);
-        Console.ForegroundColor = ConsoleColor.DarkMagenta;
-        Console.WriteLine($"Selected Proxy: {randomProxy.Address.Host}:{randomProxy.Address.Port}, IP: {ip}");
-        Console.ResetColor();
-
-        return GetHttpClientWithProxy(randomProxy);
-    }
-
-    private List<WebProxy> LoadProxiesFromConfiguration()
-    {
-        // Load proxy settings from the configuration file
-        var configurationJson = File.ReadAllText("appsettings.json"); // Adjust the path if needed
-
-        var proxyConfiguration = Newtonsoft.Json.JsonConvert.DeserializeObject<ProxyConfiguration>(configurationJson);
-
-        var webProxies = new List<WebProxy>();
-        foreach (var proxySettings in proxyConfiguration.Proxies)
-        {
-            var webProxy = new WebProxy(proxySettings.Address, proxySettings.Port);
-
-            // Set credentials if provided
-            if (!string.IsNullOrEmpty(proxySettings.Username) && !string.IsNullOrEmpty(proxySettings.Password))
+            var randomProxy = GetRandomProxy();
+            if (randomProxy == null)
             {
-                webProxy.Credentials = new NetworkCredential(proxySettings.Username, proxySettings.Password);
+                _logger.LogError("No proxies available.");
+                break;
             }
 
-            webProxies.Add(webProxy);
+            try
+            {
+                var ip = GetIpWithProxy(randomProxy);
+                Console.WriteLine($"Selected Proxy: {randomProxy.Address.Host}:{randomProxy.Address.Port}, IP: {ip}");
+                client = GetHttpClientWithProxy(randomProxy);
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
+                _proxies.Remove(randomProxy); // Remove the proxy that failed
+            }
         }
 
-        return webProxies;
+        return client;
     }
 
-    private WebProxy GetRandomProxy(List<WebProxy> proxies)
+    private void LoadProxiesFromConfiguration()
     {
-        if (proxies == null || proxies.Count == 0)
+        var configurationJson = File.ReadAllText("appsettings.json");
+        var proxyConfiguration = JsonConvert.DeserializeObject<ProxyConfiguration>(configurationJson);
+        _proxies = proxyConfiguration.Proxies.Select(p => new WebProxy(p.Address, p.Port)
+        {
+            Credentials = string.IsNullOrEmpty(p.Username) ? null : new NetworkCredential(p.Username, p.Password)
+        }).ToList();
+    }
+
+    private WebProxy GetRandomProxy()
+    {
+        if (_proxies == null || _proxies.Count == 0)
         {
             return null;
         }
 
-        var random = new Random();
-        return proxies[random.Next(proxies.Count)];
+        int index = _random.Next(_proxies.Count);
+        var proxy = _proxies[index];
+        _proxies.RemoveAt(index);
+        return proxy;
     }
 
     private async Task<string> GetIpWithProxyAsync(WebProxy proxy)
     {
         using (var httpClient = GetHttpClientWithProxy(proxy))
         {
-            // Use httpClient for making requests with the specified proxy
             return await httpClient.GetStringAsync("https://api.ipify.org/");
+        }
+    }
+
+    private string GetIpWithProxy(WebProxy proxy)
+    {
+        using (var httpClient = GetHttpClientWithProxy(proxy))
+        {
+            return httpClient.GetStringAsync("https://api.ipify.org/").GetAwaiter().GetResult();
         }
     }
 
     private HttpClient GetHttpClientWithProxy(WebProxy proxy)
     {
         var handler = new HttpClientHandler { UseProxy = true, Proxy = proxy };
-
-        // If your proxy requires credentials, add them here
         if (proxy.Credentials != null)
         {
             handler.Proxy.Credentials = proxy.Credentials;
             handler.UseDefaultCredentials = false;
         }
-
         return new HttpClient(handler);
-    }
-
-
-    private string GetIpWithProxy(WebProxy proxy)
-    {
-        // Use a new instance of HttpClient for getting IP
-        using (var httpClient = GetHttpClientWithProxy(proxy))
-        {
-            return httpClient.GetStringAsync("https://api.ipify.org/").GetAwaiter().GetResult();
-        }
     }
 }
