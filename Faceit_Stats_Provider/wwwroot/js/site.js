@@ -13,7 +13,7 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     c.beginPath();
     c.arc(centerX, centerY, circle, 0,  2* Math.PI);
     c.strokeStyle = "rgba(31, 31, 34, 1)";
-    c.fillStyle = "rgba(31, 31, 34, 0.1)";
+    c.fillStyle = "rgba(31, 31, 34, 0.2)";
     c.fill();
     c.stroke();
 
