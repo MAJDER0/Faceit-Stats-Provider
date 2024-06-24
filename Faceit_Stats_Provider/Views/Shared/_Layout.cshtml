@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name=”theme-color” content=”#1f1f1f" />
+    <meta name="theme-color" content="#1f1f1f" />
     <title>@ViewData["Title"] Faceit Stats Provider</title>
-    <link rel="icon" type="image/x-icon" href="/niewypelnione2.ico"/>
+    <link rel="icon" type="image/x-icon" href="/niewypelnione2.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Faceit_Stats_Provider.styles.css" asp-append-version="true" />
@@ -18,7 +18,7 @@
             <div class="container-fluid">
                 <a href="/">
                     <img src="~/niewypelnione2.png" width="35" height="35" class="logo" />
-                </a>                           
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -32,30 +32,22 @@
                         var currentPath = $"{currentArea}/{currentController}/{currentAction}";
                     }
                     <ul class="navbar-nav flex-grow-1">
-
                         @if (currentPath != "/Home/Index")
                         {
-                       
-                                <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>
-                        
-
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>
                         }
                         else
                         {
-                        
-                                <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a></li>
-                                <li><a class="navbar-brand faq-link" asp-area="" asp-controller="FAQ"><span>FAQ</span></a></li>
-                       
+                            <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a></li>
+                            <li><a class="navbar-brand faq-link" asp-area="" asp-controller="FAQ"><span>FAQ</span></a></li>
                         }
-                    
-                            <li class="nav-item d-flex align-items-center">
-                                <span class="nav-starfield replace-white">starfield off</span>
-                                <div class="form-check form-switch starfield-switch">
-                                    <input class="form-check-input starfield-check-input" type="checkbox" id="starfieldSwitch">
-                                    <label class="form-check-label starfield-check-label" for="starfieldSwitch"></label>
-                                </div>
-                            </li>
-
+                        <li class="nav-item d-flex align-items-center">
+                            <span class="nav-starfield replace-white">starfield off</span>
+                            <div class="form-check form-switch starfield-switch">
+                                <input class="form-check-input starfield-check-input" type="checkbox" id="starfieldSwitch">
+                                <label class="form-check-label starfield-check-label" for="starfieldSwitch"></label>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -64,11 +56,12 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
-                <div class="bg"></div>
-                <div class="star-field">
+            <div class="bg"></div>
+            <div class="star-field">
                 <div class="layer"></div>
                 <div class="layer"></div>
                 <div class="layer"></div>
+            </div>
         </main>
     </div>
 
@@ -85,29 +78,21 @@
             function saveToggleState(state) {
                 localStorage.setItem('starfieldToggleState', state);
             }
-
+            
             function loadToggleState() {
-                const state = localStorage.getItem('starfieldToggleState');
-                if (state === 'true') {
-                    toggleSwitch.checked = true;
-                    body.classList.add('toggle-on');
-                } else {
-                    toggleSwitch.checked = false;
-                    body.classList.remove('toggle-on');
-                }
+
+                const state = localStorage.getItem('starfieldToggleState') === 'true';
+                toggleSwitch.checked = state; 
+                body.classList.toggle('toggle-on', state); 
             }
 
             toggleSwitch.addEventListener('change', function () {
-                if (toggleSwitch.checked) {
-                    body.classList.add('toggle-on');
-                    saveToggleState('true');
-                } else {
-                    body.classList.remove('toggle-on');
-                    saveToggleState('false');
-                }
+                const state = toggleSwitch.checked; 
+                body.classList.toggle('toggle-on', state); 
+                saveToggleState(state); 
             });
 
-            loadToggleState();
+            loadToggleState(); 
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

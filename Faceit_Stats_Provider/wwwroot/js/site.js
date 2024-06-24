@@ -2,18 +2,18 @@
 function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     var canvas = document.querySelector('#faceitlvl');
     var c = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const circle = canvas.width / 2;
+    const centerX = canvas.width / 2 ;
+    const centerY = canvas.height / 2 ;
+    const circle = canvas.width / 2 -1;
 
     var x = -3.974;
     var dx = AnimationSpeed;
 
     // Draw outer circle
     c.beginPath();
-    c.arc(centerX, centerY, circle, 0, 2 * Math.PI);
-    c.strokeStyle = "#1F1F22";
-    c.fillStyle = "#1F1F22";
+    c.arc(centerX, centerY, circle, 0,  2* Math.PI);
+    c.strokeStyle = "rgba(31, 31, 34, 1)";
+    c.fillStyle = "rgba(31, 31, 34, 0.1)";
     c.fill();
     c.stroke();
 
@@ -21,9 +21,9 @@ function generatelvl(level, AnimationSpeed, color, HowFarAnimationComes) {
     c.beginPath();
     c.arc(centerX, centerY, circle * 0.7, 2.3, 0.90);
     c.lineWidth = circle * 0.2;
-    c.strokeStyle = "rgba(205, 205, 205,0.1)";
-    c.fill();
+    c.strokeStyle = "rgba(205, 205, 205,0.1";
     c.stroke();
+
 
     // Draw progress arc
     c.beginPath();

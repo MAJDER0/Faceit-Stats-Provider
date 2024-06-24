@@ -123,23 +123,28 @@ input[type="submit"] {
     font-size: 20px;
 }
 
-    .DISCLAIMER span {
-        background-image: linear-gradient(to right, var(--lgbt-color-red), var(--lgbt-color-orange), var(--lgbt-color-yellow), var(--lgbt-color-green), var(--lgbt-color-blue), var(--lgbt-color-violet));
-        display: inline;
-        -webkit-background-clip: text;
-        color: transparent;
-        font-family: 'Oxygen', sans-serif;
-    }
+.DISCLAIMER span {
+    background-image: linear-gradient(to right, var(--lgbt-color-red), var(--lgbt-color-orange), var(--lgbt-color-yellow), var(--lgbt-color-green), var(--lgbt-color-blue), var(--lgbt-color-violet));
+    display: inline;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Oxygen', sans-serif;
+}
 
 
 .BALANCE {
-    cursor:help;
+    cursor: help;
 }
 
 
 
 #faceitlvl {
     font-family: 'Play', sans-serif;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left:5%;
 }
 
 .mainstatspanel {
@@ -219,16 +224,22 @@ input[type="submit"] {
     margin-right: 10px;
 }
 
+.InfoUnderCanvas {
+    margin-top:3%;
+}
+
 .InfoUnderCanvas > p {
     color: red;
     font-weight: bold;
-    margin-left: -3.5%;
+    margin-left: -1%;
 }
 
 .EloInfoUnderCanvas {
     padding-left: 17%;
     font-size: 25px;
+    margin-top:-3%;
 }
+
 
 .EloInfoUnderCanvas2 {
     padding-left: 19%;
@@ -401,9 +412,9 @@ input[type="submit"]:hover {
 }
 
 
-    .matchesTable tbody tr:last-child {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
+.matchesTable tbody tr:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
 
 .matchesTableStats {
     background-color: transparent;
@@ -441,7 +452,7 @@ input[type="submit"]:hover {
 
 
 .more-button-cursor {
-    cursor:pointer;
+    cursor: pointer;
 }
 
 .MapsTable {
@@ -517,12 +528,12 @@ input[type="submit"]:hover {
     cursor: pointer;
 }
 
-.match-row.BLAST:hover {
-    background-color: rgba(85,27,142,0.18);
-}
+    .match-row.BLAST:hover {
+        background-color: rgba(85,27,142,0.18);
+    }
 
 .CountryFlag {
-    margin-left:1%;
+    margin-left: 1%;
 }
 
 .switch {
@@ -610,10 +621,11 @@ input:checked + .slider:before {
     }
 
 #loadMoreButton {
-    display:block;
+    display: block;
 }
+
 .NoMoreMatches {
-    margin-top:4%;
+    margin-top: 4%;
 }
 
 /*.SeeCompleteStatistics-button {
@@ -723,18 +735,17 @@ input:checked + .slider:before {
     }
 
 .toggle-on .star-field .layer {
-    display: none; 
+    display: none;
 }
 
-        .star-field .layer:nth-child(1) {
-            animation: sf-fly-by-1 17s linear infinite;
-        }
+.star-field .layer:nth-child(1) {
+    animation: sf-fly-by-1 17s linear infinite;
+}
 
-        .star-field .layer:nth-child(2) {
-            animation: sf-fly-by-2 17s linear infinite;
-        }
+.star-field .layer:nth-child(2) {
+    animation: sf-fly-by-2 17s linear infinite;
+}
 
-        .star-field .layer:nth-child(3) {
-            animation: sf-fly-by-3 17s linear infinite;
-        }
-
+.star-field .layer:nth-child(3) {
+    animation: sf-fly-by-3 17s linear infinite;
+}
