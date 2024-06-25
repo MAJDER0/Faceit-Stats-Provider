@@ -934,9 +934,14 @@
                                 <thead>
                                         @{
                                             bool ShowDifferentStats = false;
-
-                                            if (match.teams is not null && match.teams[1].players[0].player_stats.ADR != null)
+                                            try
                                             {
+                                                if (match.teams is not null && match.teams[0].players[0].player_stats.ADR != null)
+                                                {
+                                                    ShowDifferentStats = true;
+                                                }
+                                            }
+                                            catch {
                                                 ShowDifferentStats = true;
                                             }
 

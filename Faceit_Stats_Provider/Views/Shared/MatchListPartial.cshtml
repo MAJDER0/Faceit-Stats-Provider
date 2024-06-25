@@ -284,15 +284,20 @@
                             <table class="table matchesTableStats">
                                 <thead>
 
-                                        @{
-                                            bool ShowDifferentStats = false;
+                                            @{
+                                                bool ShowDifferentStats = false;
 
                                                 var firstPlayerADR = match?.rounds?.FirstOrDefault()?.teams?.FirstOrDefault()?.players?.FirstOrDefault()?.player_stats?.ADR;
 
-                                            if (firstPlayerADR != null)
-                                            {
-                                                ShowDifferentStats = true;
-                                            }
+                                                try
+                                                {
+                                                    if (firstPlayerADR != null)
+                                                    {
+                                                        ShowDifferentStats = true;
+                                                    }
+                                                }catch {
+                                                        ShowDifferentStats = true;
+                                                }
 
                                         }
 
