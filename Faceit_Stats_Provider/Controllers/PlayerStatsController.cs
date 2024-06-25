@@ -30,14 +30,14 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly IMemoryCache _memoryCache;
         private readonly Random _random;
         static string playerid = "";
-        private readonly ILogger<ChangeProxyIP> _logger;
+        private readonly ILogger<HttpClientManager> _logger;
         private readonly IConnectionMultiplexer _redis;
         private readonly IConfiguration _configuration;
         private readonly GetTotalEloRetrievesCountFromRedis _getTotalEloRetrievesCountFromRedis;
 
 
 
-        public PlayerStatsController(ILogger<ChangeProxyIP> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis)
+        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis)
         {
             _random = new Random();
             _clientFactory = clientFactory;
@@ -143,7 +143,7 @@ namespace Faceit_Stats_Provider.Controllers
                 }
                 var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
 
-                var changeProxyIp = new ChangeProxyIP(_logger, _clientFactory);
+                var httpClientManager = new HttpClientManager(_logger, _clientFactory);
                 HttpClient eloDiffClient = null;
 
                 var retrieveCount = (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition;
@@ -153,8 +153,6 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     eloRetrievesCount = Enumerable.Range(0, retrieveCount);
                 }
-
-                
 
                 ParallelOptions parallelOptions = new()
                 {
@@ -171,7 +169,7 @@ namespace Faceit_Stats_Provider.Controllers
                         {
                             if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
                             {
-                                eloDiffClient = GetHttpClientWithRetry(changeProxyIp);
+                                eloDiffClient = httpClientManager.GetHttpClientWithRandomProxy();
                                 if (eloDiffClient != null)
                                 {
                                     eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
@@ -207,9 +205,6 @@ namespace Faceit_Stats_Provider.Controllers
                     }
                 });
 
-
-
-                // Await all tasks to complete
                 await Task.WhenAll(eloDiffTasks);
 
                 var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
@@ -427,29 +422,28 @@ namespace Faceit_Stats_Provider.Controllers
             return View(ConnectionStatus);
         }
 
-        public static async Task<T> RetryPolicyAsync<T>(Func<Task<T>> action, int maxRetryCount = 3, int delayMilliseconds = 1000)
+        public async Task<T> RetryPolicyAsync<T>(Func<Task<T>> action, int maxRetries = 3, int delay = 2000)
         {
-            int retryCount = 0;
-            while (true)
+            for (int i = 0; i < maxRetries; i++)
             {
                 try
                 {
                     return await action();
                 }
-                catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException || ex is SocketException)
+                catch (Exception ex)
                 {
-                    retryCount++;
-                    if (retryCount > maxRetryCount)
+                    if (i == maxRetries - 1)
                     {
                         throw;
                     }
-                    await Task.Delay(delayMilliseconds);
+                    await Task.Delay(delay);
                 }
             }
+            return default;
         }
 
         // Method to get HttpClient with retry
-        public static HttpClient GetHttpClientWithRetry(ChangeProxyIP changeProxyIp, int maxRetryCount = 3)
+        public static HttpClient GetHttpClientWithRetry(HttpClientManager changeProxyIp, int maxRetryCount = 3)
         {
             int retryCount = 0;
             HttpClient client = null;
