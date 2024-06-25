@@ -96,6 +96,11 @@ namespace Faceit_Stats_Provider.Controllers
                 try
                 {
                     var overallplayerstatsTaskResult = await overallplayerstatsTask;
+
+                    if (overallplayerstatsTaskResult.segments.Count() == 0) {
+
+                        throw new Exception("No cs2 Matches");
+                    }
                 }
                 catch
                 {
