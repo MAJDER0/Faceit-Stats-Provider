@@ -10,7 +10,8 @@ namespace Faceit_Stats_Provider.Models
         public OverallPlayerStats.Rootobject OverallPlayerStatsInfo { get; set; }
         public List<EloDiff.Root> EloDiff { get; set; }
         public List<EloDiff.Root> AllHistory { get; set; }
-        public int? HighestElo { get; set; }
+        public int? HighestCs2Elo { get; set; }
+        public int? HighestCsgoElo { get; set; }
         public long RedisEloRetrievesCount { get; set; }
         public string Game { get; set; }
         public string ErrorMessage { get; set; }

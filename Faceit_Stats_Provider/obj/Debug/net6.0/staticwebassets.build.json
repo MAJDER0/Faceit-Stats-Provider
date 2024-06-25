@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "sIZ2HQM6Ip3905Z2tmJlIDzZU96dxWlbENYCmMP3/3k=",
+  "Hash": "cUmiHm6Ag7OXnL2ZwgZr25dE1kvD2BKswSvaWezh1vY=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -1120,6 +1120,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\NoPicLogo.png"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\trending-up.png",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "trending-up.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\trending-up.png"
     }
   ]
 }

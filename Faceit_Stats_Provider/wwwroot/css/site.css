@@ -243,9 +243,16 @@ input[type="submit"] {
 
 .EloInfoUnderCanvas2 {
     padding-left: 19%;
-    font-size: 19px;
+    font-size: 20px;
     margin-top: -3%;
 }
+
+.EloInfoUnderCanvas3 {
+    padding-left: 20.5%;
+    font-size: 14px;
+    margin-top: -3%;
+}
+
 
 .PlayerNotFound {
     display: flex;
@@ -301,6 +308,10 @@ input[type="submit"]:hover {
 
 .Result {
     font-weight: bold;
+}
+
+.HighestCs2Elo {
+   margin-right:4%;
 }
 
 #EloChart {

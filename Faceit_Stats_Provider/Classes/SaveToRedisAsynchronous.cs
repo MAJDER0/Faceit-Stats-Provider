@@ -29,11 +29,11 @@ public class SaveToRedisAsynchronous
             ? JsonConvert.DeserializeObject<HashSet<RedisMatchData.MatchData>>(existingDataJson)
             : new HashSet<RedisMatchData.MatchData>();
 
-        var matchDictionary = existingData.ToDictionary(match => match.MatchId);
+        var matchDictionary = existingData.ToDictionary(match => match.matchId);
 
         foreach (var match in data)
         {
-            matchDictionary[match.MatchId] = match;
+            matchDictionary[match.matchId] = match;
         }
 
         var combinedData = new HashSet<RedisMatchData.MatchData>(matchDictionary.Values);

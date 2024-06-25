@@ -402,12 +402,13 @@ namespace Faceit_Stats_Provider.Controllers
 
 
             var redisFetcher = new RedisFetchMaxElo(_configuration);
-            int highestElo = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
+            var FetchedMaxElosFromRedis = await redisFetcher.GetHighestEloAsync(playerinf.player_id);
 
             var ConnectionStatus = new PlayerStats
             {
                 RedisEloRetrievesCount = RedisEloRetrievesCount,
-                HighestElo = highestElo,
+                HighestCs2Elo = FetchedMaxElosFromRedis.HighestCs2Elo,
+                HighestCsgoElo = FetchedMaxElosFromRedis.HighestCsgoElo,
                 OverallPlayerStatsInfo = overallplayerstats,
                 Last20MatchesStats = matchstats,
                 MatchHistory = matchhistory,

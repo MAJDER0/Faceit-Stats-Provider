@@ -6,6 +6,7 @@ using StackExchange.Redis;
 using Microsoft.Extensions.Configuration;
 using Faceit_Stats_Provider.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 public class RedisFetchMaxElo
 {
@@ -18,7 +19,7 @@ public class RedisFetchMaxElo
         _redis = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis"));
     }
 
-    public async Task<int> GetHighestEloAsync(string userId)
+    public async Task<(int HighestCsgoElo, int HighestCs2Elo)> GetHighestEloAsync(string userId)
     {
         IDatabase db = _redis.GetDatabase();
         var key = $"userMatchesHistory_{userId}";
@@ -26,19 +27,27 @@ public class RedisFetchMaxElo
         string userMatchesJson = await db.StringGetAsync(key);
         if (string.IsNullOrEmpty(userMatchesJson))
         {
-            // No data found
-            return 0; // Or any default value
+            return (0, 0); // No data found, return default values
         }
 
         var userMatches = JsonSerializer.Deserialize<IEnumerable<RedisMatchData.MatchData>>(userMatchesJson);
         if (userMatches == null || !userMatches.Any())
         {
-            // No matches found
-            return 0; // Or any default value
+            return (0, 0); // No matches found, return default values
         }
 
-        // Assuming Elo is an integer property in MatchData
-        var highestElo = userMatches.Max(match => match.elo);
-        return highestElo;
+        var HighestCsgoElo = userMatches
+            .Where(match => match.game == "csgo") 
+            .Select(match => match.elo) 
+            .DefaultIfEmpty(0) 
+            .Max(); 
+
+        var HighestCs2Elo = userMatches
+            .Where(match => match.game == "cs2") 
+            .Select(match => match.elo) 
+            .DefaultIfEmpty(0) 
+            .Max(); 
+
+        return (HighestCsgoElo, HighestCs2Elo);
     }
 }

@@ -190,6 +190,8 @@
             {
                 <p class="EloInfoUnderCanvas">CS2 ELO: @request</p>
                 <p class="EloInfoUnderCanvas2">CS:GO ELO: @Model.Playerinfo.games.csgo.faceit_elo</p>
+                <p class="EloInfoUnderCanvas3">MAX CS:GO ELO: @Model.HighestCsgoElo</p>
+                
             }
         </div>
     </div>
@@ -217,9 +219,8 @@
                     <p>HEADSHOTS: <span class="Result" style="color:@(int.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots)>=45 ?  "#6BBE49" : "#F20707")">                                                                    @Model.OverallPlayerStatsInfo.lifetime.AverageHeadshots%</span></p>
 
                     <p>K/D RATIO: <span class="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
-                    <p>
-                        HIGHEST ELO: <span class="Result">@Model.HighestElo</span>
-                    </p>
+
+                    <p><img src="~/trending-up.png" alt="Trending-up Icon" width="25" height="25" class="HighestCs2Elo">CS2 ELO: <span class="Result">@Model.HighestCs2Elo</span></p>
                 }
 
             </div>
