@@ -330,17 +330,17 @@
                                             {
                                                 <tr>
                                                     <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                                    <td style="text-align:center;">@player.player_stats.Kills</td>
-                                                    <td style="text-align:center;">@player.player_stats.Deaths</td>
-                                                    <td style="text-align:center;">@player.player_stats.Assists</td>
-                                                    <td style="text-align:center;">@player.player_stats.KRRatio</td>
-                                                    <td style="text-align:center;">@player.player_stats.KDRatio</td>
-                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
-                                                    <td style="text-align:center;">@player.player_stats.HeadshotsPercentage</td>
-                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
-                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
-                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
-                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.KRRatio</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.KDRatio</td>
+                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
+                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
+                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
+                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
+                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
+                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
                                                         @if (ShowDifferentStats)
                                                         {
                                                             <td class="more-button" style="text-align:center;">
@@ -425,17 +425,17 @@
                                                 {
                                     <tr>
                                         <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                        <td style="text-align:center;">@player.player_stats.Kills</td>
-                                        <td style="text-align:center;">@player.player_stats.Deaths</td>
-                                        <td style="text-align:center;">@player.player_stats.Assists</td>
-                                        <td style="text-align:center;">@player.player_stats.KRRatio</td>
-                                        <td style="text-align:center;">@player.player_stats.KDRatio</td>
-                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
-                                        <td style="text-align:center;">@player.player_stats.HeadshotsPercentage</td>
-                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
-                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
-                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
-                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.KRRatio</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.KDRatio</td>
+                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
+                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
+                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
+                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
+                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills)</td>
+                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills)</td>
                                                         @if (ShowDifferentStats)
                                                         {
                                                             <td class="more-button" style="text-align:center;">
