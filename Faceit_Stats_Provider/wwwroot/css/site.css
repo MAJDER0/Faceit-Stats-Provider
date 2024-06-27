@@ -387,7 +387,11 @@ input[type="submit"]:hover {
 }
 
 .HighestCs2Elo {
-   margin-right:4%;
+   margin-right:2%;
+}
+
+.HighestCs2EloContainer {
+    cursor:help;
 }
 
 #EloChart {
