@@ -36,12 +36,7 @@ builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
     var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
-    return ConnectionMultiplexer.Connect(configuration);
-});
-
-builder.Services.AddSingleton<ConnectionMultiplexer>(provider =>
-{
-    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"));
+    configuration.AbortOnConnectFail = false; 
     return ConnectionMultiplexer.Connect(configuration);
 });
 
