@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Faceit_Stats_Provider.props" />
+</Project>

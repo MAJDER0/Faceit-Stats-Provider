@@ -1,0 +1,29 @@
+﻿.load-more-button {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #F2F2F2;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 45%;
+    margin-left: 45%;
+    transition: background-color 0.3s;
+    transition: color 0.3s;
+    height: 31px;
+    width: 10%;
+}
+
+    .load-more-button:hover {
+        background-color: rgba(0, 0, 0, 1);
+        color: #ff3c22;
+    }
+
+#loadMoreButton {
+    display: block;
+}
+
+.NoMoreMatches {
+    margin-top: 4%;
+}

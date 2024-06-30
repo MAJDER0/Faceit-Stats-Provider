@@ -1,0 +1,35 @@
+﻿.navbarcolor {
+    background-color: rgba(13,13,13,0);
+}
+
+.navbar-brand > span {
+    color: #F2F2F2;
+    transition: color ease-in-out 0.3s;
+}
+
+    .navbar-brand > span:hover {
+        color: #ff3c22;
+    }
+
+.nav-starfield {
+    margin-top: 2%; /* Adjusted margin top */
+    color: #f2f2f2;
+    font-size: 1rem; /* Font size matches FAQ */
+}
+
+.nav-HOME span {
+    color: #ff3c22 !important;
+}
+
+    .nav-HOME span:hover {
+        color: #f2f2f2 !important;
+    }
+
+.nav-faq-link span {
+    color: #ff3c22;
+    font-size: 1rem; /* Smaller font size for FAQ */
+}
+
+    .nav-faq-link span:hover {
+        color: #F2F2F2;
+    }

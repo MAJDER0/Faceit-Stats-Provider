@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj": {}
+    "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj": {
+    "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
+        "projectUniqueName": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
         "projectName": "Faceit_Stats_Provider",
-        "projectPath": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
-        "packagesPath": "C:\\Users\\Tomek\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\obj\\",
+        "projectPath": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
+        "packagesPath": "C:\\Users\\Majderki\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Majderki\\Source\\Repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Tomek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Majderki\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,8 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://www.myget.org/F/discord-net/api/v3/index.json": {}
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -35,6 +35,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -81,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
         }
       }
     }

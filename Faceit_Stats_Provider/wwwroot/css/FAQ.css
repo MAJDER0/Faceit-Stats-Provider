@@ -1,0 +1,70 @@
+﻿.FAQcontainer {
+    margin: 20px;
+}
+
+.FAQheader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.Questions {
+    margin-top: 7%;
+}
+
+.FAQplus {
+    margin-top: -0.3%;
+    cursor: pointer;
+}
+
+.FAQrightArrow {
+    margin-top: -0.3%;
+}
+
+.FAQheader {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.FAQrightArrowContainer {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    width: 10px;
+}
+
+.FAQanswerContainer {
+    display: inline-block;
+    margin-top: 0.1%;
+    max-width: calc(100% - 30px); /* Adjust maximum width to fit content */
+}
+
+.question {
+    cursor: pointer;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.answer {
+    display: none;
+    padding: 10px;
+    margin: -10px 30px 10px;
+}
+
+.BuyBeer {
+    text-decoration: none;
+}
+
+.TwitterContact {
+    text-decoration: none;
+}
+
+.SteamContact {
+    text-decoration: none;
+}
+
+.FAQflag {
+    padding-left: 1%;
+}
+

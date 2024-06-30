@@ -1,0 +1,23 @@
+﻿.DISCLAIMER {
+    width: fit-content;
+    margin-top: 1%;
+    text-align: left;
+    color: rgb(139,0,0);
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.WebOwner {
+    margin-left: 3%;
+    color: rgb(139,0,0);
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.DISCLAIMER span {
+    background-image: linear-gradient(to right, var(--lgbt-color-red), var(--lgbt-color-orange), var(--lgbt-color-yellow), var(--lgbt-color-green), var(--lgbt-color-blue), var(--lgbt-color-violet));
+    display: inline;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-family: 'Oxygen', sans-serif;
+}
