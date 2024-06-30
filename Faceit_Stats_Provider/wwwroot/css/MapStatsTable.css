@@ -1,0 +1,71 @@
+﻿.ActiveFaceitMapPoolContainer {
+    margin-top: 6%;
+}
+
+
+.MapsTable {
+    background-color: transparent;
+    border: none;
+    color: #F2F2F2;
+}
+
+    .MapsTable thead {
+        background-color: rgba(0, 0, 0, 0);
+        font-size: 15px;
+        color: #5A0273;
+    }
+
+    .MapsTable tbody tr {
+        background-color: rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+    }
+
+
+    .MapsTable th,
+    .MapsTable td {
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+
+    .MapsTable tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+
+    .MapsTable tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .MapsTable thead th {
+        border: none;
+    }
+
+.table-container {
+    opacity: 0;
+    transform: translateY(50px); /* Adjust the translateY value as needed */
+    transition: opacity 0.5s, transform 0.5s;
+}
+
+    .table-container.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+
+.TableMapTitle {
+    text-align: center;
+    margin-bottom: 30px; /* Adjust the margin as needed */
+    margin-top: -10%;
+}
+
+    .TableMapTitle > h2 {
+        color: #F2F2F2;
+        font-size: 25px;
+        margin: 0;
+    }
+
+.MapStatsRow {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 6%;
+}

@@ -1,0 +1,8 @@
+﻿#faceitlvl {
+    font-family: 'Play', sans-serif;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: 5%;
+}

@@ -1,0 +1,87 @@
+﻿.matchespanel {
+    margin-top: 60px;
+}
+
+.matchesList {
+    margin-top: -8%;
+}
+
+.matchesTable {
+    background-color: transparent;
+    border: none;
+    color: #F2F2F2;
+}
+
+    .matchesTable thead {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-weight: bold;
+        font-size: 18px;
+        color: #5A0273;
+    }
+
+    .matchesTable tbody tr {
+        background-color: rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+    }
+
+    .matchesTable th,
+    .matchesTable td {
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .matchesTable tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+
+    .matchesTable tbody tr:last-child {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+.matchesTableStats {
+    background-color: transparent;
+    border: none;
+    color: #F2F2F2;
+}
+
+    .matchesTableStats thead {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-size: 14px;
+        color: #5A0273;
+    }
+
+    .matchesTableStats th,
+    .matchesTableStats td {
+        cursor: default;
+    }
+
+.matchesAdditionalTableStats {
+    background-color: transparent;
+    border: none;
+    color: #F2F2F2;
+}
+
+    .matchesAdditionalTableStats thead {
+        background-color: rgba(0, 0, 0, 0.7);
+        font-size: 14px;
+        color: #8C1F28;
+    }
+
+    .matchesAdditionalTableStats th,
+    .matchesAdditionalTableStats td {
+        cursor: default;
+    }
+
+
+.more-button-cursor {
+    cursor: pointer;
+}
+
+.match-row.BLAST {
+    background-color: rgba(85,27,142,0.2);
+    cursor: pointer;
+}
+
+    .match-row.BLAST:hover {
+        background-color: rgba(85,27,142,0.18);
+    }

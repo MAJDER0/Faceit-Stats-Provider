@@ -1,0 +1,45 @@
+﻿.SwitchToggle {
+    width: 100%;
+    border-top: 1px solid red;
+    text-align: center;
+    margin-left: -3%;
+}
+
+.Ranked5v5Games {
+    margin-top: 3%;
+    margin-left: 1%;
+    display: inline-block;
+}
+
+.Only5v5Games {
+    margin-top: -1%;
+    margin-left: 1%;
+    display: inline-block;
+}
+
+.WalkoverGames {
+    margin-top: 3%;
+    margin-left: 5%;
+    display: inline-block;
+}
+
+.Ranked5v5Games > p {
+    float: left;
+    margin-top: -3%;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.WalkoverGames > p {
+    float: left;
+    margin-top: -3%;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.Only5v5Games > p {
+    float: left;
+    margin-top: -4%;
+    font-size: 20px;
+    margin-right: 10px;
+}

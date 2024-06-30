@@ -38,3 +38,4 @@
 .starfield-check-input:checked + .starfield-check-label::before {
     transform: translateX(16px); /* Position of the toggle handle when checked */
 }
+

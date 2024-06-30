@@ -1,0 +1,43 @@
+﻿.mainstatspanel {
+    margin-top: 60px;
+}
+
+.StatsContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.OverallStats {
+    font-size: 20px;
+    width: 50%;
+}
+
+    .OverallStats p.title {
+        font-size: 25px;
+        font-weight: bold;
+        color: #5A0273;
+    }
+
+.Last20Stats {
+    font-size: 20px;
+    width: 50%;
+}
+
+    .Last20Stats p.title {
+        font-size: 25px;
+        font-weight: bold;
+        color: #5A0273;
+    }
+
+
+.BALANCE {
+    cursor: help;
+}
+
+.HighestCs2Elo {
+    margin-right: 2%;
+}
+
+.HighestCs2EloContainer {
+    cursor: help;
+}
