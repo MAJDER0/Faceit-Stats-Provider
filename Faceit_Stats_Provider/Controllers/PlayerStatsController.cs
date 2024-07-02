@@ -536,12 +536,12 @@ namespace Faceit_Stats_Provider.Controllers
 
                 if (!isPlayerInRedis)
                 {
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100);
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100)+1;
                 }
                 else
                 {
                     SendDataToRedisLoopCondition = (int)(await _getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerId) / 100);
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100);
+                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100)+1;
                 }
 
                 var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
@@ -579,7 +579,7 @@ namespace Faceit_Stats_Provider.Controllers
                                 else
                                 {
                                     _logger.LogError("No proxies available.");
-                                    return; // Exit the loop if no proxies are available
+                                    return; 
                                 }
                             }
 
@@ -634,6 +634,7 @@ namespace Faceit_Stats_Provider.Controllers
 
             return Json(HighestElos);
         }
+
     }
 
 }
