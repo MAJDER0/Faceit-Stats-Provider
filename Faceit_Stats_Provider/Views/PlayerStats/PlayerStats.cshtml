@@ -22,11 +22,11 @@
                         @{
                             if (Model.Playerinfo.avatar == "https://distribution.faceit-cdn.net/images/75d3f213-ba21-42f5-b4e5-327b2ff32a0e.jpeg" || Model.Playerinfo.avatar == "" || Model.Playerinfo.avatar == null)
                             {
-                                <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                    <img src="~/NoPicLogo.png" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                             else
                             {
-                                <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
+                                    <img src="@Model.Playerinfo.avatar" alt="Player's faceit profile image" width="300" height="300" class="ProfilImage">
                             }
                         }
                     </a>
@@ -88,7 +88,7 @@
 
             else
             {
-                <p>Player information or game stats are not available.</p>
+                    <p>Player information or game stats are not available.</p>
             }
         }
 
@@ -190,9 +190,9 @@
             {
                 <p class="EloInfoUnderCanvas">CS2 ELO: @request</p>
                 <p class="EloInfoUnderCanvas2">CS:GO ELO: @Model.Playerinfo.games.csgo.faceit_elo</p>
-                <p class="EloInfoUnderCanvas3">MAX CS:GO ELO: @Model.HighestCsgoElo</p>
-                
+                <p class="EloInfoUnderCanvas3" id="max-csgo-elo">MAX CS:GO ELO: <span id="max-csgo-elo-value"></span><span class="loading-dots">...</span></p>
             }
+
         </div>
     </div>
 
@@ -220,13 +220,43 @@
 
                     <p>K/D RATIO: <span class="Result" style="color: @(double.Parse(Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1 ?                                                                           "#6BBE49" : "#F20707")">@Model.OverallPlayerStatsInfo.lifetime.AverageKDRatio</span></p>
 
-                    <p >
+                        <p>
+                            <span class="HighestCs2EloContainer" title="Highest CS2 ELO">
+                                <img src="~/trending-up.png" alt="Trending up icon" width="25" height="25" class="HighestCs2Elo"> CS2 ELO:
+                            </span>
+                            <span id="highest-cs2-elo-value"> <span class="loading-dots">...</span></span>
+                        </p>
 
-                        <span class="HighestCs2EloContainer" title="Highest CS2 ELO">
-                            <img src="~/trending-up.png" alt="Trending up icon" width="25" height="25" class="HighestCs2Elo">
-                         CS2 ELO:</span><span class="Result"> @Model.HighestCs2Elo</span>
+                                    @section Scripts {
+                <script>
+                    $(document).ready(function () {
+                        var playerId = '@Model.Playerinfo.player_id';
 
-                   </p>
+                        function updateElos(maxCs2Elo,maxCsgoElo) {
+                            $('#max-csgo-elo').html('MAX CS:GO ELO ' + maxCsgoElo);
+                            $('#highest-cs2-elo-value').html(' ' + maxCs2Elo);
+                        }
+
+                        $.ajax({
+                            url: '/FetchMaxElo',
+                            type: 'GET',
+                            data: { playerId: playerId },
+                            success: function (data) {
+
+                                var maxCs2Elo = data.highestCs2Elo;
+                                var maxCsgoElo = data.highestCsgoElo;
+
+                                updateElos(maxCs2Elo,maxCsgoElo);
+                            },
+                            error: function () {
+                                $('#player-stats-container').html('<p>Error loading data</p>');
+                                $('#max-csgo-elo').empty();
+                            }
+                        });
+                    });
+                </script>
+            }
+
                 }
 
             </div>
@@ -234,9 +264,9 @@
                 @{
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string id, bool RankedGame = false, bool FiveVsFiveGame = false)
                     {
-                        <p class="title">LAST 20</p>
+                            <p class="title">LAST 20</p>
 
-                        @if (MatchesStats != null)
+                            @if (MatchesStats != null)
                         {
                             double totalKdRatio = 0;
                             double totalKrRatio = 0;
@@ -248,7 +278,7 @@
                             int matchCounter = 0;
                             int matchCounterWithWalkovers = 0;
 
-                            @foreach (var match in MatchesStats)
+                                @foreach (var match in MatchesStats)
                             {
                                 if (match.teams is not null && match.best_of != "Walkover")
                                 {
@@ -319,18 +349,18 @@
                             string averageKillsFormatted = (averageKills % 1 >= 0.5) ? Math.Ceiling(averageKills).ToString("F0") : averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
-                            <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
+                                <p>K/D RATIO: <span class="Result" style="color:@(Math.Round(averageKdRatio, 2) >= 1.00 ? "#6BBE49" : "#F20707")">@averageKdRatioFormatted</span></p>
 
-                            <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
+                                <p>K/R RATIO: <span class="Result" style="color:@(averageKrRatio>=0.70 ? "#6BBE49" : "#F20707")">@averageKrRatioFormatted</span></p>
 
-                            <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
+                                <p>WIN RATIO: <span class="Result" style="color:@(winratio>=50 ? "#6BBE49" : "#F20707")">@winratio.ToString("F0")%</span></p>
 
-                            <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
+                                <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                            <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                                <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
 
-                            <span>
-                                @{
+                                <span>
+                                    @{
                                     int balance = 9999;
                                     int lastEloToRetrieve = 0;
                                     int firstEloToRetrieve = 0;
@@ -373,26 +403,26 @@
 
                                         balance = firstEloToRetrieve - lastEloToRetrieve;
                                     }
-                                }
-                            </span>
+                                    }
+                                </span>
 
-                            <p>
-                                <span class="BALANCE" title="How much you lost or gained within the last 20 matches">BALANCE:</span> @{
+                                <p>
+                                    <span class="BALANCE" title="How much you lost or gained within the last 20 matches">BALANCE:</span> @{
                                     if (balance != 9999)
                                     {
-                                        <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
-                                            @(
+                                                <span class="Result" style="color: @(balance > 0 ? "#6BBE49" : (balance < 0 ? "#F20707" : "white"))">
+                                                    @(
                                         balance > 0 ? '+' : (balance < 0 ? "-" : "")
-                                                )@Math.Abs(balance)
-                                        </span>
+                                                        )@Math.Abs(balance)
+                                                </span>
                                     }
 
                                     else
                                     {
-                                        <span class="Result">-</span>
+                                                <span class="Result">-</span>
                                     }
-                                }
-                            </p>
+                                    }
+                                </p>
 
 
                         }
@@ -818,12 +848,12 @@
                                     @{
                                         if (match.competition_name.ToString().ToUpper().Contains("BLAST"))
                                         {
-                                        <p class="Result">BLAST</p>
+                                            <p class="Result">BLAST</p>
                                         }
 
                                         else
                                         {
-                                        <p class="Result">Walkover</p>
+                                            <p class="Result">Walkover</p>
                                         }
                                     }
                             </td>

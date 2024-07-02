@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "VaUybfDITHJWhPkuLMDVstUVj9lLZtbqplg8HIAe+Kk=",
+  "Hash": "nFCuI4LfQFqdPbBMtDRwMaorcaRfltxzssS+B1SSZNA=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -153,6 +153,23 @@
       "OriginalItemSpec": "wwwroot\\css\\FilterSwitches.css"
     },
     {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\general.css",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "css/general.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\general.css"
+    },
+    {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\LoadMoreMatchesButton.css",
       "SourceId": "Faceit_Stats_Provider",
       "SourceType": "Discovered",
@@ -168,6 +185,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\LoadMoreMatchesButton.css"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\logo.css",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "css/logo.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\logo.css"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\MapRadarChart.css",
@@ -306,23 +340,6 @@
       "OriginalItemSpec": "wwwroot\\css\\SearchBar.css"
     },
     {
-      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-      "SourceId": "Faceit_Stats_Provider",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
-      "BasePath": "_content/Faceit_Stats_Provider",
-      "RelativePath": "css/site.css",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\css\\site.css"
-    },
-    {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\StarFieldSwitch.css",
       "SourceId": "Faceit_Stats_Provider",
       "SourceType": "Discovered",
@@ -355,6 +372,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\TableMatches.css"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\SearchBarAnimation.js",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "js/SearchBarAnimation.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\SearchBarAnimation.js"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\site.js",
