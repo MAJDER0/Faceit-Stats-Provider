@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Concurrent;
 using static Faceit_Stats_Provider.Models.PlayerStats;
 using System.Net.Sockets;
+using Faceit_Stats_Provider.Interfaces;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -35,9 +36,10 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly IConfiguration _configuration;
         private readonly GetTotalEloRetrievesCountFromRedis _getTotalEloRetrievesCountFromRedis;
         private readonly IConnectionMultiplexer _multiplexer;
+        private readonly ILoadMoreMatches _loadMoreMatchesService;
 
 
-        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer)
+        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer, ILoadMoreMatches loadMoreMatchesService)
         {
             _random = new Random();
             _clientFactory = clientFactory;
@@ -47,6 +49,7 @@ namespace Faceit_Stats_Provider.Controllers
             _redis = redis;
             _getTotalEloRetrievesCountFromRedis = getTotalEloRetrievesCountFromRedis;
             _multiplexer = multiplexer;
+            _loadMoreMatchesService = loadMoreMatchesService;
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -374,137 +377,11 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
 
-        public async Task<ActionResult> LoadMoreMatches(string nickname, int offset, string playerID, bool isOffsetModificated, int QuantityOfEloRetrieves = 10)
+        [HttpGet("PlayerStats/LoadMoreMatches")]
+        public async Task<IActionResult> LoadMatches(string nickname, int offset, string playerID, bool isOffsetModificated, int QuantityOfEloRetrieves =10)
         {
-            int limit = 10;
-            int page = 1; // doesnt matter can stay static
-            string game = "cs2";
-
-            if (offset > 100)
-            {
-                page = (offset / 100) + 1;
-            }
-
-            if (offset % 2 == 0)
-            {
-                limit = LookForBiggestDivider(offset);
-            }
-
-            static int LookForBiggestDivider(int liczba)
-            {
-                for (int dzielnik = Math.Min(liczba / 2, 14); dzielnik >= 2; dzielnik--)
-                {
-                    if (liczba % dzielnik == 0)
-                    {
-                        return dzielnik;
-                    }
-                }
-                return 2;
-            }
-
-            try
-            {
-                var client = _clientFactory.CreateClient("Faceit");
-                var client2 = _clientFactory.CreateClient("FaceitV1");
-
-                if (!_memoryCache.TryGetValue(nickname, out playerid))
-                {
-                    var x = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
-                    _memoryCache.Set(nickname, x.nickname, TimeSpan.FromMinutes(5));
-                    playerid = x.nickname;
-                }
-
-                var playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
-
-                var matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                    $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit={limit}");
-
-                if (matchhistory?.items == null || matchhistory.items.Count() == 0)
-                {
-                    game = "csgo";
-                    matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit={limit}");
-                }
-
-                if (isOffsetModificated)
-                {
-                    var additionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset + limit}&limit=1");
-
-                    matchhistory.items = matchhistory.items.Concat(additionalMatch.items).ToArray();
-
-                }
-
-                if (matchhistory?.items != null && matchhistory.items.Count() > 0)
-                {
-                    var matchStatsList = new List<MatchStats.Rootobject>();
-
-                    var task = matchhistory.items.Select(async match =>
-                    {
-                        try
-                        {
-                            return await client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
-                        }
-                        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-                        {
-                            Console.WriteLine($"Match ID {match.match_id} not found. Skipping.");
-
-                            return new MatchStats.Rootobject
-                            {
-                                rounds = new MatchStats.Round[1]
-                                {
-                            new MatchStats.Round
-                            {
-                                competition_id = "",
-                                competition_name = match.competition_name,
-                                best_of = "Walkover",
-                                game_id = "",
-                                game_mode = "",
-                                match_id = match.match_id,
-                                match_round = "",
-                                played = "",
-                                round_stats = null,
-                                teams = null,
-                                elo = ""
-                            }
-                                }
-                            };
-                        }
-                        catch (Exception innerEx)
-                        {
-                            Console.WriteLine($"Error fetching MatchStats for match {match.match_id}: {innerEx.Message}");
-                            throw;
-                        }
-                    }).ToList();
-
-                    var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                        $"v1/stats/time/users/{playerID}/games/{game}?page={page}&size={QuantityOfEloRetrieves + 10}");
-
-                    foreach (var result in await Task.WhenAll(task))
-                    {
-                        matchStatsList.Add(result);
-                    }
-
-                    var eloDiff = await eloDiffTask;
-
-                    var viewModel = new MatchHistoryWithStatsViewModel
-                    {
-                        Playerinfo = playerinf,
-                        MatchHistoryItems = matchhistory.items.ToList(),
-                        MatchStats = matchStatsList,
-                        EloDiff = eloDiff,
-                        Game = game
-                    };
-
-                    return PartialView("MatchListPartial", viewModel);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error fetching more matches: {ex.Message}");
-            }
-
-            return PartialView("MatchListPartial", new MatchHistoryWithStatsViewModel());
+            var result = await _loadMoreMatchesService.LoadMoreMatches(nickname, offset, playerID, isOffsetModificated,QuantityOfEloRetrieves);
+            return PartialView("MatchListPartial", result);
         }
 
 

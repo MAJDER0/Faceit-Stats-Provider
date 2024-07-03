@@ -1,5 +1,7 @@
 using Faceit_Stats_Provider.Classes;
+using Faceit_Stats_Provider.Interfaces;
 using Faceit_Stats_Provider.Models;
+using Faceit_Stats_Provider.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -40,7 +42,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
+builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();;
+builder.Services.AddSingleton<ILoadMoreMatches, LoadMoreMatchesService>();
+
 
 var app = builder.Build();
 
@@ -61,10 +65,15 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+app.MapControllerRoute(
+    name: "loadMoreMatches",
+    pattern: "PlayerStats/LoadMoreMatches",
+    defaults: new { controller = "PlayerStats", action = "LoadMatches" });
+
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-    // Other route configurations
+
 });
 
 
