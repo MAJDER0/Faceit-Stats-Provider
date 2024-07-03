@@ -22,6 +22,7 @@ using System.Collections.Concurrent;
 using static Faceit_Stats_Provider.Models.PlayerStats;
 using System.Net.Sockets;
 using Faceit_Stats_Provider.Interfaces;
+using Faceit_Stats_Provider.Services;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -37,9 +38,10 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly GetTotalEloRetrievesCountFromRedis _getTotalEloRetrievesCountFromRedis;
         private readonly IConnectionMultiplexer _multiplexer;
         private readonly ILoadMoreMatches _loadMoreMatchesService;
+        private readonly IFetchMaxElo _fetchMaxEloService;
 
 
-        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer, ILoadMoreMatches loadMoreMatchesService)
+        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer, ILoadMoreMatches loadMoreMatchesService, IFetchMaxElo fetchMaxEloService)
         {
             _random = new Random();
             _clientFactory = clientFactory;
@@ -50,6 +52,7 @@ namespace Faceit_Stats_Provider.Controllers
             _getTotalEloRetrievesCountFromRedis = getTotalEloRetrievesCountFromRedis;
             _multiplexer = multiplexer;
             _loadMoreMatchesService = loadMoreMatchesService;
+            _fetchMaxEloService = fetchMaxEloService;
         }
 
         public async Task<ActionResult> PlayerStats(string nickname)
@@ -329,49 +332,6 @@ namespace Faceit_Stats_Provider.Controllers
             return View(ConnectionStatus);
         }
 
-        public async Task<T> RetryPolicyAsync<T>(Func<Task<T>> action, int maxRetries = 3, int delay = 2000)
-        {
-            for (int i = 0; i < maxRetries; i++)
-            {
-                try
-                {
-                    return await action();
-                }
-                catch (Exception ex)
-                {
-                    if (i == maxRetries - 1)
-                    {
-                        throw;
-                    }
-                    await Task.Delay(delay);
-                }
-            }
-            return default;
-        }
-
-        // Method to get HttpClient with retry
-        public static HttpClient GetHttpClientWithRetry(HttpClientManager changeProxyIp, int maxRetryCount = 3)
-        {
-            int retryCount = 0;
-            HttpClient client = null;
-
-            while (client == null && retryCount < maxRetryCount)
-            {
-                client = changeProxyIp.GetHttpClientWithRandomProxy();
-                if (client == null)
-                {
-                    retryCount++;
-                }
-            }
-
-            if (client == null)
-            {
-                throw new Exception("Unable to obtain a working proxy after multiple attempts.");
-            }
-
-            return client;
-        }
-
         public IActionResult PlayerNotFound()
         {
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
@@ -384,132 +344,18 @@ namespace Faceit_Stats_Provider.Controllers
             return PartialView("MatchListPartial", result);
         }
 
-
-        [HttpGet("FetchMaxElo")]
+        [HttpGet("/FetchMaxElo")]
         public async Task<IActionResult> FetchMaxElo(string playerId)
         {
-            long RedisEloRetrievesCount = 0;
-
-            var client = _clientFactory.CreateClient("Faceit");
-            OverallPlayerStats.Rootobject overallplayerstats;
-
             try
             {
-                overallplayerstats = await client.GetFromJsonAsync<OverallPlayerStats.Rootobject>($"v4/players/{playerId}/stats/cs2");
+                var highestEloData = await _fetchMaxEloService.FetchMaxEloAsync(playerId);
+                return Ok(highestEloData);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error fetching overall player stats: {ex.Message}");
-                return BadRequest(new { Error = "Failed to fetch player stats" });
+                return StatusCode(500, $"An error occurred: {ex.Message}");
             }
-
-            if (_multiplexer.IsConnected)
-            {
-                var isPlayerInRedisDb = new IsPlayerInRedisDb(_configuration, _redis);
-                bool isPlayerInRedis = await isPlayerInRedisDb.IsPlayerInRedisAsync(playerId);
-
-                int SendDataToRedisLoopCondition = 0;
-                int page = 0;
-
-                if (!isPlayerInRedis)
-                {
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100)+1;
-                }
-                else
-                {
-                    SendDataToRedisLoopCondition = (int)(await _getTotalEloRetrievesCountFromRedis.GetTotalEloRetrievesCountFromRedisAsync(playerId) / 100);
-                    RedisEloRetrievesCount = (int)Math.Ceiling((double)int.Parse(overallplayerstats.lifetime.Matches) / 100)+1;
-                }
-
-                var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
-                var httpClientManager = new HttpClientManager(_logger, _clientFactory);
-                HttpClient eloDiffClient = null;
-
-                var retrieveCount = (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition;
-                var eloRetrievesCount = Enumerable.Range(0, 0);
-
-                if (retrieveCount > 0)
-                {
-                    eloRetrievesCount = Enumerable.Range(0, retrieveCount);
-                }
-
-                ParallelOptions parallelOptions = new()
-                {
-                    MaxDegreeOfParallelism = 3
-                };
-
-                Parallel.ForEach(eloRetrievesCount, parallelOptions, async (id, _) =>
-                {
-                    try
-                    {
-                        string cacheKey = $"PlayerData_{playerId}_Page_{page}";
-
-                        if (!_memoryCache.TryGetValue(cacheKey, out List<RedisMatchData.MatchData> cachedData))
-                        {
-                            if (page == 0 || page % 30 == 0 || page == SendDataToRedisLoopCondition)
-                            {
-                                eloDiffClient = httpClientManager.GetHttpClientWithRandomProxy();
-                                if (eloDiffClient != null)
-                                {
-                                    eloDiffClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
-                                }
-                                else
-                                {
-                                    _logger.LogError("No proxies available.");
-                                    return; 
-                                }
-                            }
-
-                            if (!isPlayerInRedis)
-                            {
-                                eloDiffTasks.Add(RetryPolicyAsync(() => eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                    $"v1/stats/time/users/{playerId}/games/csgo?page={page}&size=100")));
-                            }
-
-                            eloDiffTasks.Add(RetryPolicyAsync(() => eloDiffClient.GetFromJsonAsync<List<RedisMatchData.MatchData>>(
-                                $"v1/stats/time/users/{playerId}/games/cs2?page={page}&size=100")));
-
-                            _memoryCache.Set(cacheKey, cachedData, TimeSpan.FromMinutes(3));
-                            Console.WriteLine("Downloading 100");
-                            page++;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Using cached data for page " + page);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"Error getting HttpClient with random proxy: {ex.Message}");
-                    }
-                });
-
-                await Task.WhenAll(eloDiffTasks);
-
-                var allEloDiffResults = await Task.WhenAll(eloDiffTasks);
-                var EloDiffresultsFiltered = allEloDiffResults.SelectMany(x => x);
-                var saver = new SaveToRedisAsynchronous(_configuration);
-                await saver.SavePlayerToRedis(playerId, EloDiffresultsFiltered);
-            }
-
-            var FetchedMaxElosFromRedisCs2 = 0;
-            var FetchedMaxElosFromRedisCsgo = 0;
-
-            if (_multiplexer.IsConnected)
-            {
-                var redisFetcher = new RedisFetchMaxElo(_configuration);
-                var FetchedMaxElos = await redisFetcher.GetHighestEloAsync(playerId);
-                FetchedMaxElosFromRedisCs2 = FetchedMaxElos.HighestCs2Elo;
-                FetchedMaxElosFromRedisCsgo = FetchedMaxElos.HighestCsgoElo;
-            }
-
-            var HighestElos = new HighestEloDataModel
-            {
-                HighestCs2Elo = FetchedMaxElosFromRedisCs2,
-                HighestCsgoElo = FetchedMaxElosFromRedisCsgo
-            };
-
-            return Json(HighestElos);
         }
 
     }

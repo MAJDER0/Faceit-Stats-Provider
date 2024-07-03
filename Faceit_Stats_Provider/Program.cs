@@ -44,6 +44,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 
 builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();;
 builder.Services.AddSingleton<ILoadMoreMatches, LoadMoreMatchesService>();
+builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
+builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
+builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
+builder.Services.AddSingleton<HttpClientManager>();
 
 
 var app = builder.Build();
