@@ -25,11 +25,15 @@
         color: #f2f2f2 !important;
     }
 
-.nav-faq-link span {
+.nav-faq-link span,
+.nav-Extension-link span,
+.nav-Analyzer-link span {
     color: #ff3c22;
     font-size: 1rem; /* Smaller font size for FAQ */
 }
 
-    .nav-faq-link span:hover {
+    .nav-faq-link span:hover,
+    .nav-Extension-link span:hover,
+    .nav-Analyzer-link span:hover {
         color: #F2F2F2;
     }

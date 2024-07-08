@@ -120,7 +120,7 @@
                                         }
                                     </td>
 
-                                    <td>
+                                <td>
                                         <a href="https://www.faceit.com/en/@Model.Game/room/@match.rounds[0].match_id" target="_blank">
                                             <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
                                         </a>
@@ -193,7 +193,7 @@
 
                             if (match.rounds[0].best_of == "Walkover" && !match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                             {
-                            <tr class="match-row-second Walkover" style="display: none;">
+                            <tr class="-second Walkover" style="display: none;">
 
                                     @{
                                         RenderMatchInTable();
@@ -269,7 +269,7 @@
 
                         else
                         {
-                        <tr class="match-row-second UnrankedMatch">
+                        <tr class="-second UnrankedMatch">
                                 @{
                                     RenderMatchInTable();
                                 }
@@ -279,7 +279,7 @@
 
 
 
-                        <tr class="scoreboard match-row-second" style="display: none;">
+                        <tr class="scoreboard -second" style="display: none;">
                         <td colspan="10">
                             <table class="table matchesTableStats">
                                 <thead>
@@ -349,7 +349,7 @@
                                                         }
                                                 </tr>
 
-                                                <tr class="scoreboard match-row" style="display: none;">
+                                                <tr class="scoreboard -second" style="display: none;">
                                                     <td colspan="13">
 
                                                         <table class="table matchesAdditionalTableStats">
@@ -444,7 +444,7 @@
                                                         }
                                     </tr>
 
-                                    <tr class="scoreboard match-row" style="display: none;">
+                                    <tr class="scoreboard -second" style="display: none;">
                                         <td colspan="13">
 
                                             <table class="table matchesAdditionalTableStats">
@@ -496,4 +496,3 @@
         </div>
     </div>
 </div>
-

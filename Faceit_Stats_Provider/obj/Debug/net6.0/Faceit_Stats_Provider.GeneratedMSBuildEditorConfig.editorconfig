@@ -15,6 +15,14 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/Analyzer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcQW5hbHl6ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Extension/Extension.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXh0ZW5zaW9uXEV4dGVuc2lvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/FAQ/FAQ.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRkFRXEZBUS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

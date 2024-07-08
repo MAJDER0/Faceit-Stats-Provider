@@ -806,7 +806,7 @@
                                     }
                                     </td>
 
-                                    <td>
+                                    <td class="no-toggle">
                                         <a href="https://www.faceit.com/en/@Model.Game/room/@match.match_id" target="_blank">
                                             <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
                                         </a>
@@ -1462,14 +1462,6 @@
 
 <script>
     $(document).ready(function () {
-        $(".match-row").click(function () {
-            $(this).next(".scoreboard").toggle();
-        });
-    });
-</script>
-
-<script>
-    $(document).ready(function () {
         $(".map-row").click(function () {
             $(this).next(".MapStatsInfo").toggle();
         });
@@ -1482,6 +1474,18 @@
             var $row = $(this).closest('tr');
             var $hiddenRow = $row.next('.scoreboard.match-row');
             $hiddenRow.toggle();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Combine selectors for both match-row and match-row-second
+        $(".match-row").click(function (event) {
+            // Check if the click was on a link within the row
+            if (!$(event.target).closest('.no-toggle').length) {
+                $(this).next(".scoreboard").toggle();
+            }
         });
     });
 </script>
