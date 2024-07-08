@@ -1,0 +1,22 @@
+﻿@model Faceit_Stats_Provider.ModelsForAnalyzer.AnalyzerViewModel
+
+
+<div>@foreach (var item in Model.PlayerStats)
+    {
+        <br /> 
+            @foreach (var player in Model.Players.teams.faction1.roster)
+            {
+                if (player.player_id == item.player_id) {
+                    <span>@player.nickname</span>
+                }   
+            }
+
+            @foreach (var player in Model.Players.teams.faction2.roster)
+            {
+                if (player.player_id == item.player_id)
+                {
+                    <span>@player.nickname</span>
+                }
+            }
+
+    }</div>
