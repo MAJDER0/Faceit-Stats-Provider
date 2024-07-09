@@ -1,7 +1,7 @@
 ﻿@model Faceit_Stats_Provider.ModelsForAnalyzer.AnalyzerViewModel
 
 <div class="container">
-    <div class="row justify-content-center align-items-center">
+    <div class="row justify-content-center align-items-start">
 
         @{
             var faction1Leader = Model.Players.teams.faction1.leader;
@@ -9,49 +9,51 @@
             List<string> maps = new List<string> { "DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "ANUBIS", "DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
         }
 
-        <div class="col-md-6 text-center">
-            <p>Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
+        <div class="col-md-6">
+            <p class="text-center">Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
 
             <div class="row">
                 <div class="col-md-12">
-                    <p>OVERALL</p>
+                    <p class="text-center">OVERALL</p>
                 </div>
                 <div class="col-md-12">
-                    <p>Players</p>
+                    <p class="text-center">Players</p>
                     @foreach (var playerStat in Model.PlayerStats)
                     {
                         var player = faction1Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
 
                         if (player != null)
                         {
-                            <div class="PlayerAnalyzer">@player.nickname</div>
+                            <div class="PlayerAnalyzer player-info" data-player-id="@player.player_id">
+                                <div class="PlayerAnalyzerContent">
+                                    <img src="~/plus_green.png" alt="Plus-Icon" class="PlayerAnalyzeplus" />
+                                    <span>@player.nickname</span>
+                                </div>
+                            </div>
                             <br />
-                            <div class="PlayerMapsAnalyzer">
-                            @{
+                            <div class="PlayerMapsAnalyzer hidden" data-player-id="@player.player_id">
+                                @{
                                     var displayedMaps = playerStat.segments
-                              .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
-                              .OrderByDescending(x => x.label)
-                              .ToList();
+                                    .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
+                                    .OrderByDescending(x => x.label)
+                                    .ToList();
 
                                     foreach (var map in displayedMaps)
                                     {
-                                        <div class="map-item"><img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" />@map.label: @map.stats.AverageKills kills, @map.stats.AverageKDRatio KD</div>
-                                        <br/>
-
-
+                                        <div class="map-item">
+                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                            @map.label: @map.stats.WinRate% WR, @map.stats.AverageKDRatio K/D
+                                        </div>
+                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
-
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-
-                                                <div class="map-item"></div>
-                                                <br />
-                                            
+                                            <div class="map-item"></div>
+                                            <br />
                                         }
-
                                     }
                                 }
                             </div>
@@ -61,50 +63,56 @@
             </div>
         </div>
 
-        <div class="col-md-6 text-center">
+        <div class="col-md-6">
             @{
                 var faction2Leader = Model.Players.teams.faction2.leader;
                 var faction2Players = Model.Players.teams.faction2.roster;
             }
 
-            <p>Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
+            <p class="text-center">Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
 
             <div class="row">
                 <div class="col-md-12">
-                    <p>OVERALL</p>
+                    <p class="text-center">OVERALL</p>
                 </div>
                 <div class="col-md-12">
-                    <p>Players</p>
+                    <p class="text-center">Players</p>
                     @foreach (var playerStat in Model.PlayerStats)
                     {
                         var player = faction2Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
 
                         if (player != null)
                         {
-                            <div class="PlayerAnalyzer">@player.nickname</div>
+                            <div class="PlayerAnalyzer player-info" data-player-id="@player.player_id">
+                                <div class="PlayerAnalyzerContent">
+                                    <img src="~/plus_green.png" alt="Plus-Icon" class="PlayerAnalyzeplus" />
+                                    <span>@player.nickname</span>
+                                </div>
+                            </div>
                             <br />
-                            <div class="PlayerMapsAnalyzer">
-                               @{
-                                       var displayedMaps = playerStat.segments
+                            <div class="PlayerMapsAnalyzer hidden" data-player-id="@player.player_id">
+                                @{
+                                    var displayedMaps = playerStat.segments
                                     .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
                                     .OrderByDescending(x => x.label)
                                     .ToList();
 
                                     foreach (var map in displayedMaps)
                                     {
-                                        <div class="map-item"><img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" />@map.label: @map.stats.AverageKills kills, @map.stats.AverageKDRatio KD</div>
-                                            <br />
+                                        <div class="map-item">
+                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                            @map.label: @map.stats.WinRate% WR, @map.stats.AverageKDRatio K/D
+                                        </div>
+                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
-
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                                <div class="map-item"></div>
-                                                <br />                                          
+                                            <div class="map-item"></div>
+                                            <br />
                                         }
-
                                     }
                                 }
                             </div>
@@ -115,3 +123,16 @@
         </div>
     </div>
 </div>
+
+@* JavaScript Section *@
+@section scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.player-info').click(function () {
+                var playerId = $(this).data('player-id');
+                $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
+            });
+        });
+    </script>
+}
