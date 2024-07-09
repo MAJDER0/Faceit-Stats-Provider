@@ -1,0 +1,21 @@
+﻿.PlayerAnalyzer {
+    border: solid 1px #ff3c22;
+    border-radius: 10px;
+}
+
+
+.PlayerMapsAnalyzer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.map-item {
+    width: 50%;
+    box-sizing: border-box;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    height: 79px; /* Adjust as needed */
+}

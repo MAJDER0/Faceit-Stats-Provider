@@ -1,22 +1,117 @@
 ﻿@model Faceit_Stats_Provider.ModelsForAnalyzer.AnalyzerViewModel
 
+<div class="container">
+    <div class="row justify-content-center align-items-center">
 
-<div>@foreach (var item in Model.PlayerStats)
-    {
-        <br /> 
-            @foreach (var player in Model.Players.teams.faction1.roster)
-            {
-                if (player.player_id == item.player_id) {
-                    <span>@player.nickname</span>
-                }   
+        @{
+            var faction1Leader = Model.Players.teams.faction1.leader;
+            var faction1Players = Model.Players.teams.faction1.roster;
+            List<string> maps = new List<string> { "DUST2", "MIRAGE", "INFERNO", "NUKE", "VERTIGO", "ANCIENT", "ANUBIS", "DE_DUST2", "DE_MIRAGE", "DE_INFERNO", "DE_NUKE", "DE_VERTIGO", "DE_ANCIENT", "DE_ANUBIS" };
+        }
+
+        <div class="col-md-6 text-center">
+            <p>Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p>OVERALL</p>
+                </div>
+                <div class="col-md-12">
+                    <p>Players</p>
+                    @foreach (var playerStat in Model.PlayerStats)
+                    {
+                        var player = faction1Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
+
+                        if (player != null)
+                        {
+                            <div class="PlayerAnalyzer">@player.nickname</div>
+                            <br />
+                            <div class="PlayerMapsAnalyzer">
+                            @{
+                                    var displayedMaps = playerStat.segments
+                              .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
+                              .OrderByDescending(x => x.label)
+                              .ToList();
+
+                                    foreach (var map in displayedMaps)
+                                    {
+                                        <div class="map-item"><img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" />@map.label: @map.stats.AverageKills kills, @map.stats.AverageKDRatio KD</div>
+                                        <br/>
+
+
+                                    }
+
+                                    if (displayedMaps.Count != 7)
+                                    {
+
+                                        for (int i = displayedMaps.Count; i < 7; i++)
+                                        {
+
+                                                <div class="map-item"></div>
+                                                <br />
+                                            
+                                        }
+
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 text-center">
+            @{
+                var faction2Leader = Model.Players.teams.faction2.leader;
+                var faction2Players = Model.Players.teams.faction2.roster;
             }
 
-            @foreach (var player in Model.Players.teams.faction2.roster)
-            {
-                if (player.player_id == item.player_id)
-                {
-                    <span>@player.nickname</span>
-                }
-            }
+            <p>Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
 
-    }</div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>OVERALL</p>
+                </div>
+                <div class="col-md-12">
+                    <p>Players</p>
+                    @foreach (var playerStat in Model.PlayerStats)
+                    {
+                        var player = faction2Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
+
+                        if (player != null)
+                        {
+                            <div class="PlayerAnalyzer">@player.nickname</div>
+                            <br />
+                            <div class="PlayerMapsAnalyzer">
+                               @{
+                                       var displayedMaps = playerStat.segments
+                                    .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
+                                    .OrderByDescending(x => x.label)
+                                    .ToList();
+
+                                    foreach (var map in displayedMaps)
+                                    {
+                                        <div class="map-item"><img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" />@map.label: @map.stats.AverageKills kills, @map.stats.AverageKDRatio KD</div>
+                                            <br />
+                                    }
+
+                                    if (displayedMaps.Count != 7)
+                                    {
+
+                                        for (int i = displayedMaps.Count; i < 7; i++)
+                                        {
+                                                <div class="map-item"></div>
+                                                <br />                                          
+                                        }
+
+                                    }
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
