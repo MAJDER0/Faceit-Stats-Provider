@@ -53,3 +53,9 @@
 .hidden {
     display: none;
 }
+
+.AnalyzerResult {
+    font-weight: bold;
+    margin-left:3%;
+    margin-right:1.5%;
+}
