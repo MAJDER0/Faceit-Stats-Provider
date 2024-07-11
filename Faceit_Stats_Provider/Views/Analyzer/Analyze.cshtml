@@ -11,11 +11,26 @@
         }
 
         <div class="col-md-6">
-            <p class="text-center">Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
+            <p class="text-center title">Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
 
             <div class="row">
                 <div class="col-md-12">
                     <p class="text-center">OVERALL</p>
+
+                    <div class="maps-container">
+                        @{
+                            foreach (var map in maps)
+                            {
+                                if (map.StartsWith("DE_"))
+                                {
+                                    <div class="OverallAnalyzeMap">
+                                        <img src="~/Map_Icons/@(map).png" width="45" height="45" class="MapIcon" /><span class="OverallAnalyzerMapName">@map.Remove(0,3)</span>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                    
                 </div>
                 <div class="col-md-12">
                     <p class="text-center">Players</p>
@@ -41,20 +56,20 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                                <div class="map-item">
-                                                    <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                                    @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span>WR,
-                                                <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                                </div>
-                                                <br />
+                                                        <div class="map-item">
+                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span>WR,
+                                                        <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                        </div>
+                                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                            <div class="map-item" style="height:55px;"></div>
-                                                    <br />
+                                                    <div class="map-item" style="height:55px;"></div>
+                                                            <br />
                                         }
                                     }
                                 }
@@ -71,11 +86,26 @@
                 var faction2Players = Model.Players.teams.faction2.roster;
             }
 
-            <p class="text-center">Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
+            <p class="text-center title">Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
 
             <div class="row">
                 <div class="col-md-12">
                     <p class="text-center">OVERALL</p>
+
+                    <div class="maps-container">
+                        @{
+                            foreach (var map in maps)
+                            {
+                                if (map.StartsWith("DE_"))
+                                {
+                                    <div class="OverallAnalyzeMap">
+                                        <img src="~/Map_Icons/@(map).png" width="45" height="45" class="MapIcon" /><span class="OverallAnalyzerMapName">@map.Remove(0,3)</span>
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+
                 </div>
                 <div class="col-md-12">
                     <p class="text-center">Players</p>
@@ -101,20 +131,20 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                                <div class="map-item">
-                                                    <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                                    @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span> WR
-                                                <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                                </div>
-                                                <br />
+                                                        <div class="map-item">
+                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span> WR
+                                                        <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                        </div>
+                                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                                    <div class="map-item" style="height:55px;"></div>
-                                                    <br />
+                                                            <div class="map-item" style="height:55px;"></div>
+                                                            <br />
                                         }
                                     }
                                 }
