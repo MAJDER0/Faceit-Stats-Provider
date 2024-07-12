@@ -16,6 +16,13 @@
         var total = ratios.Select(ratio => double.Parse(ratio.Replace(",", "."), CultureInfo.InvariantCulture)).Sum();
         return total / ratios.Count;
     }
+
+    public int CalculateTotalMatches(List<string> matches)
+    {
+        if (matches == null || matches.Count == 0)
+            return 0;
+        return matches.Select(match => int.Parse(match)).Sum();
+    }
 }
 
 <div class="container">
@@ -32,8 +39,10 @@
 
             var faction1MapStatsKD = maps.ToDictionary(map => map, map => new List<string>());
             var faction1MapStatsWR = maps.ToDictionary(map => map, map => new List<string>());
+            var faction1MapStatsMatches = maps.ToDictionary(map => map, map => new List<string>());
             var faction2MapStatsKD = maps.ToDictionary(map => map, map => new List<string>());
             var faction2MapStatsWR = maps.ToDictionary(map => map, map => new List<string>());
+            var faction2MapStatsMatches = maps.ToDictionary(map => map, map => new List<string>());
 
             foreach (var playerStat in faction1PlayerStats)
             {
@@ -41,6 +50,7 @@
                 {
                     faction1MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
                     faction1MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                    faction1MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
                 }
             }
 
@@ -50,6 +60,7 @@
                 {
                     faction2MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
                     faction2MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                    faction2MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
                 }
             }
         }
@@ -59,7 +70,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <p class="text-center">OVERALL</p>
+                    <p class="text-center subtitle">OVERALL</p>
 
                     <div class="maps-container">
                         @{
@@ -68,20 +79,27 @@
                                 var mapName = CapitalizeFirstLetter(map.ToLower());
                                 var averageKD = CalculateAverage(faction1MapStatsKD[map]);
                                 var averageWR = CalculateAverage(faction1MapStatsWR[map]);
+                                var totalMatches = CalculateTotalMatches(faction1MapStatsMatches[map]);
 
-                                <div class="OverallAnalyzeMap">
-                                    <img src="~/Map_Icons/de_@(map.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                    <span class="OverallAnalyzerMapName">@mapName:
-                                        <span class="AnalyzerResultOverall" style="color:@(averageWR >= 50 ? "#6BBE49" : "#F20707")">@averageWR.ToString("F0")%</span> WR,
-                                        <span class="AnalyzerResultOverall" style="color:@(averageKD >= 1.00 ? "#6BBE49" : "#F20707")">@averageKD.ToString("F2")</span> K/D
-                                    </span>
-                                </div>
+                                                <div class="OverallAnalyzeMap">
+                                                    <img src="~/Map_Icons/de_@(map.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                    <span class="OverallAnalyzerMapName">
+                                                        <span class="AnalyzerMapNameStyle">@mapName:</span>
+                                                        <span class="AnalyzerResultOverall" style="font-weight:100;">@totalMatches</span> Matches, <span class="AnalyzerResultOverall" style="color:@(averageWR >= 50 ? "#6BBE49" : "#F20707")">@averageWR.ToString("F0")%</span>WR,
+                                                        <span class="AnalyzerResultOverall" style="color:@(averageKD >= 1.00 ? "#6BBE49" : "#F20707")">@averageKD.ToString("F2").Replace(",", ".")</span> K/D
+                                                    </span>
+                                                </div>
+
+                                                <div class="OverallLast20AnalyzeMap">
+                                                    <div style="width:45px; height:45px"></div>
+                                            <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                                                </div>
                             }
                         }
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <p class="text-center">Players</p>
+                    <p class="text-center subtitle">PLAYERS</p>
                     @foreach (var playerStat in faction1PlayerStats)
                     {
                         var player = faction1Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
@@ -104,20 +122,20 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                        <div class="map-item">
-                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span> WR,
-                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                        </div>
-                                        <br />
+                                                        <div class="map-item">
+                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR,
+                                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                        </div>
+                                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                            <div class="map-item" style="height:55px;"></div>
-                                            <br />
+                                                            <div class="map-item" style="height:55px;"></div>
+                                                            <br />
                                         }
                                     }
                                 }
@@ -133,7 +151,7 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    <p class="text-center">OVERALL</p>
+                    <p class="text-center subtitle">OVERALL</p>
 
                     <div class="maps-container">
                         @{
@@ -142,21 +160,27 @@
                                 var mapName = CapitalizeFirstLetter(map.ToLower());
                                 var averageKD = CalculateAverage(faction2MapStatsKD[map]);
                                 var averageWR = CalculateAverage(faction2MapStatsWR[map]);
+                                var totalMatches = CalculateTotalMatches(faction2MapStatsMatches[map]);
 
-                                <div class="OverallAnalyzeMap">
-                                    <img src="~/Map_Icons/de_@(map.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                    <span class="OverallAnalyzerMapName">
-                                        @mapName:
-                                        <span class="AnalyzerResultOverall" style="color:@(averageWR >= 50 ? "#6BBE49" : "#F20707")">@averageWR.ToString("F0")%</span> WR,
-                                        <span class="AnalyzerResultOverall" style="color:@(averageKD >= 1.00 ? "#6BBE49" : "#F20707")">@averageKD.ToString("F2")</span> K/D
-                                    </span>
+                                                <div class="OverallAnalyzeMap">
+                                                    <img src="~/Map_Icons/de_@(map.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                    <span class="OverallAnalyzerMapName">
+                                                        <span class="AnalyzerMapNameStyle">@mapName:</span>
+                                                        <span class="AnalyzerResultOverall" style="font-weight:100;">@totalMatches</span> Matches, <span class="AnalyzerResultOverall" style="color:@(averageWR >= 50 ? "#6BBE49" : "#F20707")">@averageWR.ToString("F0")%</span> WR,
+                                                        <span class="AnalyzerResultOverall" style="color:@(averageKD >= 1.00 ? "#6BBE49" : "#F20707")">@averageKD.ToString("F2").Replace(",", ".")</span> K/D
+                                                    </span>
+                                                </div>
+
+                                <div class="OverallLast20AnalyzeMap">
+                                    <div style="width:45px; height:45px"></div>
+                                    <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
                                 </div>
                             }
                         }
                     </div>
                 </div>
                 <div class="col-md-12">
-                    <p class="text-center">Players</p>
+                    <p class="text-center subtitle">PLAYERS</p>
                     @foreach (var playerStat in faction2PlayerStats)
                     {
                         var player = faction2Players.FirstOrDefault(p => p.player_id == playerStat.player_id);
@@ -179,20 +203,20 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                        <div class="map-item">
-                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</span> WR
-                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                        </div>
-                                        <br />
+                                                        <div class="map-item">
+                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR
+                                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                        </div>
+                                                        <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                            <div class="map-item" style="height:55px;"></div>
-                                            <br />
+                                                            <div class="map-item" style="height:55px;"></div>
+                                                            <br />
                                         }
                                     }
                                 }
@@ -211,13 +235,7 @@
         $(document).ready(function () {
             $('.player-info').click(function () {
                 var playerId = $(this).data('player-id');
-                $('.PlayerMapsAnalyzer').each(function () {
-                    if ($(this).data('player-id') === playerId) {
-                        $(this).toggleClass('hidden');
-                    } else {
-                        $(this).addClass('hidden');
-                    }
-                });
+                $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
             });
         });
     </script>
