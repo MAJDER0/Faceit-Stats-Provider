@@ -66,6 +66,12 @@
     margin-right: 3%;
 }
 
+.AnalyzerResultOverallLast10 {
+    font-weight: bold;
+    margin-left: 2%;
+    margin-right: 1.5%;
+}
+
 .title {
     font-size: 28px;
     font-weight: bold;
@@ -118,3 +124,4 @@
 .AnalyzerMapNameStyle {
     font-weight:bold;
 }
+
