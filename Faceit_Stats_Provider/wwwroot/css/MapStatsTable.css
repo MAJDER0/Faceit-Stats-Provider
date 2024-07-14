@@ -26,10 +26,14 @@
         border-color: rgba(255, 255, 255, 0.2);
     }
 
+        .map-row td p {
+            padding-top: 17%;
+        }
 
-    .MapsTable tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.6);
-    }
+
+.MapsTable tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+}
 
 
     .MapsTable tbody tr:last-child td {

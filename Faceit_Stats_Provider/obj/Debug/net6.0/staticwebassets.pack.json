@@ -5,6 +5,46 @@
       "PackagePath": "staticwebassets\\Faceit_Stats_Provider.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_ancient.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_ancient.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_anubis.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_anubis.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_cache.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_cache.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_dust2.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_dust2.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_inferno.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_inferno.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_mirage.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_mirage.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_nuke.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_nuke.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_overpass.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_overpass.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_train.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_train.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\Map_Icons\\de_vertigo.png",
+      "PackagePath": "staticwebassets\\Map_Icons\\de_vertigo.png"
+    },
+    {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\NoPicLogo.png",
       "PackagePath": "staticwebassets\\NoPicLogo.png"
     },
@@ -17,12 +57,84 @@
       "PackagePath": "staticwebassets\\css\\Body.css"
     },
     {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\EloGraph.css",
+      "PackagePath": "staticwebassets\\css\\EloGraph.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+      "PackagePath": "staticwebassets\\css\\FAQ.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FaceitLevelCanvas.css",
+      "PackagePath": "staticwebassets\\css\\FaceitLevelCanvas.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FilterSwitches.css",
+      "PackagePath": "staticwebassets\\css\\FilterSwitches.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\LoadMoreMatchesButton.css",
+      "PackagePath": "staticwebassets\\css\\LoadMoreMatchesButton.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\MapRadarChart.css",
+      "PackagePath": "staticwebassets\\css\\MapRadarChart.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\MapStatsTable.css",
+      "PackagePath": "staticwebassets\\css\\MapStatsTable.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
+      "PackagePath": "staticwebassets\\css\\NavBar.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerBadges.css",
+      "PackagePath": "staticwebassets\\css\\PlayerBadges.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerInfo.css",
+      "PackagePath": "staticwebassets\\css\\PlayerInfo.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerNotFound.css",
+      "PackagePath": "staticwebassets\\css\\PlayerNotFound.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerStats.css",
+      "PackagePath": "staticwebassets\\css\\PlayerStats.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayersAnalyze.css",
+      "PackagePath": "staticwebassets\\css\\PlayersAnalyze.css"
+    },
+    {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\SearchBar.css",
       "PackagePath": "staticwebassets\\css\\SearchBar.css"
     },
     {
-      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-      "PackagePath": "staticwebassets\\css\\site.css"
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\StarFieldSwitch.css",
+      "PackagePath": "staticwebassets\\css\\StarFieldSwitch.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\TableMatches.css",
+      "PackagePath": "staticwebassets\\css\\TableMatches.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\general.css",
+      "PackagePath": "staticwebassets\\css\\general.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\logo.css",
+      "PackagePath": "staticwebassets\\css\\logo.css"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\js\\SearchBarAnimation.js",
+      "PackagePath": "staticwebassets\\js\\SearchBarAnimation.js"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\js\\SearchBarAnimationAnalyzer.js",
+      "PackagePath": "staticwebassets\\js\\SearchBarAnimationAnalyzer.js"
     },
     {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\js\\site.js",
@@ -271,6 +383,10 @@
     {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\plus.png",
       "PackagePath": "staticwebassets\\plus.png"
+    },
+    {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\plus_green.png",
+      "PackagePath": "staticwebassets\\plus_green.png"
     },
     {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\trending-up.png",

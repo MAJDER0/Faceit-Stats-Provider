@@ -1387,17 +1387,18 @@
                                 <img src="@map.img_small" />
                             </td>
 
-                            <td>@map.label</td>
-                            <td>@map.stats.Matches</td>
+                            <td><p class="Result" style="margin-left:-8%;">@map.label</p></td>
+
+                            <td><p class="Result" style="padding-left:25%;">@map.stats.Matches</p></td>
 
                             <td>
-                                <p class="Result" style="color: @(double.Parse(map.stats.WinRate) >= 50.00 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</p>
+                                <p class="Result" style="padding-left:20%; color: @(double.Parse(map.stats.WinRate) >= 50.00 ? "#6BBE49" : "#F20707")">@map.stats.WinRate%</p>
                             </td>
                             <td>
-                                <p class="Result" style="color: @(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</p>
+                                <p class="Result" style="padding-left:18%; color: @(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</p>
                             </td>
                             <td>
-                                <p class="Result" style="color: @(double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.AverageKRRatio</p>
+                                <p class="Result" style="padding-left:18%; color: @(double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707")">@map.stats.AverageKRRatio</p>
                             </td>
                         </tr>
 
@@ -1406,23 +1407,23 @@
                                 <table class="table MapsTable">
                                     <thead>
                                         <tr>
-                                            <th>AVERAGE KILLS</th>
-                                            <th>AVERAGE DEATHS</th>
-                                            <th>AVERAGE ASSISTS</th>
-                                            <th>HEADSHOTS PER GAME</th>
-                                            <th>AVERAGE HEADSHOTS %</th>
-                                            <th>AVERAGE TRIPLE</th>
+                                            <th style="text-align:center;">AVERAGE KILLS</th>
+                                            <th style="text-align:center;">AVERAGE DEATHS</th>
+                                            <th style="text-align:center;">AVERAGE ASSISTS</th>
+                                            <th style="text-align:center;">HEADSHOTS PER GAME</th>
+                                            <th style="text-align:center;">AVERAGE HEADSHOTS %</th>
+                                            <th style="text-align:center;">AVERAGE TRIPLE</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 
                                         <tr>
-                                            <td><p class="Result">@map.stats.AverageKills</p></td>
-                                            <td><p class="Result">@map.stats.AverageDeaths</p></td>
-                                            <td><p class="Result">@map.stats.AverageAssists</p></td>
-                                            <td><p class="Result">@map.stats.HeadshotsperMatch</p></td>
-                                            <td><p class="Result">@map.stats.AverageHeadshots</p></td>
-                                            <td><p class="Result">@map.stats.AverageTripleKills</p></td>
+                                            <td><p class="Result" style="padding-left:20%;">@map.stats.AverageKills</p></td>
+                                            <td><p class="Result" style="padding-left:20%;">@map.stats.AverageDeaths</p></td>
+                                            <td><p class="Result" style="padding-left:25%;">@map.stats.AverageAssists</p></td>
+                                            <td><p class="Result" style="padding-left:30%;">@map.stats.HeadshotsperMatch</p></td>
+                                            <td><p class="Result" style="padding-left:35%;">@map.stats.AverageHeadshots</p></td>
+                                            <td><p class="Result" style="padding-left:35%;">@map.stats.AverageTripleKills</p></td>
                                         </tr>
 
                                     </tbody>

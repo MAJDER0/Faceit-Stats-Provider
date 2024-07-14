@@ -3,40 +3,40 @@
   "WorkspaceRootPath": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\navbar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\navbar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\faq.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\faq.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\playerstats\\playerstats.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\playerstats\\playerstats.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\shared\\matchlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\shared\\matchlistpartial.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\starfieldswitch.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\starfieldswitch.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\shared\\_layout.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\playerbadges.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\playerbadges.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\navbar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\navbar.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\playerstats\\playerstats.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\playerstats\\playerstats.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\starfieldswitch.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\starfieldswitch.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\wwwroot\\css\\mapstatstable.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\wwwroot\\css\\mapstatstable.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|solutionrelative:faceit_stats_provider\\views\\_viewstart.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1A221D4C-1AF9-48F9-88D7-04D1CC2E5317}|Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj|c:\\users\\majderki\\source\\repos\\faceit-stats-provider-mvc\\faceit_stats_provider\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -137,41 +137,41 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 8,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FAQ.css",
-              "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
-              "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
-              "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
-              "RelativeToolTip": "Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAADcAAAAaAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-06-30T11:34:58.289Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
+              "Title": "MapStatsTable.css",
+              "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\MapStatsTable.css",
+              "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\MapStatsTable.css",
+              "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\MapStatsTable.css",
+              "RelativeToolTip": "Faceit_Stats_Provider\\wwwroot\\css\\MapStatsTable.css",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAABwAAAAXAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-07-14T08:35:18.115Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "NavBar.css",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
               "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
               "RelativeToolTip": "Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAXAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
               "WhenOpened": "2024-06-30T11:34:11.709Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "StarFieldSwitch.css",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\StarFieldSwitch.css",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\StarFieldSwitch.css",
@@ -184,7 +184,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "PlayerBadges.css",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerBadges.css",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\PlayerBadges.css",
@@ -198,19 +198,6 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "site.css",
-              "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-              "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "Faceit_Stats_Provider\\wwwroot\\css\\site.css",
-              "ViewState": "AQIAAAIAAAAAAAAAAAAowBcAAAABAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-06-30T08:04:36.032Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\Views\\Shared\\_Layout.cshtml",
@@ -223,7 +210,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "MatchListPartial.cshtml",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Views\\Shared\\MatchListPartial.cshtml",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\Views\\Shared\\MatchListPartial.cshtml",
@@ -236,20 +223,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 1,
               "Title": "PlayerStats.cshtml",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Views\\PlayerStats\\PlayerStats.cshtml",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\Views\\PlayerStats\\PlayerStats.cshtml",
               "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Views\\PlayerStats\\PlayerStats.cshtml",
               "RelativeToolTip": "Faceit_Stats_Provider\\Views\\PlayerStats\\PlayerStats.cshtml",
-              "ViewState": "AQIAAJQBAAAAAAAAAAAlwKoBAAAtAAAA",
+              "ViewState": "AQIAAGUFAAAAAAAAAAAAAG4FAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-06-30T08:04:36.018Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 0,
+              "Title": "FAQ.css",
+              "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+              "RelativeDocumentMoniker": "Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+              "ToolTip": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+              "RelativeToolTip": "Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACUAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-06-30T11:34:58.289Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "_ViewStart.cshtml",
               "DocumentMoniker": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\Views\\_ViewStart.cshtml",
               "RelativeDocumentMoniker": "Faceit_Stats_Provider\\Views\\_ViewStart.cshtml",
@@ -257,8 +257,7 @@
               "RelativeToolTip": "Faceit_Stats_Provider\\Views\\_ViewStart.cshtml",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-06-30T08:04:36.086Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-30T08:04:36.086Z"
             },
             {
               "$type": "Document",
@@ -270,8 +269,7 @@
               "RelativeToolTip": "Faceit_Stats_Provider\\appsettings.json",
               "ViewState": "AQIAAPEAAAAAAAAAAAAIwAABAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-06-30T08:07:20.704Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-30T08:07:20.704Z"
             },
             {
               "$type": "Document",
@@ -283,8 +281,7 @@
               "RelativeToolTip": "Faceit_Stats_Provider\\Controllers\\PlayerStatsController.cs",
               "ViewState": "AQIAAIkBAAAAAAAAAAAAAKsBAAA8AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-30T08:04:36.015Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-30T08:04:36.015Z"
             },
             {
               "$type": "Document",
