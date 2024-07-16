@@ -260,8 +260,11 @@
                 }
 
             </div>
-            <div class="Last20Stats">
+            <div class="Last20Stats">               
+
                 @{
+                    bool ShowDifferentStatsLast20 = true;
+
                     void RenderLast20Stats(List<MatchStats.Round> MatchesStats, string id, bool RankedGame = false, bool FiveVsFiveGame = false)
                     {
                                             <p class="title">LAST 20</p>
@@ -274,11 +277,12 @@
                             double totalAverageAssists = 0;
                             double gameCount = 0;
                             double wins = 0;
+                            double totalADR = 0;
 
                             int matchCounter = 0;
                             int matchCounterWithWalkovers = 0;
 
-                                                @foreach (var match in MatchesStats)
+                            @foreach (var match in MatchesStats)
                             {
                                 if (match.teams is not null && match.best_of != "Walkover")
                                 {
@@ -286,6 +290,18 @@
                                     {
                                         foreach (var player in team.players)
                                         {
+                                            try
+                                            {
+                                                if (player.player_stats.ADR == null)
+                                                {
+                                                    ShowDifferentStatsLast20 = false;
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                ShowDifferentStatsLast20 = false;                                           
+                                            }
+
                                             if (matchCounter < 20)
                                             {
 
@@ -294,12 +310,21 @@
                                                     double kills = double.Parse(player.player_stats.Kills);
                                                     double deaths = double.Parse(player.player_stats.Deaths);
                                                     double Assists = double.Parse(player.player_stats.Assists);
-                                                    double kdRatio = kills / deaths;
-                                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                                    double ADR = 0;
+
+                                                    if (ShowDifferentStatsLast20)
+                                                    {
+                                                        ADR = double.Parse(player.player_stats.ADR.ToString().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+                                                    }
+
+                                                    double kdRatio = double.Parse(player.player_stats.KDRatio.ToString().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+                                                    double KrRatio = double.Parse(player.player_stats.KRRatio.ToString().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+
                                                     totalAverageKills += kills;
                                                     totalAverageAssists += Assists;
                                                     totalKrRatio += KrRatio;
                                                     totalKdRatio += kdRatio;
+                                                    totalADR += ADR;
                                                     gameCount++;
 
                                                     if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
@@ -314,12 +339,20 @@
                                                     double kills = double.Parse(player.player_stats.Kills);
                                                     double deaths = double.Parse(player.player_stats.Deaths);
                                                     double Assists = double.Parse(player.player_stats.Assists);
-                                                    double kdRatio = kills / deaths;
-                                                    double KrRatio = kills / double.Parse(match.round_stats.Rounds); ;
+                                                    double ADR = 0;
+
+                                                    if (ShowDifferentStatsLast20)
+                                                    {
+                                                        ADR = double.Parse(player.player_stats.ADR.ToString().Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+                                                    }
+                                                    double kdRatio = double.Parse(player.player_stats.KDRatio.Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+                                                    double KrRatio = double.Parse(player.player_stats.KRRatio.Replace(",", "."), NumberStyles.Float, CultureInfo.InvariantCulture);
+
                                                     totalAverageKills += kills;
                                                     totalAverageAssists += Assists;
                                                     totalKrRatio += KrRatio;
                                                     totalKdRatio += kdRatio;
+                                                    totalADR += ADR;
                                                     gameCount++;
 
                                                     if (match.round_stats.Winner == match.teams[0].team_id && match.teams[0].players.Any(p => p.player_id == id) ||
@@ -339,6 +372,7 @@
 
                             double averageKdRatio = totalKdRatio / gameCount;
                             double averageKrRatio = totalKrRatio / gameCount;
+                            double averageAdrRatio = totalADR / gameCount;
                             double averageKills = totalAverageKills / gameCount;
                             double averageAssists = totalAverageAssists / gameCount;
                             double winratio = (wins / gameCount) * 100;
@@ -346,6 +380,7 @@
 
                             string averageKdRatioFormatted = averageKdRatio.ToString("F2");
                             string averageKrRatioFormatted = averageKrRatio.ToString("F2");
+                            string averageAdrRatioFormatted = averageAdrRatio.ToString("F1");
                             string averageKillsFormatted = (averageKills % 1 >= 0.5) ? Math.Ceiling(averageKills).ToString("F0") : averageKills.ToString("F0");
                             string averageAssistsFormatted = averageAssists.ToString("F0");
 
@@ -357,7 +392,13 @@
 
                                                 <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
-                                                <p>AVG ASSISTS: <span class="Result">@averageAssistsFormatted</span></p>
+                                                if(ShowDifferentStatsLast20){
+                                                    <p>AVG ADR: <span class="Result" style="color:@(averageAdrRatio>=75 ? "#6BBE49" : "#F20707")">@averageAdrRatioFormatted</span></p>
+                                                }
+                                                else
+                                                {
+                                                    <p>AVG ASSISTS: <span class="Result">@averageAssists.ToString("F0")</span></p>
+                                                }
 
                                                 <span>
                                                     @{
