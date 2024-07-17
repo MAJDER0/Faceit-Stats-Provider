@@ -50,13 +50,13 @@ namespace Faceit_Stats_Provider.Controllers
                 foreach (var item in players.teams.faction1.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=10")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 foreach (var item in players.teams.faction2.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=10")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 // Await all tasks concurrently
@@ -75,9 +75,10 @@ namespace Faceit_Stats_Provider.Controllers
                     }
                 }
 
-                await Task.WhenAll(getPlayerMatchStatsTasks.Select(t => t.Item2));
 
-                var playerMatchStats = getPlayerMatchStatsTasks.Select(t => (t.playerId, t.Item2.Result)).ToList();
+                var playerMatchStatsResults = await Task.WhenAll(getPlayerMatchStatsTasks.Select(task => HandleHttpRequestAsync(task.Item2).ContinueWith(t => (task.playerId, Result: t.Result))));
+                var playerMatchStats = playerMatchStatsResults.Where(result => result.Result != null).ToList();
+
 
                 var viewModel = new AnalyzerViewModel
                 {
@@ -103,6 +104,27 @@ namespace Faceit_Stats_Provider.Controllers
                 return segments.Length > 0 ? segments[segments.Length - 1].Trim('/') : null;
             }
             return null;
+        }
+
+        private async Task<T> HandleHttpRequestAsync<T>(Task<T> task)
+        {
+            try
+            {
+                return await task;
+            }
+            catch (HttpRequestException ex)
+            {
+                // Log the specific request that failed
+                // For example, you can use a logging framework or output to console
+                Console.WriteLine($"HTTP request error: {ex.Message}");
+                return default;
+            }
+            catch (Exception ex)
+            {
+                // Log other exceptions
+                Console.WriteLine($"General error: {ex.Message}");
+                return default;
+            }
         }
     }
 }

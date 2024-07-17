@@ -125,3 +125,15 @@
     font-weight:bold;
 }
 
+.FastChoiceContainer {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    margin-top:5%;
+    margin-bottom:5%;
+}
+
+.FastChoiceMainMapInfo {
+    display: inline-block;
+    margin-right: 10%; /* Adjust margin as needed */
+}
