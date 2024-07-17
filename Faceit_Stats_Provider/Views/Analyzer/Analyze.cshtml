@@ -179,20 +179,34 @@
                         <div class="FastChoiceMainMapInfo">
                             @{
 
-                                var recordWithLowestValue = mapScoresFaction2.OrderBy(x => x.Item2).FirstOrDefault();
+                                var lowestRecords = mapScoresFaction2.OrderBy(x => x.Item2)
+                                     .Take(4)
+                                     .ToList();
+
+                                    var recordWithLowestValue = lowestRecords.Count > 0 ? lowestRecords[0] : ("", 0);
+                                    var recordWithLowestValue2 = lowestRecords.Count > 1 ? lowestRecords[1] : ("", 0);
+                                    var recordWithLowestValue3 = lowestRecords.Count > 2 ? lowestRecords[2] : ("", 0);
+                                    var recordWithLowestValue4 = lowestRecords.Count > 3 ? lowestRecords[3] : ("", 0);
 
                             }
-                            <p class="Result">@recordWithLowestValue.Item1</p>
+                            @*<p class="Result"> Highest Win Probability</p>*@
+                            <p class="ResultFastChoiceMapName"><img src="~/trending-up.png" alt="Trending up icon" width="35" height="35" />@recordWithLowestValue.Item1</p>
+                            <p class="HowIsItCalculated"><a href="">HOW IS IT CALCULATED?</a></p>
 
                         </div>
-                        <div>
 
+                        <div>
                             <img src="@(mapLinks[recordWithLowestValue.Item1.ToLower()])" width=" 225" height="140.63" />
                         </div>
 
                     </div>
 
+                    <div>
+                        <p class="BestPicks">BEST PICKS:<span style="color:#F2F2F2;">  @recordWithLowestValue.Item1, @recordWithLowestValue2.Item1, @recordWithLowestValue3.Item1, @recordWithLowestValue4.Item1 </span></p>
+                    </div>
+
                 </div>
+
 
                 <div class="col-md-12">
                     <p class="text-center subtitle">OVERALL</p>
@@ -267,20 +281,20 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                                                                                        <div class="map-item">
-                                                                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                                                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR,
-                                                                                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                                                                                        </div>
-                                                                                                        <br />
+                                                                                                                <div class="map-item">
+                                                                                                                    <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                                                                                    @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR,
+                                                                                                                    <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                                                                                </div>
+                                                                                                                <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                                                                                            <div class="map-item" style="height:55px;"></div>
-                                                                                                            <br />
+                                                                                                                    <div class="map-item" style="height:55px;"></div>
+                                                                                                                    <br />
                                         }
                                     }
                                 }
@@ -297,26 +311,39 @@
             <div class="row">
 
                 <div class="col-md-12">
-                    <p class="text-center subtitle">FAST CHOICE</p>
+                <p class="text-center subtitle">FAST CHOICE</p>
 
-                    <div class="FastChoiceContainer">
-                        <div class="FastChoiceMainMapInfo">
-                            @{
+                <div class="FastChoiceContainer">
+                    <div class="FastChoiceMainMapInfo">
+                        @{
 
-                                var recordWithLowestValueSecond = mapScoresFaction1.OrderBy(x => x.Item2).FirstOrDefault();
+                            lowestRecords = mapScoresFaction1.OrderBy(x => x.Item2)
+                            .Take(4)
+                            .ToList();
 
-                            }
-                            <p class="Result">@recordWithLowestValue.Item1</p>
+                             recordWithLowestValue = lowestRecords.Count > 0 ? lowestRecords[0] : ("", 0);
+                             recordWithLowestValue2 = lowestRecords.Count > 1 ? lowestRecords[1] : ("", 0);
+                             recordWithLowestValue3 = lowestRecords.Count > 2 ? lowestRecords[2] : ("", 0);
+                             recordWithLowestValue4 = lowestRecords.Count > 3 ? lowestRecords[3] : ("", 0);
 
-                        </div>
-                        <div>
-
-                            <img src="@(mapLinks[recordWithLowestValueSecond.Item1.ToLower()])" width=" 225" height="140.63" />
-                        </div>
+                        }
+                        @*<p class="Result"> Highest Win Probability</p>*@
+                        <p class="ResultFastChoiceMapName"><img src="~/trending-up.png" alt="Trending up icon" width="35" height="35" />@recordWithLowestValue.Item1</p>
+                        <p class="HowIsItCalculated"><a href="">HOW IS IT CALCULATED?</a></p>
 
                     </div>
 
+                    <div>
+                        <img src="@(mapLinks[recordWithLowestValue.Item1.ToLower()])" width=" 225" height="140.63" />
+                    </div>
+
                 </div>
+
+                <div>
+                    <p class="BestPicks">BEST PICKS:<span style="color:#F2F2F2;">  @recordWithLowestValue.Item1, @recordWithLowestValue2.Item1, @recordWithLowestValue3.Item1, @recordWithLowestValue4.Item1 </span></p>
+                </div>
+
+            </div>
 
 
                 <div class="col-md-12">
@@ -394,21 +421,21 @@
 
                                     foreach (var map in displayedMaps)
                                     {
-                                                                                                        <div class="map-item">
-                                                                                                            <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                                                                                            @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR,
-                                                                                                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
-                                                                                                            
-                                                                                                        </div>
-                                                                                                        <br />
+                                                                                                                <div class="map-item">
+                                                                                                                    <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+                                                                                                                    @map.label: <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")"><span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>@map.stats.WinRate%</span> WR,
+                                                                                                                    <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">@map.stats.AverageKDRatio</span> K/D
+                                                                                                                    
+                                                                                                                </div>
+                                                                                                                <br />
                                     }
 
                                     if (displayedMaps.Count != 7)
                                     {
                                         for (int i = displayedMaps.Count; i < 7; i++)
                                         {
-                                                                                                            <div class="map-item" style="height:55px;"></div>
-                                                                                                            <br />
+                                                                                                                    <div class="map-item" style="height:55px;"></div>
+                                                                                                                    <br />
                                         }
                                     }
                                 }

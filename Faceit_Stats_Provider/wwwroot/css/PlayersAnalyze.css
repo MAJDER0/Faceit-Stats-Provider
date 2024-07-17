@@ -73,13 +73,13 @@
 }
 
 .title {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
     color: #F20707;
 }
 
 .subtitle {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     color: #5A0273;
 }
@@ -88,7 +88,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+/*    margin-left:6%;*/
+    margin-bottom:5%;
+    width: 80%;
 }
 
 .OverallAnalyzeMap {
@@ -128,12 +130,52 @@
 .FastChoiceContainer {
     display: flex;
     align-items: center;
-    justify-content:center;
-    margin-top:5%;
-    margin-bottom:5%;
+    justify-content: center;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
 
 .FastChoiceMainMapInfo {
     display: inline-block;
-    margin-right: 10%; /* Adjust margin as needed */
+    margin-right: 10%;
+}
+
+.ResultFastChoiceMapName {
+    font-weight: bold;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+}
+
+    .ResultFastChoiceMapName img {
+        margin-top:3%;
+        margin-right: 8%;
+    }
+
+.HowIsItCalculated {
+    margin-top: -10%;
+}
+
+    .HowIsItCalculated a {
+        text-decoration: none;
+        font-size: 12px;
+        color: #ff3c22;
+    }
+
+        .HowIsItCalculated a:hover {
+            color: #f2f2f2;
+        }
+
+.BestPicks {
+    display: flex;
+    justify-content: left;
+    margin-left:16%;
+    margin-bottom:8%;
+    margin-top:6%;
+    color: #5A0273;
+    color: #ff3c22;
+}
+
+.BestPicks span {
+    margin-left: 1%;
 }
