@@ -533,6 +533,10 @@
                             All5v5games.style.display = 'none';
                             rankedGames.style.display = 'block';
 
+                             for (let i = 0; i < v5ALLmatches.length; i++) {
+                                v5ALLmatches[i].style.display = 'none';
+                            }
+
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'none';
                             }
@@ -549,13 +553,16 @@
                             All5v5games.style.display = 'none';
                             rankedGames.style.display = 'none';
 
+                            for (let i = 0; i < v5ALLmatches.length; i++) {
+                                v5ALLmatches[i].style.display = 'table-row';
+                            }
+
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'table-row';
                             }
                             for (let i = 0; i < v5ALLmatches.length; i++) {
                                 v5ALLmatches[i].style.display = 'table-row';
                             }
-
                             toggle5V5Games.checked = false;
                         }
                     });
@@ -569,6 +576,11 @@
                             for (let i = 0; i < v1TableMatches.length; i++) {
                                 v1TableMatches[i].style.display = 'none';
                             }
+
+                            for (let i = 0; i < v5ALLmatches.length; i++) {
+                                v5ALLmatches[i].style.display = 'table-row';
+                            }
+
 
                         } else {
                             last20Stats.style.display = 'block';

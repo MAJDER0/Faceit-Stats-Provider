@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using MatchType = Faceit_Stats_Provider.Models.MatchType;
 
 namespace Faceit_Stats_Provider.Services
 {
@@ -99,7 +100,32 @@ namespace Faceit_Stats_Provider.Services
                     {
                         try
                         {
-                            return await client.GetFromJsonAsync<MatchStats.Rootobject>($"v4/matches/{match.match_id}/stats");
+
+                            var matchResponse = await client.GetAsync($"v4/matches/{match.match_id}");
+                            matchResponse.EnsureSuccessStatusCode();
+
+
+                            var matchData = await matchResponse.Content.ReadFromJsonAsync<MatchType.Rootobject>();
+                            var calculateElo = matchData?.calculate_elo ?? false;
+
+                            // Fetch data from v4/matches/{match.match_id}/stats
+                            var statsResponse = await client.GetAsync($"v4/matches/{match.match_id}/stats");
+                            statsResponse.EnsureSuccessStatusCode();
+
+                            var matchStats = await statsResponse.Content.ReadFromJsonAsync<MatchStats.Rootobject>();
+
+                            // Set the calculate_elo property based on the fetched data
+                            if (matchStats != null)
+                            {
+                                foreach (var round in matchStats.rounds)
+                                {
+                                    round.calculate_elo = calculateElo;
+                                    round.competition_name = matchData?.competition_name;
+                                    round.match_id = matchData?.match_id;
+                                }
+                            }
+
+                            return matchStats;
                         }
                         catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
                         {
