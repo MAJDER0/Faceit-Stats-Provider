@@ -43,7 +43,8 @@
     margin-bottom: 10px;
     height: auto;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start; /* Adjust alignment as needed */
 }
 
 .MapIcon {
@@ -178,4 +179,12 @@
 
 .BestPicks span {
     margin-left: 1%;
+}
+
+.map-item-element {
+    width: 100%;
+}
+
+.map-item-element-Last20 {
+    margin-top:-10%;
 }

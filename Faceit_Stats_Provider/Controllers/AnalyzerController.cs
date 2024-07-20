@@ -50,13 +50,13 @@ namespace Faceit_Stats_Provider.Controllers
                 foreach (var item in players.teams.faction1.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=1")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 foreach (var item in players.teams.faction2.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=1")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 // Await all tasks concurrently
