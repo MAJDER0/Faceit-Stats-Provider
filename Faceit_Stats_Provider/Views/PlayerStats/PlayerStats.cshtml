@@ -393,7 +393,7 @@
                                                 <p>AVG KILLS: <span class="Result" style="color:@(averageKills>=16 ? "#6BBE49" : "#F20707")">@averageKillsFormatted</span></p>
 
                                                 if(ShowDifferentStatsLast20){
-                                                    <p>AVG ADR: <span class="Result" style="color:@(averageAdrRatio>=75 ? "#6BBE49" : "#F20707")">@averageAdrRatioFormatted</span></p>
+                                <p>AVG ADR: <span class="Result" style="color:@(averageAdrRatio>=75 ? "#6BBE49" : "#F20707")">@averageAdrRatioFormatted.Replace(",", ".")</span></p>
                                                 }
                                                 else
                                                 {
