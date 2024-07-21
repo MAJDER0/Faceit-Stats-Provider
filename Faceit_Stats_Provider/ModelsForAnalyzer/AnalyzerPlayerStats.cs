@@ -21,7 +21,8 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string KDRatio { get; set; }
             public string Matches { get; set; }
             public string[] RecentResults { get; set; }
-            public string AverageHeadshots { get; set; }
+            public string AverageHeadshots { get; set; }           
+            [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
             public string WinRate { get; set; }
             public string CurrentWinStreak { get; set; }
@@ -42,13 +43,6 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
         public class Stats
         {
             public string Kills { get; set; }
-            public string QuadroKills { get; set; }
-            public string TripleKills { get; set; }
-            public string MVPs { get; set; }
-            [JsonPropertyName("Average Triple Kills")]
-            public string AverageTripleKills { get; set; }
-            public string PentaKills { get; set; }
-            public string AverageMVPs { get; set; }
             [JsonPropertyName("Average Headshots %")]
             public string AverageHeadshots { get; set; }
             public string Assists { get; set; }
@@ -70,8 +64,6 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string KDRatio { get; set; }
             [JsonPropertyName("Average Assists")]
             public string AverageAssists { get; set; }
-            [JsonPropertyName("Average Penta Kills")]
-            public string AveragePentaKills { get; set; }
             public string Headshots { get; set; }
             public string Wins { get; set; }
             [JsonPropertyName("Average Deaths")]
