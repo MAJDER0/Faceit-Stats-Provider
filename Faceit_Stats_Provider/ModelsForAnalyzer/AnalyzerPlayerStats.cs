@@ -24,6 +24,7 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string AverageHeadshots { get; set; }           
             [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
+            [JsonPropertyName("Win Rate %")]
             public string WinRate { get; set; }
             public string CurrentWinStreak { get; set; }
         }
