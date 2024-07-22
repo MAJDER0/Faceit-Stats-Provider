@@ -17,6 +17,7 @@ input:-webkit-autofill:focus {
 
 html {
     font-size: 14px;
+    letter-spacing: 1px;
 }
 
 @media (min-width: 768px) {

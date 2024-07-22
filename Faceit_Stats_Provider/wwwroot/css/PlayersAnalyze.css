@@ -218,3 +218,42 @@
     margin-left: 1%;
     margin-right: 1%;
 }
+
+.formula {
+    font-size: 16px;
+    margin: 20px;
+    margin-bottom:10%;
+    margin-top:10%;
+}
+
+.formulaWages {
+    margin-top:5%;
+}
+
+.formula code {
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.FAQBestPicks {
+    font-size: 16px;
+}
+
+.NormalizationFormula {
+    color: #5A0273;
+    font-weight:bold;
+    font-size:20px;
+    margin-left: 2%;
+    margin-top: 5%;
+    margin-bottom: 8%;
+}
+
+.MinOverallMatchesInfo {
+    margin-top:5%;
+    margin-bottom:3%;
+    margin-left:1.5%;
+}
+
+.formulaNormalization {
+    margin-top:5%;
+}
