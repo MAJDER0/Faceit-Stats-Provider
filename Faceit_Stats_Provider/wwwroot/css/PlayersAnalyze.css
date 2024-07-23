@@ -75,13 +75,13 @@
 
 .AnalyzerResultOverall {
     font-weight: bold;
-    margin-left: 5%;
-    margin-right: 3%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
 }
 
 .AnalyzerResultOverallLast10 {
     font-weight: bold;
-    margin-left: 2%;
+    margin-left: 1.5%;
     margin-right: 1.5%;
 }
 
@@ -106,17 +106,36 @@
     width: 80%;
 }
 
+.map-item-element {
+    width: 100%;
+}
+
+.map-item-element-Last20 {
+    margin-top: -7%;
+    padding-right: 20%;
+    margin-left:10%;
+}
+
+.map-item {
+    display:inline-block;
+}
+
+.ActualMapElements {
+    display:flex;
+}
+
+
 .OverallAnalyzeMap {
     display: flex;
-    justify-content: flex-start; 
-    width: 80%; 
+    justify-content: flex-start;
+    width: 80%;
     margin: 10px 0;
     box-sizing: border-box;
 }
 
 .OverallLast20AnalyzeMap {
     display: flex;
-    justify-content: flex-start;
+    justify-content: left;
     width: 100%;
     margin: 10px 0;
     margin-top:-4%;
@@ -179,12 +198,15 @@
             color: #f2f2f2;
         }
 
+.BestPicksNStatsContainer {
+    display: inline-block;
+    text-align:center;
+    width:100%;
+}
+
 .BestPicks, .Combined {
-    display: flex;
-    justify-content: left;
-    margin-left:16%;
-    margin-bottom:8%;
-    margin-top:6%;
+    margin-bottom: 8%;
+    margin-top: 6%;
     color: #ff3c22;
 }
 
@@ -192,15 +214,6 @@
     margin-left: 1%;
 }
 
-.map-item-element {
-    width: 100%;
-}
-
-.map-item-element-Last20 {
-    margin-top: -7%;
-    padding-right: 20%;
-    margin-left:10%;
-}
 
 .CombinedInfo {
     margin-right:1.5%;

@@ -40,7 +40,7 @@
 
                 // Define normalization ranges
                 double MinOverallKD = 0, MaxOverallKD = 3;
-                double MinOverallMatches = 0, MaxOverallMatches = 17000;
+                double MinOverallMatches = 0, MaxOverallMatches = 10000;
                 double MinKR = 0, MaxKR = 2;
                 double MinWR = 0, MaxWR = 1;
                 double MinLast20Matches = 0, MaxLast20Matches = 100;
@@ -59,15 +59,15 @@
 
                 // Calculate the score based on weights
                 double score =
-                (0.5 * NormalizedOverallMatches)
-                + (0.3 * NormalizedOverallWR)
-                + (0.08 * NormalizedOverallKR)
-                + (0.08 * NormalizedOverallKD)
+                (0.785 * NormalizedOverallMatches)
+                + (0.105 * NormalizedOverallWR)
+                + (0.05 * NormalizedOverallKR)
+                + (0.05 * NormalizedOverallKD)
 
-                + (0.015 * NormalizedLast20QuantityOfMatches)
-                + (0.0075 * NormalizedLast20KD)
-                + (0.0075 * NormalizedLast20KR)
-                + (0.010 * NormalizedLast20WR);
+                + (0.0025 * NormalizedLast20QuantityOfMatches)
+                + (0.0025 * NormalizedLast20KD)
+                + (0.0025 * NormalizedLast20KR)
+                + (0.0025 * NormalizedLast20WR);
 
                 return score;
             }
@@ -179,6 +179,9 @@
                         <div class="FastChoiceMainMapInfo">
                             @{
 
+                                var lowestRecordsAS = mapScoresFaction2.OrderBy(x => x.Item2)
+                                .ToList();
+
                                 var lowestRecords = mapScoresFaction2.OrderBy(x => x.Item2)
                                 .Take(4)
                                 .ToList();
@@ -202,7 +205,7 @@
 
                     </div>
 
-                    <div>
+                    <div class="BestPicksNStatsContainer">
                         <p class="BestPicks">BEST PICKS:<span style="color:#F2F2F2;">  @recordWithLowestValue.Item1, @recordWithLowestValue2.Item1, @recordWithLowestValue3.Item1, @recordWithLowestValue4.Item1 </span></p>
                     </div>
 
@@ -243,7 +246,7 @@
                         KrCombined = KrCombined / 5;
                         WrCombined = WrCombined / 5;
                     }
-                    <div>
+                    <div class="BestPicksNStatsContainer">
                         <p class="Combined">
                             COMBINED:
 
@@ -299,7 +302,7 @@
                                     <span class="AnalyzerMapNameStyle">@mapNameResult:</span>
                                     <span class="AnalyzerResultOverall" style="font-weight:bold;">@totalMatchesResult</span> Matches,
                                     <span class="AnalyzerResultOverall" style="color:@(averageWRResult >= 50 ? "#6BBE49" : "#F20707")">@averageWRResult.ToString("F0")%</span>WR,
-                                    <span class="AnalyzerResultOverall" style="color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".")</span> K/D
+                                    <span class="AnalyzerResultOverall" style="color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".")</span> K/D,
                                     <span class="AnalyzerResultOverall" style="color:@(averageKRResult >= 0.75 ? "#6BBE49" : "#F20707")">@averageKRResult.ToString("F2").Replace(",", ".")</span> K/R
                                 </span>
                             </div>
@@ -448,8 +451,8 @@
 
                                             <div class="map-item-element">
                                                 <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-                                                <div class="map-item-stats-container">
 
+                                                <div class="map-item-stats-container">
                                                     <span style="font-weight:bold;">@map.label:</span>
                                                     <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">
                                                         <span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>
@@ -555,7 +558,7 @@
 
                     </div>
 
-                    <div>
+                    <div class="BestPicksNStatsContainer">
                         <p class="BestPicks">BEST PICKS:<span style="color:#F2F2F2;">  @recordWithLowestValue.Item1, @recordWithLowestValue2.Item1, @recordWithLowestValue3.Item1, @recordWithLowestValue4.Item1 </span></p>
                     </div>
 
@@ -595,7 +598,7 @@
                         KrCombined = KrCombined / 5;
                         WrCombined = WrCombined / 5;
                     }
-                    <div>
+                    <div class="BestPicksNStatsContainer">
                         <p class="Combined">
                             COMBINED:
 
