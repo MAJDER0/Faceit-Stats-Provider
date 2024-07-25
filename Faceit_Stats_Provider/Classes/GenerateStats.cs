@@ -8,6 +8,7 @@ namespace Faceit_Stats_Provider.Classes
     public class GenerateStats
     {
 
+
         public static (double, double, double, double, double, double, double, double, List<(double, bool, double, string)>) OverallSection(List<AnalyzerPlayerStats.Rootobject> playerStats, List<string> playerIds, List<(string, double)> MapScores, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, Dictionary<string, List<string>> TeamMapStatsMatches, List<string> maps, bool SecondTeam, List<(string playerId, AnalyzerMatchStats.Rootobject)> PlayerMatchStats)
         {
 
