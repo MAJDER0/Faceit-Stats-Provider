@@ -1,12 +1,15 @@
-﻿using Faceit_Stats_Provider.Interfaces;
+﻿using Faceit_Stats_Provider.Classes;
+using Faceit_Stats_Provider.Interfaces;
 using Faceit_Stats_Provider.Models;
 using Faceit_Stats_Provider.ModelsForAnalyzer;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -95,6 +98,45 @@ namespace Faceit_Stats_Provider.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+        [HttpPost]
+        public ActionResult RecalculateStats([FromBody] ExcludePlayerModel model)
+        {
+            var players = model.Players;
+            var excludedPlayerId = model.PlayerId;
+
+            if (players.teams.faction1?.roster != null)
+            {
+                players.teams.faction1.roster = players.teams.faction1.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+            }
+
+
+            if (players.teams.faction2?.roster != null)
+            {
+                players.teams.faction2.roster = players.teams.faction2.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+            }
+
+            var playerStats = model.PlayerStats?.Where(ps => ps.player_id != excludedPlayerId).ToList();
+
+
+            var playerMatchStats = model.PlayerMatchStats?
+                .Where(pms => pms.playerId != excludedPlayerId)
+                .Select(pms => (pms.playerId, pms.matchStats))
+                .ToList();
+
+            var viewModel = new AnalyzerViewModel
+            {
+                RoomId = model.RoomId,
+                Players = players,
+                PlayerStats = playerStats,
+                PlayerMatchStats = playerMatchStats
+            };
+
+            Console.WriteLine(JsonConvert.SerializeObject(viewModel, Formatting.Indented));
+
+            return Json(viewModel);
+        }
+
 
         private string ExtractRoomIdFromUrl(string url)
         {
