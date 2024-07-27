@@ -102,6 +102,8 @@ namespace Faceit_Stats_Provider.Controllers
         [HttpPost]
         public ActionResult RecalculateStats([FromBody] ExcludePlayerModel model)
         {
+
+
             var players = model.Players;
             var excludedPlayerId = model.PlayerId;
 
@@ -110,14 +112,12 @@ namespace Faceit_Stats_Provider.Controllers
                 players.teams.faction1.roster = players.teams.faction1.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
             }
 
-
             if (players.teams.faction2?.roster != null)
             {
                 players.teams.faction2.roster = players.teams.faction2.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
             }
 
             var playerStats = model.PlayerStats?.Where(ps => ps.player_id != excludedPlayerId).ToList();
-
 
             var playerMatchStats = model.PlayerMatchStats?
                 .Where(pms => pms.playerId != excludedPlayerId)
@@ -132,7 +132,8 @@ namespace Faceit_Stats_Provider.Controllers
                 PlayerMatchStats = playerMatchStats
             };
 
-            Console.WriteLine(JsonConvert.SerializeObject(viewModel, Formatting.Indented));
+            Console.WriteLine("Transformed ViewModel:");
+            Console.WriteLine(JsonConvert.SerializeObject(viewModel.PlayerMatchStats, Formatting.Indented));
 
             return Json(viewModel);
         }
