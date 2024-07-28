@@ -78,10 +78,8 @@ namespace Faceit_Stats_Provider.Controllers
                     }
                 }
 
-
                 var playerMatchStatsResults = await Task.WhenAll(getPlayerMatchStatsTasks.Select(task => HandleHttpRequestAsync(task.Item2).ContinueWith(t => (task.playerId, Result: t.Result))));
                 var playerMatchStats = playerMatchStatsResults.Where(result => result.Result != null).ToList();
-
 
                 var viewModel = new AnalyzerViewModel
                 {
@@ -99,43 +97,69 @@ namespace Faceit_Stats_Provider.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult RecalculateStats([FromBody] ExcludePlayerModel model)
-        {
 
+        [HttpPost]
+        public ActionResult TogglePlayer([FromBody] ExcludePlayerModel model)
+        {
+            if (model == null)
+            {
+                return BadRequest("Model is null");
+            }
+
+            if (model.Players == null || model.PlayerStats == null || model.PlayerMatchStats == null)
+            {
+                return BadRequest("Required data is missing");
+            }
 
             var players = model.Players;
             var excludedPlayerId = model.PlayerId;
+            var isChecked = model.IsChecked;
 
-            if (players.teams.faction1?.roster != null)
+            if (isChecked)
             {
-                players.teams.faction1.roster = players.teams.faction1.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                // Exclude the player
+                if (players.teams.faction1?.roster != null)
+                {
+                    players.teams.faction1.roster = players.teams.faction1.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                }
+
+                if (players.teams.faction2?.roster != null)
+                {
+                    players.teams.faction2.roster = players.teams.faction2.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                }
+
+                var playerStats = model.PlayerStats?.Where(ps => ps.player_id != excludedPlayerId).ToList();
+
+                var playerMatchStats = model.PlayerMatchStats?
+                    .Where(pms => pms.playerId != excludedPlayerId)
+                    .Select(pms => (pms.playerId, pms.matchStats))
+                    .ToList();
+
+                //var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
+
+                var viewModel = new AnalyzerViewModel
+                {
+                    //RoomId = model.RoomId,
+                    //Players = players,
+                    //PlayerStats = result.Item8,
+                    //PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
+                };
+
+                return PartialView("_StatisticsPartial", viewModel);
             }
-
-            if (players.teams.faction2?.roster != null)
+            else
             {
-                players.teams.faction2.roster = players.teams.faction2.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                // Restore the original view model
+                var viewModel = new AnalyzerViewModel
+                {
+                    RoomId = model.RoomId,
+                    Players = players,
+                    PlayerStats = model.PlayerStats,
+                    PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
+                };
+
+                return PartialView("_StatisticsPartial", viewModel);
             }
-
-            var playerStats = model.PlayerStats?.Where(ps => ps.player_id != excludedPlayerId).ToList();
-
-            var playerMatchStats = model.PlayerMatchStats?
-                .Where(pms => pms.playerId != excludedPlayerId)
-                .Select(pms => (pms.playerId, pms.matchStats))
-                .ToList();
-
-            var viewModel = new AnalyzerViewModel
-            {
-                RoomId = model.RoomId,
-                Players = players,
-                PlayerStats = playerStats,
-                PlayerMatchStats = playerMatchStats
-            };
-
-            Console.WriteLine("Transformed ViewModel:");
-            Console.WriteLine(JsonConvert.SerializeObject(viewModel.PlayerMatchStats, Formatting.Indented));
-
-            return Json(viewModel);
         }
 
 

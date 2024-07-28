@@ -70,7 +70,13 @@
         </a>
         @{
             int LevelPossessed = 1;
-            var request = Model.Playerinfo.games.csgo.faceit_elo;
+
+            int? request = null;
+
+            if (Model.Playerinfo.games.csgo != null)
+            {
+                 request = Model.Playerinfo.games.csgo.faceit_elo;
+            }
 
             if (Model.Playerinfo != null && Model.Playerinfo.games != null)
             {
@@ -189,7 +195,13 @@
             else
             {
                 <p class="EloInfoUnderCanvas">CS2 ELO: @request</p>
-                <p class="EloInfoUnderCanvas2">CS:GO ELO: @Model.Playerinfo.games.csgo.faceit_elo</p>
+                <p class="EloInfoUnderCanvas2">CS:GO ELO: @if (Model.Playerinfo.games.csgo!= null)
+                    {
+                        <span>@Model.Playerinfo.games.csgo.faceit_elo</span>
+                    }else{
+                        <span>-</span>
+                    }
+                </p>
                 <p class="EloInfoUnderCanvas3" id="max-csgo-elo">MAX CS:GO ELO: <span id="max-csgo-elo-value"></span><span class="loading-dots">...</span></p>
             }
 
