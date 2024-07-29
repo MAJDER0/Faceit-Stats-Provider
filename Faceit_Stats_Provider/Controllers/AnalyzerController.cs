@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Faceit_Stats_Provider.Controllers
@@ -97,7 +95,6 @@ namespace Faceit_Stats_Provider.Controllers
             }
         }
 
-
         [HttpPost]
         public ActionResult TogglePlayer([FromBody] ExcludePlayerModel model)
         {
@@ -135,14 +132,14 @@ namespace Faceit_Stats_Provider.Controllers
                     .Select(pms => (pms.playerId, pms.matchStats))
                     .ToList();
 
-                //var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
+                var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
 
                 var viewModel = new AnalyzerViewModel
                 {
-                    //RoomId = model.RoomId,
-                    //Players = players,
-                    //PlayerStats = result.Item8,
-                    //PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
+                    RoomId = model.RoomId,
+                    Players = players,
+                    PlayerStats = result.Item8,
+                    PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
                 };
 
                 return PartialView("_StatisticsPartial", viewModel);
@@ -161,7 +158,6 @@ namespace Faceit_Stats_Provider.Controllers
                 return PartialView("_StatisticsPartial", viewModel);
             }
         }
-
 
         private string ExtractRoomIdFromUrl(string url)
         {

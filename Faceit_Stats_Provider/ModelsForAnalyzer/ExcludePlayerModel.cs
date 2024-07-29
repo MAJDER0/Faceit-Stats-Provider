@@ -7,6 +7,8 @@ public class ExcludePlayerModel
     public string PlayerId { get; set; }
     public bool IsChecked { get; set; }  // Add this property
     public AnalyzerMatchPlayers.Rootobject Players { get; set; }
+
+    [JsonProperty("PlayerStats")]
     public List<AnalyzerPlayerStats.Rootobject> PlayerStats { get; set; }
 
     [JsonProperty("PlayerMatchStats")]

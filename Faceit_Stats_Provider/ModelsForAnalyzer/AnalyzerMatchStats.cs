@@ -4,7 +4,6 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
 {
     public class AnalyzerMatchStats
     {
-
         public class Rootobject
         {
             public Round[] rounds { get; set; }
@@ -34,6 +33,7 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
         {
             public string player_id { get; set; }
             public string nickname { get; set; }
+            [JsonConverter(typeof(PlayerStatsConverter))]
             public Player_Stats player_stats { get; set; }
         }
 
@@ -43,8 +43,6 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string KDRatio { get; set; }
             [JsonPropertyName("K/R Ratio")]
             public string KRRatio { get; set; }
-
         }
-
     }
 }

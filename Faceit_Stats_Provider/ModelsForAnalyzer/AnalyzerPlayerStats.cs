@@ -1,14 +1,16 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Faceit_Stats_Provider.ModelsForAnalyzer
 {
     public class AnalyzerPlayerStats
     {
-
         public class Rootobject
         {
             public string player_id { get; set; }
             public string game_id { get; set; }
+            [JsonConverter(typeof(LifetimeConverter))]
             public Lifetime lifetime { get; set; }
             public Segment[] segments { get; set; }
         }
@@ -21,12 +23,15 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string KDRatio { get; set; }
             public string Matches { get; set; }
             public string[] RecentResults { get; set; }
-            public string AverageHeadshots { get; set; }           
+            public string AverageHeadshots { get; set; }
             [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
             [JsonPropertyName("Win Rate %")]
             public string WinRate { get; set; }
             public string CurrentWinStreak { get; set; }
+
+            [JsonExtensionData]
+            public Dictionary<string, JsonElement> ExtensionData { get; set; }
         }
 
         public class Segment
@@ -36,6 +41,7 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string img_small { get; set; }
             [JsonPropertyName("img_regular")]
             public string img_regular { get; set; }
+            [JsonConverter(typeof(StatsConverter))]
             public Stats stats { get; set; }
             public string type { get; set; }
             public string mode { get; set; }
@@ -71,7 +77,9 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
             public string AverageDeaths { get; set; }
             [JsonPropertyName("Average K/D Ratio")]
             public string AverageKDRatio { get; set; }
-        }
 
+            [JsonExtensionData]
+            public Dictionary<string, JsonElement> ExtensionData { get; set; }
+        }
     }
 }
