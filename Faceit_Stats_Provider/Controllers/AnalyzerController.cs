@@ -108,9 +108,24 @@ namespace Faceit_Stats_Provider.Controllers
                 return BadRequest("Required data is missing");
             }
 
+
+            var playersOriginal = JsonConvert.DeserializeObject<AnalyzerMatchPlayers.Rootobject>(JsonConvert.SerializeObject(model.Players));
+            var playerStatsOriginal = JsonConvert.DeserializeObject<List<AnalyzerPlayerStats.Rootobject>>(JsonConvert.SerializeObject(model.PlayerStats));
+            var playerMatchStatsOriginal = JsonConvert.DeserializeObject<List<(string playerId, AnalyzerMatchStats.Rootobject matchStats)>>(JsonConvert.SerializeObject(model.PlayerMatchStats));
+
             var players = model.Players;
             var excludedPlayerId = model.PlayerId;
             var isChecked = model.IsChecked;
+
+            AnalyzerViewModel modifiedViewModel;
+
+            var OriginalViewModel = new AnalyzerViewModel
+            {
+                RoomId = model.RoomId,
+                Players = playersOriginal,
+                PlayerStats = playerStatsOriginal,
+                PlayerMatchStats = playerMatchStatsOriginal
+            };
 
             if (isChecked)
             {
@@ -134,30 +149,36 @@ namespace Faceit_Stats_Provider.Controllers
 
                 var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
 
-                var viewModel = new AnalyzerViewModel
+                modifiedViewModel = new AnalyzerViewModel
                 {
                     RoomId = model.RoomId,
                     Players = players,
                     PlayerStats = result.Item8,
                     PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
                 };
-
-                return PartialView("_StatisticsPartial", viewModel);
             }
             else
             {
                 // Restore the original view model
-                var viewModel = new AnalyzerViewModel
+                modifiedViewModel = new AnalyzerViewModel
                 {
                     RoomId = model.RoomId,
                     Players = players,
                     PlayerStats = model.PlayerStats,
                     PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList()
                 };
-
-                return PartialView("_StatisticsPartial", viewModel);
             }
+
+            var partialViewModel = new AnalyzerPartialViewModel
+            {
+                ModifiedViewModel = modifiedViewModel,
+                OriginalViewModel = OriginalViewModel
+            };
+
+            return PartialView("_StatisticsPartial", partialViewModel);
         }
+
+
 
         private string ExtractRoomIdFromUrl(string url)
         {
