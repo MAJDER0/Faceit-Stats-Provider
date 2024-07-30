@@ -183,12 +183,6 @@
 
                     </div>
 
-                    <div class="col-md-12">
-                        <p class="text-center subtitle">PLAYERS</p>
-                        @{
-                            await GeneratePlayersSection(faction1PlayerStats, maps, MapStatsForSinglePlayer, faction1Players);
-                        }
-                    </div>
                 </div>
             </div>
 
@@ -207,6 +201,33 @@
 
                     </div>
 
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+</div>
+
+<div id="Player-Container">
+    <div class="container">
+        <div class="row justify-content-center align-items-start">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center subtitle">PLAYERS</p>
+                        @{
+                            await GeneratePlayersSection(faction1PlayerStats, maps, MapStatsForSinglePlayer, faction1Players);
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+
+                <div class="row">
                     <div class="col-md-12">
                         <p class="text-center subtitle">PLAYERS</p>
                         @{
@@ -215,11 +236,7 @@
                     </div>
                 </div>
             </div>
-
         </div>
-
-
-
     </div>
 </div>
 
@@ -283,7 +300,7 @@
                         <!--
                         //<button class="exclude-player" data-player-id="@player.player_id">Exclude</button>-->
                         <label class="switch">
-                            <input type="checkbox" class="player-toggle" data-player-id="@player.player_id">
+                            <input type="checkbox" class="player-toggle" data-player-id="@player.player_id" checked>
                             <span class="slider round"></span>
                         </label>
                     </div>
@@ -469,12 +486,14 @@
             var playerStats = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStats));
             var playerMatchStatsRaw = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerMatchStats));
             var players = @Html.Raw(JsonConvert.SerializeObject(Model.Players));
+            var initialModelCopy = @Html.Raw(JsonConvert.SerializeObject(Model.InitialModelCopy)); // Store the initial model copy
 
             // Store the original state
             var originalViewModel = {
                 PlayerStats: playerStats,
                 PlayerMatchStats: playerMatchStatsRaw,
-                Players: players
+                Players: players,
+                InitialModelCopy: initialModelCopy
             };
 
             // Transform playerMatchStats in JavaScript
@@ -496,25 +515,27 @@
             function togglePlayer(playerId, isChecked) {
                 var requestData;
 
-                if (isChecked) {
+                if (!isChecked) {
                     // Exclude the player
                     requestData = {
+                        RoomId: '@Model.RoomId',
                         PlayerId: playerId,
                         IsChecked: isChecked,
                         PlayerStats: playerStats,
                         PlayerMatchStats: playerMatchStats,
-                        Players: players
+                        Players: players,
+                        InitialModelCopy: initialModelCopy // Include the initial model copy
                     };
-
-                    console.log(JSON.stringify(requestData));
                 } else {
                     // Restore the original view model
                     requestData = {
+                        RoomId: '@Model.RoomId',
                         PlayerId: playerId,
                         IsChecked: isChecked,
                         PlayerStats: originalViewModel.PlayerStats,
                         PlayerMatchStats: originalViewModel.PlayerMatchStats,
-                        Players: originalViewModel.Players
+                        Players: originalViewModel.Players,
+                        InitialModelCopy: initialModelCopy // Include the initial model copy
                     };
                 }
 

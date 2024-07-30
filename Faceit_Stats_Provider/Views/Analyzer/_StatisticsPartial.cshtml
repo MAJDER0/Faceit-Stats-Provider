@@ -199,12 +199,6 @@
 
                     </div>
 
-                    <div class="col-md-12">
-                        <p class="text-center subtitle">PLAYERS</p>
-                        @{
-                            await GeneratePlayersSection(faction1PlayerStatsOriginal, mapsOriginal, MapStatsForSinglePlayerOriginal, faction1PlayersOriginal);
-                        }
-                    </div>
                 </div>
             </div>
 
@@ -223,12 +217,6 @@
 
                     </div>
 
-                    <div class="col-md-12">
-                        <p class="text-center subtitle">PLAYERS</p>
-                        @{
-                            await GeneratePlayersSection(faction2PlayerStatsOriginal, mapsOriginal, MapStatsForSinglePlayerOriginal, faction2PlayersOriginal);
-                        }
-                    </div>
                 </div>
             </div>
 
@@ -238,6 +226,8 @@
 
     </div>
 </div>
+
+
 
 
 
@@ -281,137 +271,6 @@
     </div>
     }
 
-    async Task GeneratePlayersSection(List<AnalyzerPlayerStats.Rootobject> factionPlayerStats, List<string> maps, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerMatchPlayers.Roster[] FactionPlayers)
-    {
-    @foreach (var playerStat in factionPlayerStats)
-        {
-            var player = FactionPlayers.FirstOrDefault(p => p.player_id == playerStat.player_id);
-
-            if (player != null)
-            {
-                var Last20PlayerSectionInfo = Last20PlayerSection(playerStat, maps, MapStatsForSinglePlayer, player);
-
-                var PlayerLast20KD = Last20PlayerSectionInfo.Item1;
-                var PlayerLast20KR = Last20PlayerSectionInfo.Item3;
-                var PlayerLast20WR = Last20PlayerSectionInfo.Item2;
-                var PlayerTotalMatchesLast20 = Last20PlayerSectionInfo.Item4;
-
-    <div class="PlayerAnalyzer player-info" data-player-id="@player.player_id">
-                        <div class="PlayerAnalyzerContent">
-                            <img src="~/plus_green.png" alt="Plus-Icon" class="PlayerAnalyzeplus" />
-                            <span>@player.nickname</span>
-                            <!--
-                            //<button class="exclude-player" data-player-id="@player.player_id">Exclude</button>-->
-                            <label class="switch">
-                                <input type="checkbox" class="player-toggle" data-player-id="@player.player_id">
-                                <span class="slider round"></span>
-                            </label>
-                        </div>
-    </div>
-    <br />
-
-    <div class="PlayerMapsAnalyzer hidden" data-player-id="@player.player_id">
-                        <div class="CombinedCombinedPlayerStatsAnalyzer">
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:#ff3c22; font-weight:100;">PLATFORM:</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="font-weight:bold;">@playerStat.lifetime.Matches</span><span>Matches,</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(playerStat.lifetime.WinRate) >= 50 ? "#6BBE49" : "#F20707")">@playerStat.lifetime.WinRate%</span><span>WR,</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(playerStat.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@playerStat.lifetime.AverageKDRatio</span> <span>K/D</span>
-                        </div>
-
-                        <div class="CombinedLast20PlayerStatsAnalyzer">
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:#ff3c22; font-weight:100;">LAST 20:</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="font-weight:bold;">@PlayerTotalMatchesLast20.ToString("F0")</span><span>Matches,</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20WR >= 50 ? "#6BBE49" : "#F20707")">@PlayerLast20WR.ToString("F0")%</span><span>WR,</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20KD >= 1.00 ? "#6BBE49" : "#F20707")">@PlayerLast20KD.ToString("F2").Replace(",", ".")</span> <span>K/D,</span>
-                            <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20KR >= 0.75 ? "#6BBE49" : "#F20707")">@PlayerLast20KR.ToString("F2").Replace(",", ".")</span> <span>K/R</span>
-                        </div>
-
-                        @{
-                        MapStatsPlayerSection(maps, player, MapStatsForSinglePlayer, playerStat);
-                        }
-    </div>
-            }
-        }
-    }
-
-    async Task MapStatsPlayerSection(List<string> maps, AnalyzerMatchPlayers.Roster player, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerPlayerStats.Rootobject playerStat)
-    {
-        var displayedMaps = playerStat.segments
-        .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
-        .OrderByDescending(x => x.label)
-        .ToList();
-
-        foreach (var map in displayedMaps)
-        {
-            var PlayerMapStatsLast20 = CalculatePlayerMapAverage(MapStatsForSinglePlayer, player.player_id, map.label);
-
-    <div class="map-item">
-                    <div class="map-item-element">
-                        <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
-
-                        <div class="map-item-stats-container">
-                            <span style="font-weight:bold;">@map.label:</span>
-                            <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">
-                                <span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>
-                                @map.stats.WinRate%
-                            </span> WR,
-                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">
-                                @map.stats.AverageKDRatio
-                            </span> K/D,
-                            <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 0.75 ? "#6BBE49" : "#F20707")">
-                                @map.stats.AverageKRRatio
-                            </span> K/R
-                        </div>
-                    </div>
-
-                    <div class="map-item-element map-item-element-Last20">
-                        <div style="width:45px; height:45px"></div>
-                        <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
-                        <span class="AnalyzerResultOverallLast10">@PlayerMapStatsLast20.totalMatches</span><span>Matches,</span>
-
-                        @if (PlayerMapStatsLast20.totalMatches != 0.00)
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.winRatio >= 50 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.winRatio.ToString("F0").Replace(",", ".")%</span>
-                            <span>WR,</span>
-                    }
-                    else
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
-                    }
-
-                        @if (PlayerMapStatsLast20.avgKD != 0.00)
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.avgKD > 1.00 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.avgKD.ToString("F2").Replace(",", ".")</span>
-                            <span>K/D,</span>
-                    }
-                    else
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
-                    }
-
-                        @if (PlayerMapStatsLast20.avgKR != 0.00)
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.avgKR > 0.75 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.avgKR.ToString("F2").Replace(",", ".")</span>
-                            <span>K/R</span>
-                    }
-                    else
-                    {
-                            <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found</span>
-                    }
-                    </div>
-    </div>
-    <br />
-        }
-
-        if (displayedMaps.Count != 7)
-        {
-            for (int i = displayedMaps.Count; i < 7; i++)
-            {
-    <div class="map-item" style="height:55px;"></div>
-    <br />
-            }
-        }
-    }
 
     public async Task GenerateOverallMapStats(List<(string, double)> MapScores, Dictionary<string, List<string>> TeamMapStatsKD, Dictionary<string, List<string>> TeamMapStatsKR, Dictionary<string, List<string>> TeamMapStatsWR, Dictionary<string, List<string>> TeamMapStatsTotalMatches, List<(double, bool, double, string)> mapAverageKDsResult, List<string> TeamPlayerIds)
     {
@@ -477,85 +336,6 @@
     </div>
         }
     }
-}
-
-
-@section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            var faction1Players = @Html.Raw(JsonConvert.SerializeObject(Model.ModifiedViewModel.Players.teams.faction1.roster));
-            var faction2Players = @Html.Raw(JsonConvert.SerializeObject(Model.ModifiedViewModel.Players.teams.faction2.roster));
-            var playerStats = @Html.Raw(JsonConvert.SerializeObject(Model.ModifiedViewModel.PlayerStats));
-            var playerMatchStatsRaw = @Html.Raw(JsonConvert.SerializeObject(Model.ModifiedViewModel.PlayerMatchStats));
-            var players = @Html.Raw(JsonConvert.SerializeObject(Model.ModifiedViewModel.Players));
-
-            // Store the original state
-            var originalViewModel = {
-                PlayerStats: playerStats,
-                PlayerMatchStats: playerMatchStatsRaw,
-                Players: players
-            };
-
-            // Transform playerMatchStats in JavaScript
-            var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
-                return { playerId: pms.Item1, matchStats: pms.Item2 };
-            });
-
-            $('.player-info').click(function () {
-                var playerId = $(this).data('player-id');
-                $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
-            });
-
-            $('.player-toggle').change(function () {
-                var playerId = $(this).data('player-id');
-                var isChecked = $(this).is(':checked');
-                togglePlayer(playerId, isChecked);
-            });
-
-            function togglePlayer(playerId, isChecked) {
-                var requestData;
-
-                if (isChecked) {
-                    // Exclude the player
-                    requestData = {
-                        PlayerId: playerId,
-                        IsChecked: isChecked,
-                        PlayerStats: playerStats,
-                        PlayerMatchStats: playerMatchStats,
-                        Players: players
-                    };
-
-                    console.log(JSON.stringify(requestData));
-                } else {
-                    // Restore the original view model
-                    requestData = {
-                        PlayerId: playerId,
-                        IsChecked: isChecked,
-                        PlayerStats: originalViewModel.PlayerStats,
-                        PlayerMatchStats: originalViewModel.PlayerMatchStats,
-                        Players: originalViewModel.Players
-                    };
-                }
-
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("TogglePlayer", "Analyzer")',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'html', // Expect HTML response
-                    data: JSON.stringify(requestData),
-                    success: function (data) {
-                        // Update the view with the new data
-                        $('#statistics-container').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("An error occurred: " + status + " - " + error);
-                        console.log(xhr.responseText);
-                    }
-                });
-            }
-        });
-    </script>
 }
 
 

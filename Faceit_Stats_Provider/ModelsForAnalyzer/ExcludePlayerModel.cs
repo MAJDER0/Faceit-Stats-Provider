@@ -13,4 +13,6 @@ public class ExcludePlayerModel
 
     [JsonProperty("PlayerMatchStats")]
     public List<TransformedPlayerMatchStats> PlayerMatchStats { get; set; }
+
+    public AnalyzerViewModel InitialModelCopy { get; set; } // Add this line
 }
