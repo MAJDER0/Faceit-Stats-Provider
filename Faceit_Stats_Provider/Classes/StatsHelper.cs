@@ -222,6 +222,13 @@ namespace Faceit_Stats_Provider.Classes
             return input[0].ToString().ToUpper() + input.Substring(1).ToLower();
         }
 
+        public static string CapitalizeOnlyFirstLetter(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+            return input[0].ToString().ToUpper() + input.Substring(1);
+        }
+
         public static double CalculateAverage(List<string> ratios)
         {
             if (ratios == null || ratios.Count == 0)

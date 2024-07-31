@@ -4,8 +4,7 @@ using Newtonsoft.Json;
 public class ExcludePlayerModel
 {
     public string RoomId { get; set; }
-    public string PlayerId { get; set; }
-    public bool IsChecked { get; set; }  // Add this property
+    public List<string> ExcludedPlayers { get; set; }
     public AnalyzerMatchPlayers.Rootobject Players { get; set; }
 
     [JsonProperty("PlayerStats")]
@@ -14,5 +13,5 @@ public class ExcludePlayerModel
     [JsonProperty("PlayerMatchStats")]
     public List<TransformedPlayerMatchStats> PlayerMatchStats { get; set; }
 
-    public AnalyzerViewModel InitialModelCopy { get; set; } // Add this line
+    public ExcludePlayerModel InitialModelCopy { get; set; }
 }

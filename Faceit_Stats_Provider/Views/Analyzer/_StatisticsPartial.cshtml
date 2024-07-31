@@ -45,21 +45,7 @@
 }
 
 
-@{
-    var faction1LeaderOriginal = Model.OriginalViewModel.Players.teams.faction1.leader;
-    var faction1PlayersOriginal = Model.OriginalViewModel.Players.teams.faction1.roster;
-    var faction2LeaderOriginal = Model.OriginalViewModel.Players.teams.faction2.leader;
-    var faction2PlayersOriginal = Model.OriginalViewModel.Players.teams.faction2.roster;
-    var playerStatsOriginal = Model.OriginalViewModel.PlayerStats;
-    var playerMatchStatsOriginal = Model.OriginalViewModel.PlayerMatchStats;
 
-    var CalculateNeededStastisticsResultOriginal = CalculateNeededStatistics(faction1LeaderOriginal, faction2LeaderOriginal, faction1PlayersOriginal, faction2PlayersOriginal, playerStatsOriginal, playerMatchStatsOriginal);
-
-    var mapsOriginal = CalculateNeededStastisticsResultOriginal .Item1;
-    var faction1PlayerStatsOriginal = CalculateNeededStastisticsResultOriginal.Item8;
-    var faction2PlayerStatsOriginal = CalculateNeededStastisticsResultOriginal.Item9;
-    var MapStatsForSinglePlayerOriginal = CalculateNeededStastisticsResultOriginal .Item23;
-}
 
 
 @{
@@ -185,7 +171,7 @@
         <div class="row justify-content-center align-items-start">
 
             <div class="col-md-6">
-                <p class="text-center title">Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
+                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction1.name.Replace("_"," "))</p>
 
                 <div class="row">
 
@@ -203,7 +189,7 @@
             </div>
 
             <div class="col-md-6">
-                <p class="text-center title">Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
+                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction2.name.Replace("_"," "))</p>
 
                 <div class="row">
 
@@ -339,6 +325,3 @@
 }
 
 
-
-
-    

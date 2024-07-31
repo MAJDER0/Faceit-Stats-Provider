@@ -96,7 +96,7 @@ namespace Faceit_Stats_Provider.Controllers
                     Players = players,
                     PlayerStats = playerStats,
                     PlayerMatchStats = playerMatchStats,
-                    InitialModelCopy = initialModelCopy // Store the deep copy
+                    InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy) // Use mapping function
                 };
 
                 return View("~/Views/Analyzer/Analyze.cshtml", viewModel);
@@ -122,73 +122,75 @@ namespace Faceit_Stats_Provider.Controllers
 
             var initialModelCopy = model.InitialModelCopy;
             var players = model.Players;
-            var excludedPlayerId = model.PlayerId;
-            var isChecked = model.IsChecked;
+            var excludedPlayerIds = model.ExcludedPlayers;
 
-            AnalyzerViewModel modifiedViewModel;
-
-            if (!isChecked)
+            // Exclude the players from the model
+            if (excludedPlayerIds != null && excludedPlayerIds.Count > 0)
             {
-                // Exclude the player
                 if (players.teams.faction1?.roster != null)
                 {
-                    players.teams.faction1.roster = players.teams.faction1.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                    players.teams.faction1.roster = players.teams.faction1.roster.Where(p => !excludedPlayerIds.Contains(p.player_id)).ToArray();
                 }
 
                 if (players.teams.faction2?.roster != null)
                 {
-                    players.teams.faction2.roster = players.teams.faction2.roster.Where(p => p.player_id != excludedPlayerId).ToArray();
+                    players.teams.faction2.roster = players.teams.faction2.roster.Where(p => !excludedPlayerIds.Contains(p.player_id)).ToArray();
                 }
 
-                var playerStats = model.PlayerStats?.Where(ps => ps.player_id != excludedPlayerId).ToList();
-
+                var playerStats = model.PlayerStats?.Where(ps => !excludedPlayerIds.Contains(ps.player_id)).ToList();
                 var playerMatchStats = model.PlayerMatchStats?
-                    .Where(pms => pms.playerId != excludedPlayerId)
+                    .Where(pms => !excludedPlayerIds.Contains(pms.playerId))
                     .Select(pms => (pms.playerId, pms.matchStats))
                     .ToList();
 
                 var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
                 var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
 
-                modifiedViewModel = new AnalyzerViewModel
+                var modifiedViewModel = new AnalyzerViewModel
                 {
                     RoomId = model.RoomId,
                     Players = players,
                     PlayerStats = CombinedPlayerStats,
-                    PlayerMatchStats = model.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList(),
-                    InitialModelCopy = initialModelCopy // Keep the initial copy
+                    PlayerMatchStats = playerMatchStats,
+                    InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
                 };
+
+                var partialViewModel = new AnalyzerPartialViewModel
+                {
+                    ModifiedViewModel = modifiedViewModel,
+                    OriginalViewModel = ModelMapper.ToAnalyzerViewModel(initialModelCopy) // Use mapping function
+                };
+
+                return PartialView("_StatisticsPartial", partialViewModel);
             }
             else
             {
                 // Restore the original view model
                 var restoredPlayers = initialModelCopy.Players;
                 var restoredPlayerStats = initialModelCopy.PlayerStats;
-                var restoredPlayerMatchStats = initialModelCopy.PlayerMatchStats;
+                var restoredPlayerMatchStats = initialModelCopy.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList();
 
                 var result = StatsHelper.CalculateNeededStatistics(restoredPlayers.teams.faction1.leader, restoredPlayers.teams.faction2.leader, restoredPlayers.teams.faction1.roster, restoredPlayers.teams.faction2.roster, restoredPlayerStats, restoredPlayerMatchStats);
+                var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
 
-                modifiedViewModel = new AnalyzerViewModel
+                var modifiedViewModel = new AnalyzerViewModel
                 {
                     RoomId = model.RoomId,
                     Players = restoredPlayers,
-                    PlayerStats = result.Item8,
-                    PlayerMatchStats = restoredPlayerMatchStats.Select(pms => (pms.playerId, pms.Item2)).ToList(),
-                    InitialModelCopy = initialModelCopy // Keep the initial copy
+                    PlayerStats = CombinedPlayerStats,
+                    PlayerMatchStats = restoredPlayerMatchStats,
+                    InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
                 };
+
+                var partialViewModel = new AnalyzerPartialViewModel
+                {
+                    ModifiedViewModel = modifiedViewModel,
+                    OriginalViewModel = ModelMapper.ToAnalyzerViewModel(initialModelCopy) // Use mapping function
+                };
+
+                return PartialView("_StatisticsPartial", partialViewModel);
             }
-
-            var partialViewModel = new AnalyzerPartialViewModel
-            {
-                ModifiedViewModel = modifiedViewModel,
-                OriginalViewModel = initialModelCopy
-            };
-
-            return PartialView("_StatisticsPartial", partialViewModel);
         }
-
-
-
 
         private string ExtractRoomIdFromUrl(string url)
         {

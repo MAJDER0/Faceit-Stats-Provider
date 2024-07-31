@@ -43,10 +43,10 @@ namespace Faceit_Stats_Provider.Classes
             + (0.05 * NormalizedOverallKR)
             + (0.05 * NormalizedOverallKD)
 
-            + (0.0025 * NormalizedLast20QuantityOfMatches)
-            + (0.0025 * NormalizedLast20KD)
-            + (0.0025 * NormalizedLast20KR)
-            + (0.0025 * NormalizedLast20WR);
+            + (0.0030 * NormalizedLast20QuantityOfMatches)
+            + (0.0020 * NormalizedLast20KD)
+            + (0.0020 * NormalizedLast20KR)
+            + (0.0030 * NormalizedLast20WR);
 
             return score;
         }

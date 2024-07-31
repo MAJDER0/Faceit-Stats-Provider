@@ -169,10 +169,10 @@
         <div class="row justify-content-center align-items-start">
 
             <div class="col-md-6">
-                <p class="text-center title">Team @faction1Players.FirstOrDefault(p => p.player_id == faction1Leader)?.nickname</p>
+                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.Players.teams.faction1.name.Replace("_"," "))</p>
 
                 <div class="row">
-                    
+
                     <div class="StatsToRecalculateFirstTeam">
 
                         @{
@@ -187,7 +187,7 @@
             </div>
 
             <div class="col-md-6">
-                <p class="text-center title">Team @faction2Players.FirstOrDefault(p => p.player_id == faction2Leader)?.nickname</p>
+                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.Players.teams.faction2.name.Replace("_"," "))</p>
 
                 <div class="row">
 
@@ -481,79 +481,108 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            var faction1Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction1.roster));
-            var faction2Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction2.roster));
-            var playerStats = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStats));
-            var playerMatchStatsRaw = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerMatchStats));
-            var players = @Html.Raw(JsonConvert.SerializeObject(Model.Players));
-            var initialModelCopy = @Html.Raw(JsonConvert.SerializeObject(Model.InitialModelCopy)); // Store the initial model copy
+            try {
+                var faction1Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction1.roster));
+                var faction2Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction2.roster));
+                var playerStats = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStats));
+                var playerMatchStatsRaw = @Html.Raw(JsonConvert.SerializeObject(Model.PlayerMatchStats));
+                var players = @Html.Raw(JsonConvert.SerializeObject(Model.Players));
+                var initialModelCopyRaw = '@Html.Raw(JsonConvert.SerializeObject(Model.InitialModelCopy))';
 
-            // Store the original state
-            var originalViewModel = {
-                PlayerStats: playerStats,
-                PlayerMatchStats: playerMatchStatsRaw,
-                Players: players,
-                InitialModelCopy: initialModelCopy
-            };
+                // Debugging log to check raw JSON
+                console.log("Initial Model Copy Raw String:", initialModelCopyRaw);
 
-            // Transform playerMatchStats in JavaScript
-            var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
-                return { playerId: pms.Item1, matchStats: pms.Item2 };
-            });
+                // Remove potential HTML encoding issues
+                initialModelCopyRaw = initialModelCopyRaw.replace(/&quot;/g, '"');
 
-            $('.player-info').click(function () {
-                var playerId = $(this).data('player-id');
-                $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
-            });
+                // Parse the initialModelCopyRaw JSON string into a JavaScript object
+                var initialModelCopy = JSON.parse(initialModelCopyRaw);
 
-            $('.player-toggle').change(function () {
-                var playerId = $(this).data('player-id');
-                var isChecked = $(this).is(':checked');
-                togglePlayer(playerId, isChecked);
-            });
+                // Debugging log to check parsed object
+                console.log("Parsed Initial Model Copy:", initialModelCopy);
 
-            function togglePlayer(playerId, isChecked) {
-                var requestData;
+                // Transform InitialModelCopy's PlayerMatchStats if it exists
+                if (initialModelCopy && initialModelCopy.PlayerMatchStats) {
+                    initialModelCopy.PlayerMatchStats = initialModelCopy.PlayerMatchStats.map(function (pms) {
+                        return { playerId: pms.playerId, matchStats: pms.matchStats };
+                    });
+                }
 
-                if (!isChecked) {
-                    // Exclude the player
-                    requestData = {
+                // Debugging log to check transformed PlayerMatchStats
+                console.log("Transformed Initial Model Copy PlayerMatchStats:", initialModelCopy.PlayerMatchStats);
+
+                // Transform playerMatchStats in JavaScript
+                var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
+                    return { playerId: pms.Item1, matchStats: pms.Item2 };
+                });
+
+                // Debugging log to check transformed playerMatchStats
+                console.log("Transformed PlayerMatchStats:", playerMatchStats);
+
+                // Store the original state
+                var originalViewModel = {
+                    PlayerStats: playerStats,
+                    PlayerMatchStats: playerMatchStats,
+                    Players: players,
+                    InitialModelCopy: initialModelCopy
+                };
+
+                console.log("Original ViewModel:", originalViewModel);
+
+                // Maintain a list of excluded players
+                var excludedPlayers = [];
+
+                $('.player-info').click(function () {
+                    var playerId = $(this).data('player-id');
+                    $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
+                });
+
+                $('.player-toggle').change(function () {
+                    var playerId = $(this).data('player-id');
+                    var isChecked = $(this).is(':checked');
+                    togglePlayer(playerId, isChecked);
+                });
+
+                function togglePlayer(playerId, isChecked) {
+                    if (isChecked) {
+                        // Remove the player from the excluded list
+                        excludedPlayers = excludedPlayers.filter(id => id !== playerId);
+                    } else {
+                        // Add the player to the excluded list
+                        if (!excludedPlayers.includes(playerId)) {
+                            excludedPlayers.push(playerId);
+                        }
+                    }
+
+                    var requestData = {
                         RoomId: '@Model.RoomId',
-                        PlayerId: playerId,
-                        IsChecked: isChecked,
+                        ExcludedPlayers: excludedPlayers,
                         PlayerStats: playerStats,
                         PlayerMatchStats: playerMatchStats,
                         Players: players,
                         InitialModelCopy: initialModelCopy // Include the initial model copy
                     };
-                } else {
-                    // Restore the original view model
-                    requestData = {
-                        RoomId: '@Model.RoomId',
-                        PlayerId: playerId,
-                        IsChecked: isChecked,
-                        PlayerStats: originalViewModel.PlayerStats,
-                        PlayerMatchStats: originalViewModel.PlayerMatchStats,
-                        Players: originalViewModel.Players,
-                        InitialModelCopy: initialModelCopy // Include the initial model copy
-                    };
-                }
 
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("TogglePlayer", "Analyzer")',
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'html', // Expect HTML response
-                    data: JSON.stringify(requestData),
-                    success: function (data) {
-                        // Update the view with the new data
-                        $('#statistics-container').html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("An error occurred: " + status + " - " + error);
-                        console.log(xhr.responseText);
-                    }
-                });
+                    console.log("Request Data being sent to server:", requestData);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("TogglePlayer", "Analyzer")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'html', // Expect HTML response
+                        data: JSON.stringify(requestData),
+                        success: function (data) {
+                            // Update the view with the new data
+                            $('#statistics-container').html(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("An error occurred: " + status + " - " + error);
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Error during initialization:", error);
             }
         });
     </script>
