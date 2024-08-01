@@ -295,14 +295,19 @@
 
                 <div class="PlayerAnalyzer player-info" data-player-id="@player.player_id">
                     <div class="PlayerAnalyzerContent">
+
+                        <div class="ExcludePlayerSwitch">
+                            <label class="switch">
+                                <input type="checkbox" class="player-toggle" data-player-id="@player.player_id" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+
                         <img src="~/plus_green.png" alt="Plus-Icon" class="PlayerAnalyzeplus" />
                         <span>@player.nickname</span>
-                        <!--
-                        //<button class="exclude-player" data-player-id="@player.player_id">Exclude</button>-->
-                        <label class="switch">
-                            <input type="checkbox" class="player-toggle" data-player-id="@player.player_id" checked>
-                            <span class="slider round"></span>
-                        </label>
+
+
                     </div>
                 </div>
                 <br />

@@ -270,3 +270,12 @@
 .formulaNormalization {
     margin-top:5%;
 }
+
+.ExcludePlayerSwitch {
+
+    display:flex;
+    margin-left:-12%;
+    padding-right:4%;
+
+
+}

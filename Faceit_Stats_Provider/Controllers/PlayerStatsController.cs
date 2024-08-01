@@ -72,6 +72,13 @@ namespace Faceit_Stats_Provider.Controllers
             string errorString;
             string game = "cs2";
 
+
+            if (nickname.Contains("https://steamcommunity.com/profiles/")) {
+            
+
+
+            }
+
             try
             {
                 Stopwatch z = new Stopwatch();

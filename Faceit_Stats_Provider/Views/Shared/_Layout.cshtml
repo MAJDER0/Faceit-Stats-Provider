@@ -44,7 +44,6 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-
                     @{
                         var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
                         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
@@ -60,11 +59,11 @@
                         {
                             <li><a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span style="color:#ff3c22"><strong>FACEIT STATS PROVIDER</strong></span></a></li>
                             <li><a class="navbar-brand nav-Extension-link" asp-area="" asp-controller="Extension"><span>EXTENSION</span></a></li>
-                            <li><a class="navbar-brand nav-Analyzer-link" asp-area="" asp-controller="Analyzer"><span>ANALYZER</span></a></li>
+                            <li><a class="navbar-brand text-border nav-Analyzer-link" asp-area="" asp-controller="Analyzer"><span>ANALYZER</span></a></li>
                             <li><a class="navbar-brand nav-faq-link" asp-area="" asp-controller="FAQ"><span>FAQ</span></a></li>
                         }
                         <li class="nav-item d-flex align-items-center">
-                            <span class="nav-starfield replace-white">starfield off</span>
+                            <span class="nav-starfield replace-white">starfield</span>
                             <div class="form-check form-switch starfield-switch">
                                 <input class="form-check-input starfield-check-input" type="checkbox" id="starfieldSwitch">
                                 <label class="form-check-label starfield-check-label" for="starfieldSwitch"></label>
@@ -100,21 +99,20 @@
             function saveToggleState(state) {
                 localStorage.setItem('starfieldToggleState', state);
             }
-            
-            function loadToggleState() {
 
+            function loadToggleState() {
                 const state = localStorage.getItem('starfieldToggleState') === 'true';
-                toggleSwitch.checked = state; 
-                body.classList.toggle('toggle-on', state); 
+                toggleSwitch.checked = state;
+                body.classList.toggle('toggle-on', state);
             }
 
             toggleSwitch.addEventListener('change', function () {
-                const state = toggleSwitch.checked; 
-                body.classList.toggle('toggle-on', state); 
-                saveToggleState(state); 
+                const state = toggleSwitch.checked;
+                body.classList.toggle('toggle-on', state);
+                saveToggleState(state);
             });
 
-            loadToggleState(); 
+            loadToggleState();
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

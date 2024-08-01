@@ -48,3 +48,14 @@ input[type="submit"] {
     input[type="submit"]:hover {
         background: #ff3c22;
     }
+
+
+.SearchStatsInfo {
+    color: #F2F2F2;
+    margin: 0;
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 650px;
+}

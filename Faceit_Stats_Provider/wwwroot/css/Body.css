@@ -117,15 +117,20 @@ body {
     z-index: -1;
 }
 
+body.toggle-on .layer {
+    display: block; /* Show when toggle-on class is applied to body */
+}
+
 .star-field .layer {
+    display: none;
     box-shadow: -411px -476px rgb(185, 0, 0), 777px -407px #d4d4d4, -387px -477px #fcfcfc, -91px -235px rgb(185, 0, 0), 491px -460px rgb(185, 0, 0), 892px -128px #f7f7f7, 758px -277px rgb(185, 0, 0), 596px 378px rgb(185, 0, 0), 647px 423px whitesmoke, 183px 389px rgb(185, 0, 0), 524px -237px #f0f0f0, 679px -535px rgb(185, 0, 0), 158px 399px #ededed, 157px 249px #ededed, 81px -450px #ebebeb, 719px -360px #c2c2c2, -499px 473px #e8e8e8, -158px -349px rgb(185, 0, 0), 870px -134px #cfcfcf, 446px 404px #c2c2c2, 440px 490px #d4d4d4, 414px 507px #e6e6e6, -12px 246px rgb(185, 0, 0), -384px 369px #e3e3e3, 641px -413px #fcfcfc, 822px 516px #dbdbdb, 449px 132px #c2c2c2, 727px 146px #f7f7f7, -315px -488px rgb(185, 0, 0), 952px -70px #e3e3e3, -869px -29px rgb(185, 0, 0), 502px 80px rgb(185, 0, 0), 764px 342px rgb(185, 0, 0), -150px -380px rgb(185, 0, 0), 654px -426px rgb(185, 0, 0), -325px -263px rgb(185, 0, 0), 755px -447px rgb(185, 0, 0), 729px -177px rgb(185, 0, 0), -682px -391px rgb(185, 0, 0), 554px -176px #ededed, -85px -428px rgb(185, 0, 0), 714px 55px #e8e8e8, 359px -285px rgb(185, 0, 0), -362px -508px rgb(185, 0, 0), 468px -265px #fcfcfc, 74px -500px #c7c7c7, -514px 383px #dbdbdb, 730px -92px #cfcfcf, -112px 287px rgb(185, 0, 0), -853px 79px #d6d6d6, 828px 475px rgb(185, 0, 0), -681px 13px rgb(185, 0, 0), -176px 209px rgb(185, 0, 0), 758px 457px #fafafa, -383px -454px rgb(185, 0, 0), 813px 179px #d1d1d1, 608px 98px rgb(185, 0, 0), -860px -65px #c4c4c4, -572px 272px rgb(185, 0, 0), 459px 533px rgb(185, 0, 0), 624px -481px rgb(185, 0, 0), 790px 477px rgb(185, 0, 0), 731px -403px #ededed, 70px -534px rgb(185, 0, 0), -23px 510px rgb(185, 0, 0), -652px -237px whitesmoke, -690px 367px #d1d1d1, 810px 536px rgb(185, 0, 0), 774px 293px #c9c9c9, -362px 97px rgb(185, 0, 0), 563px 47px #dedede, 313px 475px rgb(185, 0, 0), 839px -491px rgb(185, 0, 0), -217px 377px #d4d4d4, -581px 239px rgb(185, 0, 0), -857px 72px #cccccc, -23px 340px #dedede, -837px 246px rgb(185, 0, 0), 170px -502px #cfcfcf, 822px -443px #e0e0e0, 795px 497px #e0e0e0, -814px -337px #cfcfcf, 206px -339px white, -779px 108px #e6e6e6, 808px 2px #d4d4d4, 665px 41px #d4d4d4, -564px 64px #cccccc, -380px 74px #cfcfcf, -369px -60px rgb(185, 0, 0), 47px -495px #e3e3e3, -383px 368px #f7f7f7, 419px 288px rgb(185, 0, 0), -598px -50px #c2c2c2, -833px 187px #c4c4c4, 378px 325px rgb(185, 0, 0), -703px 375px rgb(185, 0, 0), 392px 520px rgb(185, 0, 0), -492px -60px rgb(185, 0, 0), 759px 288px #ebebeb, 98px -412px #c4c4c4, -911px -277px rgb(185, 0, 0);
     transform-style: preserve-3d;
     position: absolute;
     top: 50%;
     left: 50%;
-    height: 10px; 
-    width: 10px; 
-    border-radius: 40px; 
+    height: 10px;
+    width: 10px;
+    border-radius: 40px;
 }
 
     .star-field .layer:nth-child(1) {
@@ -139,3 +144,7 @@ body {
     .star-field .layer:nth-child(3) {
         animation: sf-fly-by-3 17s linear infinite;
     }
+
+body.toggle-on .star-field .layer {
+    display: block;
+}
