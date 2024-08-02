@@ -6,4 +6,40 @@
             <input type="submit" value="Search" />
         </div>
     </div>
+
+    <div class="SearchStatsInfoAnalyzer">
+        <p id="animatedInfoAnalyzer"></p>
+    </div>
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    function animateInfoTextAnalyzer() {
+        const info = document.getElementById("animatedInfoAnalyzer");
+            const infoText = "This feature allows you to analyze the enemy team to determine the best map picks against them.";
+        let infoIndex = 0;
+        let showCursor = true;
+
+        function typeInfo() {
+            let displayedText = infoText.substring(0, infoIndex);
+            if (infoIndex < infoText.length) {
+                displayedText += "|"; 
+            }
+            info.textContent = displayedText;
+            if (infoIndex < infoText.length) {
+                infoIndex++;
+                setTimeout(typeInfo, 19);
+            } else {
+                showCursor = true; 
+                blinkInfoCursor(); 
+            }
+        }
+
+        typeInfo(); 
+    }
+
+        animateInfoTextAnalyzer();
+
+    });
+
+</script>

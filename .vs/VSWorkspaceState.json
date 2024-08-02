@@ -1,11 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\Faceit_Stats_Provider",
-    "\\Faceit_Stats_Provider\\wwwroot",
-    "\\Faceit_Stats_Provider\\wwwroot\\css",
-    "\\Faceit_Stats_Provider\\wwwroot\\lib"
+    ""
   ],
-  "SelectedNode": "\\Faceit_Stats_Provider\\wwwroot\\css\\FAQ.css",
+  "SelectedNode": "\\Faceit_Stats_Provider.sln",
   "PreviewInSolutionExplorer": false
 }
