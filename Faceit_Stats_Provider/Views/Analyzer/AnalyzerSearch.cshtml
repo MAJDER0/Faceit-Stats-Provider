@@ -1,6 +1,7 @@
 ﻿@using (Html.BeginForm("Analyze", "Analyzer", FormMethod.Get))
 {
     <div class="row box">
+        <div class="FillExampleData"><p id="fillDataAnalyzer"><span>+ fill in with data</span></p></div>
         <div class="col-sm-12 search-container">
             <input type="text" id="SearchBarAnalyzer" placeholder="" name="RoomID" />
             <input type="submit" value="Search" />
@@ -16,7 +17,7 @@
     document.addEventListener("DOMContentLoaded", function () {
     function animateInfoTextAnalyzer() {
         const info = document.getElementById("animatedInfoAnalyzer");
-            const infoText = "This feature allows you to analyze the enemy team to determine the best map picks against them.";
+            const infoText = "This feature allows you to analyze the enemy team before the game starts to determine the best map picks against them.";
         let infoIndex = 0;
         let showCursor = true;
 
@@ -42,4 +43,29 @@
 
     });
 
+</script>
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+
+        const dataList = ["https://www.faceit.com/pl/cs2/room/1-91ae6132-d21a-4e51-a422-d7477e83ba92"];
+
+
+        function getRandomData() {
+            const randomIndex = Math.floor(Math.random() * dataList.length);
+            return dataList[randomIndex];
+        }
+
+        document.getElementById("fillDataAnalyzer").addEventListener("click", function () {
+            // Clear the search bar
+            const searchBar = document.getElementById("SearchBarAnalyzer");
+            searchBar.value = "";
+
+
+            searchBar.value = getRandomData();
+        });
+    });
 </script>

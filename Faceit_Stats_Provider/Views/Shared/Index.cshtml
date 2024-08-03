@@ -1,13 +1,123 @@
-﻿@using (Html.BeginForm("PlayerStats", "PlayerStats", FormMethod.Get))
-{
-    <div class="row box">
-        <div class="col-sm-12 search-container">
-            <input type="text" id="animatedInput" placeholder="" name="nickname" />
-            <input type="submit" value="Search" />
-        </div>
-    </div>
-
-    <div class="SearchStatsInfo">
-        <p id="animatedInfo"></p>
-    </div>
+﻿@{
+    var apiKey = ViewBag.FaceitAPIKey;
 }
+
+    @using (Html.BeginForm("PlayerStats", "PlayerStats", FormMethod.Get))
+    {
+        <div class="row box">
+            <div class="FillExampleData"><p id="fillData"><span>+ fill in with data</span></p></div>
+            <div class="col-sm-12 search-container">
+                <input type="text" id="animatedInput" placeholder="" name="nickname" />
+                <input type="submit" value="Search" />
+            </div>
+        </div>
+
+        <div class="SearchStatsInfo">
+            <p id="animatedInfo"></p>
+        </div>
+    }
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const fillDataButton = $("#fillData");
+            const searchBar = $("#animatedInput");
+            let nicknames = [];
+            const apiKey = '@(apiKey)'; // Correctly inject API key from Razor
+
+            console.log("Page loaded, starting fetch...");
+
+            // Fetch nicknames when the page loads
+            nicknames = await fetchNicknames();
+
+            fillDataButton.on("click", function () {
+                if (nicknames.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * nicknames.length);
+                    searchBar.val(nicknames[randomIndex]);
+                } else {
+                    searchBar.val("No nicknames available");
+                }
+            });
+
+            async function fetchNicknames() {
+                console.log("1: Fetch Nicknames started");
+
+                const startTime = performance.now();
+                const playerIds = [
+                    "2faca739-6ec4-4e33-8ee2-e326c6590b53", // MAJDER
+                    "e40175ca-aed9-49fb-a1e7-d5404a2d8cbc", // Reivil
+                    "17033463-203d-4242-8be7-1c9af7c5104e", // Kubson
+                    "3b536dda-e3dd-40cd-baed-7e66ab050c8f", // ZywOo
+                    "ac71ba3c-d3d4-45e7-8be2-26aa3986867d", // Simple
+                    "93306681-bce6-4369-8c41-e0bdba2597ed", // Monesy
+                    "19606e0c-137b-4885-a904-744fa12d25f6", // Niko
+                    "5ad1783f-f978-4501-8708-b9a04ba47ee9", // Snax
+                    "24180323-d946-4bb7-a334-be3e96fcac05", // paszaBiceps
+                    "d683100c-1452-47cc-af4a-b66efea476b0", // Neo
+                    "425a97f6-2a9b-426d-a81e-0cd63ba2f343", // Taz
+                    "e90de29a-db00-4e03-8044-04ccf54b4b64", // Byali
+                    "e5e8e2a6-d716-4493-b949-e16965f41654",  // donk
+                    "93973130-4297-455b-afea-befbf96d4e17"  // Oskarasty
+                ];
+
+                // Fetch all nicknames in parallel with a limit on concurrent requests
+                const maxConcurrentRequests = 14;
+                const nicknames = await fetchWithConcurrencyLimit(playerIds, maxConcurrentRequests, fetchNickname);
+
+                const fetchEndTime = performance.now();
+                console.log(`2: Fetch completed in ${fetchEndTime - startTime} ms`);
+                console.log(`3: Total time taken: ${fetchEndTime - startTime} ms`);
+
+                return nicknames;
+            }
+
+            function getCachedNickname(playerId) {
+                return localStorage.getItem(playerId);
+            }
+
+            async function fetchNickname(playerId) {
+                const cachedNickname = getCachedNickname(playerId);
+                if (cachedNickname) {
+                    return cachedNickname;
+                } else {
+                    return await getNicknameAsync(playerId);
+                }
+            }
+
+            async function getNicknameAsync(playerId) {
+                const response = await fetch(`https://open.faceit.com/data/v4/players/${playerId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': apiKey
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const nickname = data.nickname;
+                localStorage.setItem(playerId, nickname);
+
+                return nickname;
+            }
+
+            async function fetchWithConcurrencyLimit(items, limit, fetchFunction) {
+                const results = [];
+                const executing = [];
+
+                for (const item of items) {
+                    const p = fetchFunction(item).then(result => {
+                        results.push(result);
+                        executing.splice(executing.indexOf(p), 1);
+                    });
+                    executing.push(p);
+                    if (executing.length >= limit) {
+                        await Promise.race(executing);
+                    }
+                }
+                await Promise.all(executing);
+                return results;
+            }
+        });
+    </script>
