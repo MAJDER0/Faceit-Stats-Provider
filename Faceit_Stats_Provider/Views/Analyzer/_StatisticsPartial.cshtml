@@ -196,6 +196,8 @@
                     <div class="StatsToRecalculateSecondTeam">
 
                         @{
+                            MapStatsForSinglePlayer.Clear();
+
                             await AnalyzerGenerateAllStatisticsSecondTeam(maps, faction1PlayerIds, faction2PlayerIds, faction1Leader, faction2Leader, faction1Players, faction2Players, faction1PlayerStats,
                             faction2PlayerStats, faction1MapStatsKD, faction2MapStatsKD, faction1MapStatsKR, faction2MapStatsKR, faction1MapStatsWR, faction2MapStatsWR, faction1MapStatsMatches, faction2MapStatsMatches, mapScoresFaction1, mapScoresFaction2, mapAverageKDs,
                             mapAverageKDsSecond, mapLinks, MapStatsForSinglePlayer);
