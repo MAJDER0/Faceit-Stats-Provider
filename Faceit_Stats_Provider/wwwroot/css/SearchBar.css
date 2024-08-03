@@ -6,7 +6,7 @@
 }
 
 .FillExampleData p {
-    font-size:13px;
+    font-size: 13px;
     color: #7393B3;
     display: flex;
     justify-content: flex-end;
@@ -15,27 +15,27 @@
 }
 
     .FillExampleData p span {
-        cursor:pointer;
+        cursor: pointer;
     }
 
         .FillExampleData p span:hover {
             background-color: #1a1a1a;
         }
 
-    input[type="text"],
-    input[type="submit"] {
-        color: #F2F2F2;
-        font-size: 20px;
-        box-sizing: border-box;
-        transition: .5s;
-        height: 50px;
-    }
+input[type="text"],
+input[type="submit"] {
+    color: #F2F2F2;
+    font-size: 20px;
+    box-sizing: border-box;
+    transition: .5s;
+    height: 50px;
+}
 
 input[type="text"] {
     background-color: transparent;
     border: 1px solid #f50;
-    border-right: none;
-    width: 340px;
+    border-right: 0px; 
+    width: 280px;
     outline: none;
     padding: 0 25px;
     border-radius: 25px 0 0 25px;
@@ -54,18 +54,16 @@ input[type="submit"] {
     border-radius: 0 25px 25px 0;
     width: 150px;
     border: 1px solid #f50;
-    border-left: none;
+    border-left: 0px;
     outline: none;
     cursor: pointer;
     background-color: transparent;
-    color: #fff;
     transition: .5s;
 }
 
     input[type="submit"]:hover {
         background: #ff3c22;
     }
-
 
 .SearchStatsInfo {
     color: #F2F2F2;
