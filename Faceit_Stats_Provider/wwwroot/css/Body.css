@@ -118,7 +118,7 @@ body {
 }
 
 body.toggle-on .layer {
-    display: block; /* Show when toggle-on class is applied to body */
+    display: block;
 }
 
 .star-field .layer {
