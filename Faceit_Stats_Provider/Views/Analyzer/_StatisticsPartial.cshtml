@@ -275,53 +275,53 @@
             var AvgKrResult = CalculateAverage(mapAverageKDsResult.Select(kr => new List<double> { kr.Item3 }).ToList());
             var winRatioResult = CalculateWinRatio(mapAverageKDsResult.Select(kd => new List<bool> { kd.Item2 }).ToList());
 
-    <div class="OverallAnalyzeMap">
+            <div class="flex-container">
+                <div class="OverallAnalyzeMap">
                     <img src="~/Map_Icons/de_@(mapScore.Item1.ToLower()).png" width="45" height="45" class="MapIcon" />
-                    <span class="OverallAnalyzerMapName">
-                        <span class="AnalyzerMapNameStyle">@mapNameResult:</span>
-                        <span class="AnalyzerResultOverall" style="font-weight:bold;">@totalMatchesResult</span> Matches,
-                        <span class="AnalyzerResultOverall" style="color:@(averageWRResult >= 50 ? "#6BBE49" : "#F20707")">@averageWRResult.ToString("F0")%</span>WR,
-                        <span class="AnalyzerResultOverall" style="color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".")</span> K/D,
-                        <span class="AnalyzerResultOverall" style="color:@(averageKRResult >= 0.75 ? "#6BBE49" : "#F20707")">@averageKRResult.ToString("F2").Replace(",", ".")</span> K/R
-                    </span>
-    </div>
+                    <div class="OverallAnalyzerMapDetails">
+                        <span class="OverallAnalyzerMapName" id="OverallAnalyzerMapName-@mapScore.Item1">
+                            <span class="AnalyzerMapNameStyle">@mapNameResult:</span>
+                            <span class="AnalyzerResultOverall" style="font-weight:bold;">@totalMatchesResult  <span style="color:#F2F2F2; font-weight:normal;">Matches,</span></span>
+                            <span class="AnalyzerResultOverall" style="color:@(averageWRResult >= 50 ? "#6BBE49" : "#F20707")">@averageWRResult.ToString("F0")% <span style="color:#F2F2F2; font-weight:normal;">WR,</span></span>
+                            <span class="AnalyzerResultOverall" style="color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".") <span style="color:#F2F2F2; font-weight:normal;">K/D,</span></span>
+                            <span class="AnalyzerResultOverall" style="color:@(averageKRResult >= 0.75 ? "#6BBE49" : "#F20707")">@averageKRResult.ToString("F2").Replace(",", ".") <span style="color:#F2F2F2; font-weight:normal;">K/R</span></span>
+                        </span>
+                        <div class="OverallLast20AnalyzeMap">
+                            <span class="Last20InfoText" id="Last20InfoText-@mapScore.Item1">
+                                <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                                <span class="AnalyzerResultOverallLast10">@mapAverageKDsResult.Count() <span style="color:#F2F2F2;  font-weight:normal;"> Matches,</span></span>
+                                @if (mapAverageKDsResult.Count() != 0.00)
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:@(winRatioResult >= 50 ? "#6BBE49" : "#F20707")">@winRatioResult.ToString("F0").Replace(",", ".")% <span style="color:#F2F2F2;  font-weight:normal;">WR,</span></span>
 
-    <div class="OverallLast20AnalyzeMap">
-                    <div style="width:45px; height:45px"></div>
-                    <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                                }
+                                else
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
+                                }
+                                @if (AvgKdResult != 0.00)
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:@(AvgKdResult > 1.00 ? "#6BBE49" : "#F20707")">@AvgKdResult.ToString("F2").Replace(",", ".")<span style="color:#F2F2F2;  font-weight:normal;"> K/D,</span></span>
 
-                    <span class="AnalyzerResultOverallLast10">@mapAverageKDsResult.Count()</span><span>Matches,</span>
+                                }
+                                else
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
+                                }
+                                @if (AvgKrResult != 0.00)
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:@(AvgKrResult > 0.75 ? "#6BBE49" : "#F20707")">@AvgKrResult.ToString("F2").Replace(",", ".")<span style="color:#F2F2F2;  font-weight:normal;"> K/R</span></span>
+                                }
+                                else
+                                {
+                                    <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found</span>
+                                }
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    @if (mapAverageKDsResult.Count() != 0.00)
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:@(winRatioResult >= 50 ? "#6BBE49" : "#F20707")">@winRatioResult.ToString("F0").Replace(",", ".")%</span>
-                        <span>WR,</span>
-                }
-                else
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
-                }
-
-                    @if (AvgKdResult != 0.00)
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:@(AvgKdResult > 1.00 ? "#6BBE49" : "#F20707")">@AvgKdResult.ToString("F2").Replace(",", ".")</span>
-                        <span>K/D,</span>
-                }
-                else
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
-                }
-
-                    @if (AvgKrResult != 0.00)
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:@(AvgKrResult > 0.75 ? "#6BBE49" : "#F20707")">@AvgKrResult.ToString("F2").Replace(",",".")</span>
-                        <span>K/R</span>
-                }
-                else
-                {
-                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found</span>
-                }
-    </div>
         }
     }
 }

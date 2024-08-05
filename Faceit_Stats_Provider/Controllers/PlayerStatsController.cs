@@ -73,11 +73,11 @@ namespace Faceit_Stats_Provider.Controllers
             string game = "cs2";
 
 
-            if (nickname.Contains("https://steamcommunity.com/profiles/")) {
+            //if (nickname.Contains("https://steamcommunity.com/profiles/")) {
             
 
 
-            }
+            //}
 
             try
             {
