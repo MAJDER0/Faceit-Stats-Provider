@@ -67,17 +67,40 @@ namespace Faceit_Stats_Provider.Controllers
             List<EloDiff.Root> eloDiff;
             List<EloDiff.Root> allhistory;
             List<MatchType.Rootobject> matchtype;
+            NicknameBySteamId.Rootobject NicknameBySteamID;
 
             long RedisEloRetrievesCount = 0;
             string errorString;
             string game = "cs2";
 
 
-            //if (nickname.Contains("https://steamcommunity.com/profiles/")) {
-            
+            if (!string.IsNullOrEmpty(nickname) && nickname.Contains("https://steamcommunity.com/profiles/"))
+            {
+                try
+                {
+                    var SteamID = ExtractSteamId(nickname);
+                    var cacheKey = $"nickname_{SteamID}";
 
+                    if (!_memoryCache.TryGetValue(cacheKey, out NicknameBySteamID))
+                    {
+                        NicknameBySteamID = await client.GetFromJsonAsync<NicknameBySteamId.Rootobject>($"v4/players?game_player_id={SteamID}&game=cs2");
 
-            //}
+                        if (NicknameBySteamID is not null)
+                        {
+                            _memoryCache.Set(cacheKey, NicknameBySteamID, TimeSpan.FromMinutes(3));
+                            nickname = NicknameBySteamID.nickname;
+                        }
+                    }
+                    else
+                    {
+                        nickname = NicknameBySteamID.nickname;
+                    }
+                }
+                catch
+                {
+                    return View("~/Views/PlayerNotFoundBySteamID/PlayerNotFoundBySteamID.cshtml");
+                }
+            }
 
             try
             {
@@ -363,6 +386,24 @@ namespace Faceit_Stats_Provider.Controllers
             {
                 return StatusCode(500, $"An error occurred: {ex.Message}");
             }
+        }
+
+
+
+        public string ExtractSteamId(string url)
+        {
+            string pattern = @"https:\/\/steamcommunity\.com\/profiles\/(\d+)";
+
+            Regex regex = new Regex(pattern);
+
+            Match match = regex.Match(url);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+
+            return null;
         }
 
     }

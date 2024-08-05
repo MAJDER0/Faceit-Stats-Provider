@@ -1,0 +1,13 @@
+﻿.PlayerNotFoundBySteamID {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+    .PlayerNotFoundBySteamID .NotFoundBySteamIDmessage {
+        font-size: 30px;
+        font-weight: bold;
+        margin-top: -50vh;
+    }
