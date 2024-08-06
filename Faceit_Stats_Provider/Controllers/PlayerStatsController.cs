@@ -83,7 +83,14 @@ namespace Faceit_Stats_Provider.Controllers
 
                     if (!_memoryCache.TryGetValue(cacheKey, out NicknameBySteamID))
                     {
-                        NicknameBySteamID = await client.GetFromJsonAsync<NicknameBySteamId.Rootobject>($"v4/players?game_player_id={SteamID}&game=cs2");
+                        try
+                        {
+                            NicknameBySteamID = await client.GetFromJsonAsync<NicknameBySteamId.Rootobject>($"v4/players?game_player_id={SteamID}&game=cs2");
+
+                        }
+                        catch {
+                            NicknameBySteamID = await client.GetFromJsonAsync<NicknameBySteamId.Rootobject>($"v4/players?game_player_id={SteamID}&game=csgo");
+                        }
 
                         if (NicknameBySteamID is not null)
                         {
