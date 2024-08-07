@@ -75,14 +75,14 @@
 
 .AnalyzerResultOverall {
     font-weight: bold;
-    margin-left: 2.5%;
-    margin-right: 2.5%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
 .AnalyzerResultOverallLast10 {
     font-weight: bold;
-    margin-left: 1.5%;
-    margin-right: 1.5%;
+    margin-left: 1%;
+    margin-right: 1%;
 }
 
 .title {
@@ -286,22 +286,22 @@
     align-items: center;
 }
 
+
 .OverallAnalyzerMapDetails {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-left:2%;
-    padding-top:4%;
+    padding-left: 2%;
+    padding-top: 4%;
     margin-left: 3%;
 }
 
 .OverallAnalyzerMapName {
-    display: flex;
     align-items: center;
     text-align: left;
     margin-bottom: 5px;
     height: auto;
-    margin-top: -2%;
+    margin-top: -1%;
     box-sizing: border-box;
     
 }
@@ -319,10 +319,6 @@
     margin-top: -2%;
 }
 
-.Last20InfoText {
-    display: block;
-    text-align: justify;
-}
 
 .AnalyzerMapNameStyle {
     font-weight: bold;
@@ -374,3 +370,7 @@
         font-weight: bold;
         margin-top: -50vh;
     }
+
+.Last20InfoText {
+    margin-top:0.5%;
+}

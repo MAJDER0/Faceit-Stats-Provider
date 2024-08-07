@@ -89,7 +89,7 @@
             @{
                 List<(double, bool, double, string)> mapAverageKDsResult = new List<(double, bool, double, string)>();
 
-               await GenerateOverallSection(faction1PlayerStats, faction1PlayerIds, mapScoresFaction1, MapStatsForSinglePlayer, faction1MapStatsMatches, maps, false, Model.PlayerMatchStats, mapAverageKDsResult);
+                await GenerateOverallSection(faction1PlayerStats, faction1PlayerIds, mapScoresFaction1, MapStatsForSinglePlayer, faction1MapStatsMatches, maps, false, Model.PlayerMatchStats, mapAverageKDsResult);
             }
 
             <div class="maps-container">
@@ -146,12 +146,12 @@
             @{
                 List<(double, bool, double, string)> mapAverageKDsSecondResult = new List<(double, bool, double, string)>();
 
-               await GenerateOverallSection(faction2PlayerStats, faction2PlayerIds, mapScoresFaction2, MapStatsForSinglePlayer, faction2MapStatsMatches, maps, true, Model.PlayerMatchStats, mapAverageKDsSecondResult);
+                await GenerateOverallSection(faction2PlayerStats, faction2PlayerIds, mapScoresFaction2, MapStatsForSinglePlayer, faction2MapStatsMatches, maps, true, Model.PlayerMatchStats, mapAverageKDsSecondResult);
             }
 
             <div class="maps-container">
                 @{
- 
+
                     MapStatsForSinglePlayerCopy = MapStatsForSinglePlayer;
                     await GenerateOverallMapStats(mapScoresFaction2, faction2MapStatsKD, faction2MapStatsKR, faction2MapStatsWR, faction2MapStatsMatches, mapAverageKDsSecondResult, faction2PlayerIds);
                 }
@@ -443,28 +443,30 @@
                     <img src="~/Map_Icons/de_@(mapScore.Item1.ToLower()).png" width="45" height="45" class="MapIcon" />
                     <div class="OverallAnalyzerMapDetails">
                         <span class="OverallAnalyzerMapName" id="OverallAnalyzerMapName-@mapScore.Item1">
-                            <span class="AnalyzerMapNameStyle">@mapNameResult:</span>
-                            <span class="AnalyzerResultOverall" style="font-weight:bold;">@totalMatchesResult  <span style="color:#F2F2F2; font-weight:normal;">Matches,</span></span>
-                            <span class="AnalyzerResultOverall" style="color:@(averageWRResult >= 50 ? "#6BBE49" : "#F20707")">@averageWRResult.ToString("F0")% <span style="color:#F2F2F2; font-weight:normal;">WR,</span></span>
-                            <span class="AnalyzerResultOverall" style="color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".") <span style="color:#F2F2F2; font-weight:normal;">K/D,</span></span>
-                            <span class="AnalyzerResultOverall" style="color:@(averageKRResult >= 0.75 ? "#6BBE49" : "#F20707")">@averageKRResult.ToString("F2").Replace(",", ".") <span style="color:#F2F2F2; font-weight:normal;">K/R</span></span>
+
+                            <span class="AnalyzerMapNameStyle" style=" display:inline-block; width:68.25px;">@mapNameResult:</span>
+
+                            <span class="AnalyzerResultOverall" style="font-weight:bold;  display:inline-block;width:47px; text-align:center;">@totalMatchesResult </span><span style="color:#F2F2F2;width:74px; font-weight:normal; display:inline-block; ">Matches,</span>
+                            <span class="AnalyzerResultOverall" style="width:36px; text-align:right;display:inline-block;color:@(averageWRResult >= 50 ? "#6BBE49" : "#F20707")">@averageWRResult.ToString("F0")% </span><span style="width:40px;text-align:right;color:#F2F2F2; font-weight:normal;  display:inline-block;">WR,</span>
+                            <span class="AnalyzerResultOverall" style="width:36px;text-align:left; display:inline-block;color:@(averageKDResult >= 1.00 ? "#6BBE49" : "#F20707")">@averageKDResult.ToString("F2").Replace(",", ".")  </span><span style="width:36px;color:#F2F2F2; font-weight:normal;  display:inline-block;"> K/D,</span>
+                            <span class="AnalyzerResultOverall" style="width:36px;display:inline-block;color:@(averageKRResult >= 0.75 ? "#6BBE49" : "#F20707")">@averageKRResult.ToString("F2").Replace(",", ".") </span><span style="width:31px;color:#F2F2F2; font-weight:normal;  display:inline-block;"> K/R</span>
                         </span>
                         <div class="OverallLast20AnalyzeMap">
                             <span class="Last20InfoText" id="Last20InfoText-@mapScore.Item1">
-                                <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
-                                <span class="AnalyzerResultOverallLast10">@mapAverageKDsResult.Count() <span style="color:#F2F2F2;  font-weight:normal;"> Matches,</span></span>
+                                <span style="color:#5A0273; font-weight:bold;display:inline-block; width:68.25px;">Last 20:</span>
+                                <span class="AnalyzerResultOverallLast10" style="display:inline-block;width:47px; text-align:center;">@mapAverageKDsResult.Count() </span><span style="width:74px;display:inline-block;color:#F2F2F2;  font-weight:normal;"> Matches,</span>
                                 @if (mapAverageKDsResult.Count() != 0.00)
                                 {
-                                    <span class="AnalyzerResultOverallLast10" style="color:@(winRatioResult >= 50 ? "#6BBE49" : "#F20707")">@winRatioResult.ToString("F0").Replace(",", ".")% <span style="color:#F2F2F2;  font-weight:normal;">WR,</span></span>
+                                    <span class="AnalyzerResultOverallLast10" style="display:inline-block;text-align:center;width:36px;color:@(winRatioResult >= 50 ? "#6BBE49" : "#F20707")">@winRatioResult.ToString("F0").Replace(",", ".")% </span><span style="display:inline-block;width:40px;text-align:right;color:#F2F2F2;  font-weight:normal;">WR,</span>
 
                                 }
                                 else
                                 {
-                                    <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
+                                    <span class="AnalyzerResultOverallLast10" style="display:inline-block;color:#F20707;">not found,</span>
                                 }
                                 @if (AvgKdResult != 0.00)
                                 {
-                                    <span class="AnalyzerResultOverallLast10" style="color:@(AvgKdResult > 1.00 ? "#6BBE49" : "#F20707")">@AvgKdResult.ToString("F2").Replace(",", ".")<span style="color:#F2F2F2;  font-weight:normal;"> K/D,</span></span>
+                                    <span class="AnalyzerResultOverallLast10" style="width:36px;text-align:left;display:inline-block;color:@(AvgKdResult > 1.00 ? "#6BBE49" : "#F20707")">@AvgKdResult.ToString("F2").Replace(",", ".") </span><span style="width:36px;display:inline-block;color:#F2F2F2;  font-weight:normal;"> K/D,</span>
 
                                 }
                                 else
@@ -473,11 +475,11 @@
                                 }
                                 @if (AvgKrResult != 0.00)
                                 {
-                                    <span class="AnalyzerResultOverallLast10" style="color:@(AvgKrResult > 0.75 ? "#6BBE49" : "#F20707")">@AvgKrResult.ToString("F2").Replace(",", ".")<span style="color:#F2F2F2;  font-weight:normal;"> K/R</span></span>
+                                    <span class="AnalyzerResultOverallLast10" style="width:36px;display:inline-block;color:@(AvgKrResult > 0.75 ? "#6BBE49" : "#F20707")">@AvgKrResult.ToString("F2").Replace(",", ".") </span><span style="width:31px;color:#F2F2F2;  font-weight:normal; display:inline-block; margin-right:-90%;"> K/R</span>
                                 }
                                 else
                                 {
-                                    <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found</span>
+                                    <span class="AnalyzerResultOverallLast10" style="display:inline-block;color:#F20707;">not found</span>
                                 }
                             </span>
                         </div>
@@ -603,35 +605,6 @@
         });
     </script>
 
-
-    <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            function updateSpanWidths() {
-                const mapScores = @Html.Raw(JsonConvert.SerializeObject(mapScoresFaction1.Concat(mapScoresFaction2)));
-
-                mapScores.forEach(mapScore => {
-                    const mapId = mapScore.Item1;
-                    const overallSpanId = `OverallAnalyzerMapName-${mapId}`;
-                    const last20SpanId = `Last20InfoText-${mapId}`;
-
-                    const overallSpan = document.getElementById(overallSpanId);
-                    const last20Span = document.getElementById(last20SpanId);
-
-                    if (overallSpan && last20Span) {
-                        const overallWidth = overallSpan.getBoundingClientRect().width;
-                        last20Span.style.width = `${overallWidth}px`;
-                        console.log("success");
-                    }
-                });
-            }
-
-            // Call the function to set the initial widths
-            updateSpanWidths();
-
-            // If you expect the widths to change dynamically, you can call updateSpanWidths() again as needed.
-            // Example: window.onresize = updateSpanWidths;
-        });
-    </script>
 }
 
 
