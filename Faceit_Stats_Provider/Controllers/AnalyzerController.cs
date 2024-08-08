@@ -41,6 +41,7 @@ namespace Faceit_Stats_Provider.Controllers
 
             AnalyzerMatchPlayers.Rootobject players;
             var getPlayerStatsTasks = new List<Task<AnalyzerPlayerStats.Rootobject>>();
+            var getPlayerStatsForCsGoTasks = new List<Task<AnalyzerPlayerStatsForCsgo.Rootobject>>();
             var getPlayerMatchHistoryTasks = new List<(string playerId, Task<AnalyzerMatchHistory.Rootobject>)>();
             var getPlayerMatchStatsTasks = new List<(string playerId, Task<AnalyzerMatchStats.Rootobject>)>();
 
@@ -51,21 +52,25 @@ namespace Faceit_Stats_Provider.Controllers
                 foreach (var item in players.teams.faction1.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
+                    getPlayerStatsForCsGoTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo"));
                     getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 foreach (var item in players.teams.faction2.roster)
                 {
                     getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
+                    getPlayerStatsForCsGoTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo"));
                     getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
                 }
 
                 // Await all tasks concurrently
                 await Task.WhenAll(getPlayerStatsTasks);
+                await Task.WhenAll(getPlayerStatsForCsGoTasks);
                 await Task.WhenAll(getPlayerMatchHistoryTasks.Select(t => t.Item2));
 
                 // Retrieve results from tasks
                 var playerStats = getPlayerStatsTasks.Select(t => t.Result).ToList();
+                var playerStatsForCsGo = getPlayerStatsForCsGoTasks.Select(t => t.Result).ToList();
                 var playerMatchHistory = getPlayerMatchHistoryTasks.Select(t => (t.playerId, t.Item2.Result)).ToList();
 
                 foreach (var (playerId, playerHistory) in playerMatchHistory)
@@ -85,6 +90,7 @@ namespace Faceit_Stats_Provider.Controllers
                     RoomId = RoomID,
                     Players = players,
                     PlayerStats = playerStats,
+                    PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats
                 };
 
@@ -95,6 +101,7 @@ namespace Faceit_Stats_Provider.Controllers
                     RoomId = RoomID,
                     Players = players,
                     PlayerStats = playerStats,
+                    PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats,
                     InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy) // Use mapping function
                 };
