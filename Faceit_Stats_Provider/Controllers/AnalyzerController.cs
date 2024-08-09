@@ -3,6 +3,7 @@ using Faceit_Stats_Provider.Interfaces;
 using Faceit_Stats_Provider.Models;
 using Faceit_Stats_Provider.ModelsForAnalyzer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,10 +17,13 @@ namespace Faceit_Stats_Provider.Controllers
     public class AnalyzerController : Controller
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IMemoryCache _memoryCache;
+        private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(10);
 
-        public AnalyzerController(IHttpClientFactory clientFactory)
+        public AnalyzerController(IHttpClientFactory clientFactory, IMemoryCache memoryCache)
         {
             _clientFactory = clientFactory;
+            _memoryCache = memoryCache;
         }
 
         public IActionResult Index()
@@ -36,7 +40,6 @@ namespace Faceit_Stats_Provider.Controllers
             }
 
             var client = _clientFactory.CreateClient("Faceit");
-
             string RoomID = ExtractRoomIdFromUrl(roomId);
 
             AnalyzerMatchPlayers.Rootobject players;
@@ -47,20 +50,20 @@ namespace Faceit_Stats_Provider.Controllers
 
             try
             {
-                players = await client.GetFromJsonAsync<AnalyzerMatchPlayers.Rootobject>($"v4/matches/{RoomID}");
+                players = await GetOrAddToCacheAsync($"players_{RoomID}", () => client.GetFromJsonAsync<AnalyzerMatchPlayers.Rootobject>($"v4/matches/{RoomID}"));
 
                 foreach (var item in players.teams.faction1.roster)
                 {
-                    getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerStatsForCsGoTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
+                    getPlayerStatsTasks.Add(GetOrAddToCacheAsync($"stats_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2")));
+                    getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20"))));
                 }
 
                 foreach (var item in players.teams.faction2.roster)
                 {
-                    getPlayerStatsTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2"));
-                    getPlayerStatsForCsGoTasks.Add(client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo"));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20")));
+                    getPlayerStatsTasks.Add(GetOrAddToCacheAsync($"stats_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2")));
+                    getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+                    getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20"))));
                 }
 
                 // Await all tasks concurrently
@@ -77,7 +80,7 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     foreach (var matchItem in playerHistory.items)
                     {
-                        getPlayerMatchStatsTasks.Add((playerId, client.GetFromJsonAsync<AnalyzerMatchStats.Rootobject>($"v4/matches/{matchItem.match_id}/stats")));
+                        getPlayerMatchStatsTasks.Add((playerId, GetOrAddToCacheAsync($"match_stats_{matchItem.match_id}", () => client.GetFromJsonAsync<AnalyzerMatchStats.Rootobject>($"v4/matches/{matchItem.match_id}/stats"))));
                     }
                 }
 
@@ -217,6 +220,19 @@ namespace Faceit_Stats_Provider.Controllers
             return null;
         }
 
+        private async Task<T> GetOrAddToCacheAsync<T>(string cacheKey, Func<Task<T>> factory)
+        {
+            if (!_memoryCache.TryGetValue(cacheKey, out T cacheEntry))
+            {
+                cacheEntry = await factory();
+                var cacheEntryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = CacheDuration
+                };
+                _memoryCache.Set(cacheKey, cacheEntry, cacheEntryOptions);
+            }
+            return cacheEntry;
+        }
 
         private async Task<T> HandleHttpRequestAsync<T>(Task<T> task)
         {

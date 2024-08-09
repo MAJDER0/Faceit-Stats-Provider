@@ -139,7 +139,10 @@
 
 .FastChoiceMainMapInfo {
     display: inline-block;
-    margin-right: 10%;
+    margin-right: 8%;
+    padding-left: 3%;
+    border-left: 1px solid rgba(80, 200, 120, 1);
+    border-left: 1px solid rgba(224, 17, 95, 1);
 }
 
 .ResultFastChoiceMapName {

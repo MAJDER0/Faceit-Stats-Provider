@@ -1,5 +1,6 @@
 ﻿using Faceit_Stats_Provider.ModelsForAnalyzer;
 using System;
+using System.Globalization;
 using System.Reflection;
 using static Faceit_Stats_Provider.Classes.StatsHelper;
 
@@ -21,16 +22,32 @@ namespace Faceit_Stats_Provider.Classes
             List<(double, bool, double, string)> mapAverageKDsResult = new List<(double, bool, double, string)>();
 
 
+            int TotalRounds = 0;
+            int TotalKills = 0;
+            int TotalDeaths = 0;
+            int TotalWins = 0;
+            int TotalMatches = 0;
+
+
             foreach (var playerStat in playerStats)
             {
 
-                var KRInfo = playerStat.segments.Where(p => maps.Any(map => map.Equals(p.label, StringComparison.OrdinalIgnoreCase)) && p.mode == "5v5").ToList();
-                KrCombined += KRInfo.Sum(map => ParseDoubleOrDefault(map.stats.AverageKRRatio));
-                WrCombined += (ParseDoubleOrDefault(playerStat.lifetime.Wins) / ParseDoubleOrDefault(playerStat.lifetime.Matches)) * 100;
-                KdCombined += ParseDoubleOrDefault(playerStat.lifetime.AverageKDRatio);
+                var properMaps = playerStat.segments.Where(p => maps.Any(map => map.Equals(p.label, StringComparison.OrdinalIgnoreCase)) && p.mode == "5v5").ToList();
+
+                foreach (var map in properMaps)
+                {
+                    TotalRounds += int.Parse(map.stats.Rounds);
+                    TotalKills += int.Parse(map.stats.Kills);
+                    TotalDeaths += int.Parse(map.stats.Deaths);
+                    TotalMatches += int.Parse(map.stats.Matches);
+                    TotalWins += int.Parse(map.stats.Wins);
+
+                }
             }
 
-            KrCombined = KrCombined / 7;
+               KdCombined = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalDeaths.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+               KrCombined = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalRounds.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+               WrCombined = (double.Parse(TotalWins.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalMatches.ToString().Replace(",", "."), CultureInfo.InvariantCulture))*100;
 
             foreach (var mapScore in MapScores)
             {
@@ -38,11 +55,6 @@ namespace Faceit_Stats_Provider.Classes
                 mapAverageKDsResult = CalculateMapAverageKD(PlayerMatchStats, mapScore.Item1, playerIds);
                 MapStatsForSinglePlayer.Add((mapAverageKDsResult, mapScore.Item1.ToString()));
             }
-
-            KdCombined = KdCombined / 5;
-            KrCombined = KrCombined / 5;
-            WrCombined = WrCombined / 5;
-
 
 
             if (SecondTeam == true)

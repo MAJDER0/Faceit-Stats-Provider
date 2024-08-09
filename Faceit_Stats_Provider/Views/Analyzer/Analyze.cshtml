@@ -331,7 +331,8 @@
                         }
                         <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(WinRatioCS2 >= 50 ? "#6BBE49" : "#F20707")">@WinRatioCS2.ToString("F0")%</span><span>WR,</span>
 
-                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(playerStat.lifetime.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")"></span> <span>K/D</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(CalculatedQuantityOfMatches.Item3.ToString().Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@CalculatedQuantityOfMatches.Item3.ToString("F2").Replace(",", ".")</span><span>K/D,</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(CalculatedQuantityOfMatches.Item4.ToString().Replace(",", "."), CultureInfo.InvariantCulture) >= 0.75 ? "#6BBE49" : "#F20707")">@CalculatedQuantityOfMatches.Item4.ToString("F2").Replace(",", ".")</span><span>K/R</span>
                             </div>
 
                             <div class="CombinedLast20PlayerStatsAnalyzer">
@@ -350,7 +351,7 @@
         }
     }
 
-    (int,int) CalculateQuantityOfMatches(List<string> maps, List<AnalyzerPlayerStatsForCsgo.Rootobject> playerStatForCsgo, AnalyzerPlayerStats.Rootobject playerStat)
+    (int,int,double,double) CalculateQuantityOfMatches(List<string> maps, List<AnalyzerPlayerStatsForCsgo.Rootobject> playerStatForCsgo, AnalyzerPlayerStats.Rootobject playerStat)
     {
         //var displayedMapsCsgo = playerStatForCsgo[0].segments.Where(map=>map.mode=="5v5" && maps.Contains(map.label.ToUpper().Substring(3))).ToList();
 
@@ -360,6 +361,9 @@
 
         int matchesOverall = 0;
         int winsOverall = 0;
+        int TotalKills =0;
+        int TotalDeaths = 0;
+        int TotalRounds = 0;
 
         //foreach (var map in displayedMapsCsgo) 
         //{
@@ -370,9 +374,15 @@
         {
             matchesOverall += int.Parse(map.stats.Matches);
             winsOverall += int.Parse(map.stats.Wins);
+            TotalKills += int.Parse(map.stats.Kills);
+            TotalDeaths += int.Parse(map.stats.Deaths);
+            TotalRounds += int.Parse(map.stats.Rounds);
         }
 
-        return (matchesOverall,winsOverall);
+        double TotalKD = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalDeaths.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+        double TotalKR = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalRounds.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+
+        return (matchesOverall,winsOverall,TotalKD,TotalKR);
     }
 
     async Task MapStatsPlayerSection(List<string> maps, AnalyzerMatchPlayers.Roster player, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerPlayerStats.Rootobject playerStat)
