@@ -101,6 +101,10 @@
       "PackagePath": "staticwebassets\\css\\PlayerNotFound.css"
     },
     {
+      "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerNotFoundBySteamID.css",
+      "PackagePath": "staticwebassets\\css\\PlayerNotFoundBySteamID.css"
+    },
+    {
       "Id": "C:\\Users\\Majderki\\source\\repos\\Faceit-Stats-Provider-MVC\\Faceit_Stats_Provider\\wwwroot\\css\\PlayerStats.css",
       "PackagePath": "staticwebassets\\css\\PlayerStats.css"
     },

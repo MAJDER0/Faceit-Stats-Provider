@@ -87,6 +87,51 @@ namespace Faceit_Stats_Provider.Controllers
                 var playerMatchStatsResults = await Task.WhenAll(getPlayerMatchStatsTasks.Select(task => HandleHttpRequestAsync(task.Item2).ContinueWith(t => (task.playerId, Result: t.Result))));
                 var playerMatchStats = playerMatchStatsResults.Where(result => result.Result != null).ToList();
 
+                var combinedPlayerStats = playerStats.Zip(playerStatsForCsGo, (cs2, csgo) =>
+                {
+                    var combinedSegments = new Dictionary<string, AnalyzerPlayerStatsCombined.Segment>();
+
+                    foreach (var cs2Segment in cs2.segments)
+                    {
+                        var normalizedLabel = NormalizeLabel(cs2Segment.label);
+                        combinedSegments[normalizedLabel] = ConvertToCombinedSegment(cs2Segment);
+                    }
+                    var csgoProperMaps = csgo.segments.Where(mode => mode.mode == "5v5").ToList();
+
+                    foreach (var csgoSegment in csgoProperMaps)
+                    {
+                        var normalizedLabel = NormalizeLabel(csgoSegment.label);
+                        if (combinedSegments.TryGetValue(normalizedLabel, out var existingSegment))
+                        {
+                            combinedSegments[normalizedLabel] = CombineSegments(existingSegment, ConvertToCombinedSegment(csgoSegment));
+                        }
+                        else
+                        {
+                            combinedSegments[normalizedLabel] = ConvertToCombinedSegment(csgoSegment);
+                        }
+                    }
+
+                    return new AnalyzerPlayerStatsCombined.Rootobject
+                    {
+                        player_id = cs2.player_id,
+                        game_id = cs2.game_id,
+                        lifetime = new AnalyzerPlayerStatsCombined.Lifetime
+                        {
+                            Wins = cs2.lifetime.Wins,
+                            TotalHeadshots = cs2.lifetime.TotalHeadshots,
+                            LongestWinStreak = cs2.lifetime.LongestWinStreak,
+                            KDRatio = cs2.lifetime.KDRatio,
+                            Matches = cs2.lifetime.Matches,
+                            AverageHeadshots = cs2.lifetime.AverageHeadshots,
+                            AverageKDRatio = cs2.lifetime.AverageKDRatio,
+                            WinRate = cs2.lifetime.WinRate,
+                            ExtensionData = cs2.lifetime.ExtensionData
+                        },
+                        segments = combinedSegments.Values.ToArray()
+                    };
+                }).ToList();
+
+
                 // Create deep copy of the initial model
                 var initialViewModel = new AnalyzerViewModel
                 {
@@ -94,7 +139,8 @@ namespace Faceit_Stats_Provider.Controllers
                     Players = players,
                     PlayerStats = playerStats,
                     PlayerStatsForCsGo = playerStatsForCsGo,
-                    PlayerMatchStats = playerMatchStats
+                    PlayerMatchStats = playerMatchStats,
+                    PlayerStatsCombinedViewModel = combinedPlayerStats
                 };
 
                 var initialModelCopy = JsonConvert.DeserializeObject<AnalyzerViewModel>(JsonConvert.SerializeObject(initialViewModel));
@@ -106,7 +152,8 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerStats = playerStats,
                     PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats,
-                    InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy) // Use mapping function
+                    PlayerStatsCombinedViewModel = combinedPlayerStats,
+                    InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy) 
                 };
 
                 return View("~/Views/Analyzer/Analyze.cshtml", viewModel);
@@ -254,5 +301,222 @@ namespace Faceit_Stats_Provider.Controllers
                 return default;
             }
         }
+
+        private string NormalizeLabel(string label)
+        {
+            return label?.ToLowerInvariant().Replace("de_", "").Replace("_", "").Replace("-", "");
+        }
+
+        private AnalyzerPlayerStatsCombined.Segment CombineSegments(AnalyzerPlayerStatsCombined.Segment cs2Segment, AnalyzerPlayerStatsCombined.Segment csgoSegment)
+        {
+            int SafeParse(string value)
+            {
+                return int.TryParse(value, out int result) ? result : 0;
+            }
+
+            // Sum the relevant values
+            int totalKills = SafeParse(cs2Segment.stats.Kills) + SafeParse(csgoSegment.stats.Kills);
+            int totalMatches = SafeParse(cs2Segment.stats.Matches) + SafeParse(csgoSegment.stats.Matches);
+            int totalRounds = SafeParse(cs2Segment.stats.Rounds) + SafeParse(csgoSegment.stats.Rounds);
+            int totalDeaths = SafeParse(cs2Segment.stats.Deaths) + SafeParse(csgoSegment.stats.Deaths);
+            int totalAssists = SafeParse(cs2Segment.stats.Assists) + SafeParse(csgoSegment.stats.Assists);
+            int totalHeadshots = SafeParse(cs2Segment.stats.TotalHeadshots) + SafeParse(csgoSegment.stats.TotalHeadshots);
+            int totalWins = SafeParse(cs2Segment.stats.Wins) + SafeParse(csgoSegment.stats.Wins);
+
+            // Calculate derived statistics
+            double kdratio = totalDeaths != 0 ? totalKills / (double)totalDeaths : 0;
+            double krratio = totalRounds != 0 ? totalKills / (double)totalRounds : 0;
+            double winRate = totalMatches != 0 ? (totalWins / (double)totalMatches) * 100 : 0;
+
+            return new AnalyzerPlayerStatsCombined.Segment
+            {
+                label = cs2Segment.label ?? csgoSegment.label,
+                img_small = cs2Segment.img_small ?? csgoSegment.img_small,
+                img_regular = cs2Segment.img_regular ?? csgoSegment.img_regular,
+                stats = new AnalyzerPlayerStatsCombined.Stats
+                {
+                    Kills = totalKills.ToString(),
+                    AverageHeadshots = totalMatches != 0 ? (totalHeadshots / (double)totalMatches).ToString("F2") : "0",
+                    Assists = totalAssists.ToString(),
+                    AverageKills = totalMatches != 0 ? (totalKills / (double)totalMatches).ToString("F2") : "0",
+                    HeadshotsperMatch = totalMatches != 0 ? (totalHeadshots / (double)totalMatches).ToString("F2") : "0",
+                    AverageKRRatio = krratio.ToString("F2"),
+                    Matches = totalMatches.ToString(),
+                    WinRate = winRate.ToString("F2"),
+                    Rounds = totalRounds.ToString(),
+                    TotalHeadshots = totalHeadshots.ToString(),
+                    KRRatio = krratio.ToString("F2"),
+                    Deaths = totalDeaths.ToString(),
+                    KDRatio = kdratio.ToString("F2"),
+                    AverageAssists = totalMatches != 0 ? (totalAssists / (double)totalMatches).ToString("F2") : "0",
+                    Headshots = totalHeadshots.ToString(),
+                    Wins = totalWins.ToString(),
+                    AverageDeaths = totalMatches != 0 ? (totalDeaths / (double)totalMatches).ToString("F2") : "0",
+                    ExtensionData = cs2Segment.stats.ExtensionData ?? csgoSegment.stats.ExtensionData
+                },
+                type = cs2Segment.type ?? csgoSegment.type,
+                mode = cs2Segment.mode ?? csgoSegment.mode
+            };
+        }
+
+        private AnalyzerPlayerStatsCombined.Segment ConvertToCombinedSegment(AnalyzerPlayerStats.Segment segment)
+        {
+            return new AnalyzerPlayerStatsCombined.Segment
+            {
+                label = segment.label,
+                img_small = segment.img_small,
+                img_regular = segment.img_regular,
+                stats = new AnalyzerPlayerStatsCombined.Stats
+                {
+                    Kills = segment.stats.Kills,
+                    AverageHeadshots = segment.stats.AverageHeadshots,
+                    Assists = segment.stats.Assists,
+                    AverageKills = segment.stats.AverageKills,
+                    HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                    AverageKRRatio = segment.stats.AverageKRRatio,
+                    Matches = segment.stats.Matches,
+                    WinRate = segment.stats.WinRate,
+                    Rounds = segment.stats.Rounds,
+                    TotalHeadshots = segment.stats.TotalHeadshots,
+                    KRRatio = segment.stats.KRRatio,
+                    Deaths = segment.stats.Deaths,
+                    KDRatio = segment.stats.KDRatio,
+                    AverageAssists = segment.stats.AverageAssists,
+                    Headshots = segment.stats.Headshots,
+                    Wins = segment.stats.Wins,
+                    AverageDeaths = segment.stats.AverageDeaths,
+                    ExtensionData = segment.stats.ExtensionData
+                },
+                type = segment.type,
+                mode = segment.mode
+            };
+        }
+
+        private AnalyzerPlayerStatsCombined.Segment ConvertToCombinedSegment(AnalyzerPlayerStatsForCsgo.Segment segment)
+        {
+            return new AnalyzerPlayerStatsCombined.Segment
+            {
+                label = segment.label,
+                img_small = segment.img_small,
+                img_regular = segment.img_regular,
+                stats = new AnalyzerPlayerStatsCombined.Stats
+                {
+                    Kills = segment.stats.Kills,
+                    AverageHeadshots = segment.stats.AverageHeadshots,
+                    Assists = segment.stats.Assists,
+                    AverageKills = segment.stats.AverageKills,
+                    HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                    AverageKRRatio = segment.stats.AverageKRRatio,
+                    Matches = segment.stats.Matches,
+                    WinRate = segment.stats.WinRate,
+                    Rounds = segment.stats.Rounds,
+                    TotalHeadshots = segment.stats.TotalHeadshots,
+                    KRRatio = segment.stats.KRRatio,
+                    Deaths = segment.stats.Deaths,
+                    KDRatio = segment.stats.KDRatio,
+                    AverageAssists = segment.stats.AverageAssists,
+                    Headshots = segment.stats.Headshots,
+                    Wins = segment.stats.Wins,
+                    AverageDeaths = segment.stats.AverageDeaths,
+                    ExtensionData = segment.stats.ExtensionData
+                },
+                type = segment.type,
+                mode = segment.mode
+            };
+        }
+
+        [HttpPost]
+        public IActionResult ToggleIncludeCsGoStats([FromBody] ToggleIncludeCsGoStatsRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest("Request is null");
+            }
+
+            // Validate the request data
+            if (string.IsNullOrEmpty(request.RoomId) || request.Players == null || request.PlayerMatchStats == null || request.PlayerStatsCombinedViewModel == null)
+            {
+                return BadRequest("Invalid request data");
+            }
+
+            var ConvertedCombinedStatsToMatchModel = ConvertCombinedToPlayerStats(request.PlayerStatsCombinedViewModel);
+
+            var viewModel = new AnalyzerViewModel
+            {
+                RoomId = request.RoomId,
+                Players = request.Players,
+                PlayerStats = ConvertedCombinedStatsToMatchModel,
+                PlayerStatsForCsGo = request.PlayerStatsForCsGo,
+                PlayerMatchStats = request.PlayerMatchStats,
+            };
+
+            // Return the updated partial view
+            return PartialView("_StatisticsPartial", viewModel);
+        }
+
+
+        private List<AnalyzerPlayerStats.Rootobject> ConvertCombinedToPlayerStats(List<AnalyzerPlayerStatsCombined.Rootobject> combinedStats)
+        {
+            var playerStats = new List<AnalyzerPlayerStats.Rootobject>();
+
+            foreach (var combined in combinedStats)
+            {
+                var playerStat = new AnalyzerPlayerStats.Rootobject
+                {
+                    player_id = combined.player_id,
+                    game_id = combined.game_id,
+                    lifetime = new AnalyzerPlayerStats.Lifetime
+                    {
+                        Wins = combined.lifetime.Wins,
+                        TotalHeadshots = combined.lifetime.TotalHeadshots,
+                        LongestWinStreak = combined.lifetime.LongestWinStreak,
+                        KDRatio = combined.lifetime.KDRatio,
+                        Matches = combined.lifetime.Matches,
+                        AverageHeadshots = combined.lifetime.AverageHeadshots,
+                        AverageKDRatio = combined.lifetime.AverageKDRatio,
+                        WinRate = combined.lifetime.WinRate,
+                        ExtensionData = combined.lifetime.ExtensionData
+                    },
+                    segments = combined.segments.Select(seg => new AnalyzerPlayerStats.Segment
+                    {
+                        label = seg.label,
+                        img_small = seg.img_small,
+                        img_regular = seg.img_regular,
+                        stats = new AnalyzerPlayerStats.Stats
+                        {
+                            Kills = seg.stats.Kills,
+                            AverageHeadshots = seg.stats.AverageHeadshots,
+                            Assists = seg.stats.Assists,
+                            AverageKills = seg.stats.AverageKills,
+                            HeadshotsperMatch = seg.stats.HeadshotsperMatch,
+                            AverageKRRatio = seg.stats.AverageKRRatio,
+                            Matches = seg.stats.Matches,
+                            WinRate = seg.stats.WinRate,
+                            Rounds = seg.stats.Rounds,
+                            TotalHeadshots = seg.stats.TotalHeadshots,
+                            KRRatio = seg.stats.KRRatio,
+                            Deaths = seg.stats.Deaths,
+                            KDRatio = seg.stats.KDRatio,
+                            AverageAssists = seg.stats.AverageAssists,
+                            Headshots = seg.stats.Headshots,
+                            Wins = seg.stats.Wins,
+                            AverageDeaths = seg.stats.AverageDeaths,
+                            ExtensionData = seg.stats.ExtensionData
+                        },
+                        type = seg.type,
+                        mode = seg.mode
+                    }).ToArray()
+                };
+
+                playerStats.Add(playerStat);
+            }
+
+            return playerStats;
+        }
+
     }
+
 }
+
+
+

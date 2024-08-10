@@ -2,6 +2,7 @@
 
 namespace Faceit_Stats_Provider.ModelsForAnalyzer
 {
+
     public class AnalyzerViewModel
     {
         public string RoomId { get; set; }
@@ -9,6 +10,7 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
         public List<AnalyzerPlayerStats.Rootobject> PlayerStats { get; set; }
         public List<AnalyzerPlayerStatsForCsgo.Rootobject> PlayerStatsForCsGo { get; set; }
         public List<(string playerId, AnalyzerMatchStats.Rootobject)> PlayerMatchStats { get; set; }
-        public ExcludePlayerModel InitialModelCopy { get; set; }  
+        public List<AnalyzerPlayerStatsCombined.Rootobject> PlayerStatsCombinedViewModel { get; set; }
+        public ExcludePlayerModel InitialModelCopy { get; set; }
     }
 }

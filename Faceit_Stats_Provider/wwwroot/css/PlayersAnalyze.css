@@ -377,3 +377,53 @@
 .Last20InfoText {
     margin-top:0.5%;
 }
+
+
+.IncludeCsGoStatsForAnalyzer-switch {
+    display: flex;
+    align-items: center;
+    margin-left: -14%;
+    margin-top: 2%;
+}
+
+.IncludeCsGoStatsForAnalyzer-check-input {
+    display: none;
+}
+
+.IncludeCsGoStatsForAnalyzer-check-label {
+    position: relative;
+    display: inline-block;
+    width: 32px;
+    height: 16px;
+    background-color: #303030;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.IncludeCsGoStatsForAnalyzer-check-input:checked + .IncludeCsGoStatsForAnalyzer-check-label {
+    background-color: #ff3c22;
+}
+
+.IncludeCsGoStatsForAnalyzer-check-label::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    border-radius: 50%;
+    left: 2px;
+    top: 2px;
+    transition: transform 0.3s ease;
+}
+
+.IncludeCsGoStatsForAnalyzer-check-input:checked + .IncludeCsGoStatsForAnalyzer-check-label::before {
+    transform: translateX(16px);
+}
+
+
+.nav-IncludeCsGoStatsForAnalyzer {
+    color: #f2f2f2;
+    font-size: 1rem; /* Font size matches FAQ */
+    margin-top:1%;
+    margin-left:2.5%;
+}

@@ -32,7 +32,9 @@ public class PlayerStatsConverter : JsonConverter<AnalyzerMatchStats.Player_Stat
                         playerStats.KRRatio = reader.GetString();
                         break;
                     default:
-                        reader.Skip();
+
+                        reader.TrySkip();
+
                         break;
                 }
             }

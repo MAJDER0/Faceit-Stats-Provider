@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -55,7 +56,19 @@
                         var currentPath = $"{currentArea}/{currentController}/{currentAction}";
                     }
                     <ul class="navbar-nav flex-grow-1">
-                        @if (currentPath != "/Home/Index")
+                        @if (currentPath.Contains("/Analyzer/Analyze"))
+                        {
+                            <li><a class="navbar-brand nav-HOME" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>
+
+                            <li class="nav-item d-flex align-items-center">
+                                <span class="nav-IncludeCsGoStatsForAnalyzer replace-white">Include cs go stats</span>
+                                <div class="form-check form-switch IncludeCsGoStatsForAnalyzer-switch">
+                                    <input class="form-check-input IncludeCsGoStatsForAnalyzer-check-input" type="checkbox" id="IncludeCsGoStatsForAnalyzer">
+                                    <label class="form-check-label IncludeCsGoStatsForAnalyzer-check-label" for="IncludeCsGoStatsForAnalyzer"></label>
+                                </div>
+                            </li>
+                        }
+                        else if (currentPath != "/Home/Index")
                         {
                             <li><a class="navbar-brand nav-HOME" asp-area="" asp-controller="Home" asp-action="Index"><span>HOME</span></a></li>
                         }
@@ -117,6 +130,46 @@
             });
 
             loadToggleState();
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#IncludeCsGoStatsForAnalyzer').change(function () {
+                var includeCsGoStats = $(this).is(':checked');
+                toggleIncludeCsGoStats(includeCsGoStats);
+            });
+
+            function toggleIncludeCsGoStats(includeCsGoStats) {
+                var requestData = {
+                    RoomId: '@Model?.RoomId',
+                    IncludeCsGoStats: includeCsGoStats,
+                    PlayerStats: includeCsGoStats ? null : @Html.Raw(JsonConvert.SerializeObject(Model?.PlayerStats)),
+                    PlayerStatsCombinedViewModel: includeCsGoStats ? @Html.Raw(JsonConvert.SerializeObject(Model?.PlayerStatsCombinedViewModel)) : null,
+                    PlayerMatchStats: @Html.Raw(JsonConvert.SerializeObject(Model?.PlayerMatchStats)),
+                    Players: @Html.Raw(JsonConvert.SerializeObject(Model?.Players)),
+                    PlayerStatsForCsGo: includeCsGoStats ? @Html.Raw(JsonConvert.SerializeObject(Model?.PlayerStatsForCsGo)) : null
+                };
+
+                console.log("Request Data being sent to server:", JSON.stringify(requestData, null, 2));
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("ToggleIncludeCsGoStats", "Analyzer")',
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'html', // Expect HTML response
+                    data: JSON.stringify(requestData),
+                    success: function (data) {
+                        // Update the view with the new data
+                        $('#statistics-container').html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("An error occurred: " + status + " - " + error);
+                        console.log(xhr.responseText);
+                    }
+                });
+            }
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)
