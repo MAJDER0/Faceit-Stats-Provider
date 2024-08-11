@@ -534,13 +534,12 @@
 
 
 @section scripts {
-
-
-
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
+            var excludedPlayers = [];
+            var includeCsGoStats = $('#IncludeCsGoStatsForAnalyzer').is(':checked');
+
             try {
                 var faction1Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction1.roster));
                 var faction2Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction2.roster));
@@ -589,9 +588,6 @@
 
                 console.log("Original ViewModel:", originalViewModel);
 
-                // Maintain a list of excluded players
-                var excludedPlayers = [];
-
                 $('.player-info').click(function () {
                     var playerId = $(this).data('player-id');
                     $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]').toggleClass('hidden');
@@ -619,14 +615,59 @@
                         ExcludedPlayers: excludedPlayers,
                         PlayerStats: playerStats,
                         PlayerMatchStats: playerMatchStats,
+                        PlayerStatsCombinedViewModel: @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStatsCombinedViewModel)),
                         Players: players,
-                        InitialModelCopy: initialModelCopy // Include the initial model copy
+                        PlayerStatsForCsGo: @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStatsForCsGo)),
+                        InitialModelCopy: initialModelCopy, // Include the initial model copy
+                        IncludeCsGoStats: includeCsGoStats // Pass the current state of the toggle
                     };
 
-                    console.log("Request Data being sent to server:", requestData)
+                    console.log("Request Data being sent to server:", requestData);
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("TogglePlayer", "Analyzer")',
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'html', // Expect HTML response
+                        data: JSON.stringify(requestData),
+                        success: function (data) {
+                            // Update the view with the new data
+                            $('#statistics-container').html(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("An error occurred: " + status + " - " + error);
+                            console.log(xhr.responseText);
+                        }
+                    });
+                }
+
+                $('#IncludeCsGoStatsForAnalyzer').change(function () {
+                    includeCsGoStats = $(this).is(':checked');
+                    toggleIncludeCsGoStats(includeCsGoStats);
+                });
+
+                function toggleIncludeCsGoStats(includeCsGoStats) {
+                    console.log("Toggle Include CsGo Stats:", includeCsGoStats);
+
+                    var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
+                        return { playerId: pms.Item1, matchStats: pms.Item2 };
+                    });
+
+                    var requestData = {
+                        RoomId: '@Model?.RoomId',
+                        IncludeCsGoStats: includeCsGoStats,
+                        PlayerStats: playerStats,
+                        PlayerStatsCombinedViewModel: includeCsGoStats ? @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStatsCombinedViewModel)) : null,
+                        PlayerMatchStats: playerMatchStats,
+                        Players: players,
+                        PlayerStatsForCsGo: includeCsGoStats ? @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStatsForCsGo)) : null,
+                        InitialModelCopy: initialModelCopy,
+                        ExcludedPlayers: excludedPlayers
+                    };
+
+                    console.log("Request Data being sent to server:", requestData);
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("ToggleIncludeCsGoStats", "Analyzer")',
                         contentType: 'application/json; charset=utf-8',
                         dataType: 'html', // Expect HTML response
                         data: JSON.stringify(requestData),
@@ -645,7 +686,6 @@
             }
         });
     </script>
-
 }
 
 

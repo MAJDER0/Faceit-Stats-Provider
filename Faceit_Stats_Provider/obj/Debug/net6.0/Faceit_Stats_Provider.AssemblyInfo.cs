@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Faceit_Stats_Provider")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3fe3f56a6d95f96633610584efcd484dd480479b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9db8763c3b1ca1054d72bdae88a8e9e32931337b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Faceit_Stats_Provider")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Faceit_Stats_Provider")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -12,6 +12,9 @@ public class ExcludePlayerModel
 
     [JsonProperty("PlayerMatchStats")]
     public List<TransformedPlayerMatchStats> PlayerMatchStats { get; set; }
-
+    public List<AnalyzerPlayerStatsForCsgo.Rootobject> PlayerStatsForCsGo { get; set; }
+    public List<AnalyzerPlayerStatsCombined.Rootobject> PlayerStatsCombinedViewModel { get; set; }
     public ExcludePlayerModel InitialModelCopy { get; set; }
+
+    public bool IncludeCsGoStats { get; set; } 
 }

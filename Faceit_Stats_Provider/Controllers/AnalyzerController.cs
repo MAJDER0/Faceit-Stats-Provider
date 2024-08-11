@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Faceit_Stats_Provider.Controllers
@@ -153,7 +154,7 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats,
                     PlayerStatsCombinedViewModel = combinedPlayerStats,
-                    InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy) 
+                    InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy)
                 };
 
                 return View("~/Views/Analyzer/Analyze.cshtml", viewModel);
@@ -164,9 +165,92 @@ namespace Faceit_Stats_Provider.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult TogglePlayer([FromBody] ExcludePlayerModel model)
+        [HttpPost("/ToggleIncludeCsGoStats")]
+        public IActionResult ToggleIncludeCsGoStats([FromBody] object request)
         {
+            // Convert the object to a JSON string
+            var jsonString = request.ToString();
+
+            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
+            var toggleRequest = JsonConvert.DeserializeObject<ToggleIncludeCsGoStatsRequest>(jsonString);
+
+            // Now you can use the toggleRequest object
+            if (toggleRequest == null)
+            {
+                return BadRequest("Request is null");
+            }
+
+            // Validate the request data
+            if (string.IsNullOrEmpty(toggleRequest.RoomId) || toggleRequest.Players == null || toggleRequest.PlayerMatchStats == null)
+            {
+                return BadRequest("Invalid request data");
+            }
+
+            AnalyzerViewModel viewModel;
+
+            if (toggleRequest.IncludeCsGoStats)
+            {
+                var convertedCombinedStatsToMatchModel = ConvertCombinedToPlayerStats(toggleRequest.PlayerStatsCombinedViewModel);
+
+                viewModel = new AnalyzerViewModel
+                {
+                    RoomId = toggleRequest.RoomId,
+                    Players = toggleRequest.Players,
+                    PlayerStats = convertedCombinedStatsToMatchModel,
+                    PlayerStatsForCsGo = toggleRequest.PlayerStatsForCsGo,
+                    PlayerStatsCombinedViewModel = toggleRequest.PlayerStatsCombinedViewModel,
+                    PlayerMatchStats = toggleRequest.PlayerMatchStats
+                        .Select(pms => (pms.playerId, pms.matchStats))
+                        .ToList(),
+                    InitialModelCopy = toggleRequest.InitialModelCopy
+                };
+            }
+            else
+            {
+                var initialModelCopy = toggleRequest.InitialModelCopy;
+                viewModel = new AnalyzerViewModel
+                {
+                    RoomId = initialModelCopy.RoomId,
+                    Players = initialModelCopy.Players,
+                    PlayerStats = initialModelCopy.PlayerStats,
+                    PlayerStatsForCsGo = initialModelCopy.PlayerStatsForCsGo,
+                    PlayerStatsCombinedViewModel = initialModelCopy.PlayerStatsCombinedViewModel,
+                    PlayerMatchStats = initialModelCopy.PlayerMatchStats
+                        .Select(pms => (pms.playerId, pms.matchStats))
+                        .ToList(),
+                    InitialModelCopy = initialModelCopy.InitialModelCopy
+                };
+            }
+
+            // Apply the excluded players logic
+            if (toggleRequest.ExcludedPlayers != null && toggleRequest.ExcludedPlayers.Any())
+            {
+                viewModel.Players.teams.faction1.roster = viewModel.Players.teams.faction1.roster.Where(p => !toggleRequest.ExcludedPlayers.Contains(p.player_id)).ToArray();
+                viewModel.Players.teams.faction2.roster = viewModel.Players.teams.faction2.roster.Where(p => !toggleRequest.ExcludedPlayers.Contains(p.player_id)).ToArray();
+                viewModel.PlayerStats = viewModel.PlayerStats.Where(ps => !toggleRequest.ExcludedPlayers.Contains(ps.player_id)).ToList();
+                viewModel.PlayerMatchStats = viewModel.PlayerMatchStats.Where(pms => !toggleRequest.ExcludedPlayers.Contains(pms.playerId)).ToList();
+            }
+
+            var partialViewModel = new AnalyzerPartialViewModel
+            {
+                ModifiedViewModel = viewModel,
+                OriginalViewModel = ModelMapper.ToAnalyzerViewModel(toggleRequest.InitialModelCopy) // Use mapping function
+            };
+
+            // Return the updated partial view
+            return PartialView("_StatisticsPartial", partialViewModel);
+        }
+
+
+        [HttpPost]
+        public ActionResult TogglePlayer([FromBody] object data)
+        {
+            // Convert the object to a JSON string
+            var jsonString = data.ToString();
+
+            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
+            var model = JsonConvert.DeserializeObject<ExcludePlayerModel>(jsonString);
+
             if (model == null)
             {
                 return BadRequest("Model is null");
@@ -180,6 +264,14 @@ namespace Faceit_Stats_Provider.Controllers
             var initialModelCopy = model.InitialModelCopy;
             var players = model.Players;
             var excludedPlayerIds = model.ExcludedPlayers;
+            var includeCsGoStats = model.IncludeCsGoStats; // Ensure this field is in your ExcludePlayerModel
+
+            // Determine the correct player stats to use
+            var playerStats = includeCsGoStats ? ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel) : model.PlayerStats;
+            var playerMatchStats = model.PlayerMatchStats?
+                .Where(pms => !excludedPlayerIds.Contains(pms.playerId))
+                .Select(pms => (pms.playerId, pms.matchStats))
+                .ToList();
 
             // Exclude the players from the model
             if (excludedPlayerIds != null && excludedPlayerIds.Count > 0)
@@ -194,11 +286,7 @@ namespace Faceit_Stats_Provider.Controllers
                     players.teams.faction2.roster = players.teams.faction2.roster.Where(p => !excludedPlayerIds.Contains(p.player_id)).ToArray();
                 }
 
-                var playerStats = model.PlayerStats?.Where(ps => !excludedPlayerIds.Contains(ps.player_id)).ToList();
-                var playerMatchStats = model.PlayerMatchStats?
-                    .Where(pms => !excludedPlayerIds.Contains(pms.playerId))
-                    .Select(pms => (pms.playerId, pms.matchStats))
-                    .ToList();
+                playerStats = playerStats?.Where(ps => !excludedPlayerIds.Contains(ps.player_id)).ToList();
 
                 var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
                 var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
@@ -227,8 +315,17 @@ namespace Faceit_Stats_Provider.Controllers
                 var restoredPlayerStats = initialModelCopy.PlayerStats;
                 var restoredPlayerMatchStats = initialModelCopy.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList();
 
+
+
                 var result = StatsHelper.CalculateNeededStatistics(restoredPlayers.teams.faction1.leader, restoredPlayers.teams.faction2.leader, restoredPlayers.teams.faction1.roster, restoredPlayers.teams.faction2.roster, restoredPlayerStats, restoredPlayerMatchStats);
                 var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
+
+                if (model.IncludeCsGoStats == true && excludedPlayerIds.Count == 0)
+                {
+                    CombinedPlayerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
+
+
+                }
 
                 var modifiedViewModel = new AnalyzerViewModel
                 {
@@ -248,6 +345,7 @@ namespace Faceit_Stats_Provider.Controllers
                 return PartialView("_StatisticsPartial", partialViewModel);
             }
         }
+
 
         private string ExtractRoomIdFromUrl(string url)
         {
@@ -341,6 +439,7 @@ namespace Faceit_Stats_Provider.Controllers
                     AverageKills = totalMatches != 0 ? (totalKills / (double)totalMatches).ToString("F2") : "0",
                     HeadshotsperMatch = totalMatches != 0 ? (totalHeadshots / (double)totalMatches).ToString("F2") : "0",
                     AverageKRRatio = krratio.ToString("F2"),
+                    AverageKDRatio = kdratio.ToString("F2"),
                     Matches = totalMatches.ToString(),
                     WinRate = winRate.ToString("F2"),
                     Rounds = totalRounds.ToString(),
@@ -425,36 +524,6 @@ namespace Faceit_Stats_Provider.Controllers
             };
         }
 
-        [HttpPost]
-        public IActionResult ToggleIncludeCsGoStats([FromBody] ToggleIncludeCsGoStatsRequest request)
-        {
-            if (request == null)
-            {
-                return BadRequest("Request is null");
-            }
-
-            // Validate the request data
-            if (string.IsNullOrEmpty(request.RoomId) || request.Players == null || request.PlayerMatchStats == null || request.PlayerStatsCombinedViewModel == null)
-            {
-                return BadRequest("Invalid request data");
-            }
-
-            var ConvertedCombinedStatsToMatchModel = ConvertCombinedToPlayerStats(request.PlayerStatsCombinedViewModel);
-
-            var viewModel = new AnalyzerViewModel
-            {
-                RoomId = request.RoomId,
-                Players = request.Players,
-                PlayerStats = ConvertedCombinedStatsToMatchModel,
-                PlayerStatsForCsGo = request.PlayerStatsForCsGo,
-                PlayerMatchStats = request.PlayerMatchStats,
-            };
-
-            // Return the updated partial view
-            return PartialView("_StatisticsPartial", viewModel);
-        }
-
-
         private List<AnalyzerPlayerStats.Rootobject> ConvertCombinedToPlayerStats(List<AnalyzerPlayerStatsCombined.Rootobject> combinedStats)
         {
             var playerStats = new List<AnalyzerPlayerStats.Rootobject>();
@@ -490,6 +559,7 @@ namespace Faceit_Stats_Provider.Controllers
                             AverageKills = seg.stats.AverageKills,
                             HeadshotsperMatch = seg.stats.HeadshotsperMatch,
                             AverageKRRatio = seg.stats.AverageKRRatio,
+                            AverageKDRatio = seg.stats.AverageKDRatio,
                             Matches = seg.stats.Matches,
                             WinRate = seg.stats.WinRate,
                             Rounds = seg.stats.Rounds,
