@@ -306,9 +306,9 @@
                                             <th>KILLS</th>
                                             <th>DEATHS</th>
                                             <th>ASSISTS</th>
-                                            <th>K/R</th>
-                                            <th>K/D</th>
-                                            <th>@(ShowDifferentStats ? "ADR" : "HEADSHOTS")</th>
+                                            <th class="thMoreSpace">K/R</th>
+                                            <th class="thMoreSpace">K/D</th>
+                                            <th class="thMoreSpace">@(ShowDifferentStats ? "ADR" : "HEADSHOTS")</th>
                                             <th>HEADSHOTS %</th>
                                             <th>@(ShowDifferentStats ? "ENTRY COUNT" : "MVPs")</th>
                                             <th>@(ShowDifferentStats ? "1v1 WINS" : "TRIPPLE KILLS")</th>
@@ -333,9 +333,9 @@
                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
-                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.KRRatio</td>
-                                                    <td style="text-align:center; padding-right:2%;">@player.player_stats.KDRatio</td>
-                                                    <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
+                                                    <td style="text-align:center;">@player.player_stats.KRRatio</td>
+                                                    <td style="text-align:center;">@player.player_stats.KDRatio</td>
+                                                    <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
                                                     <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
                                                     <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>
@@ -401,9 +401,9 @@
                                 <th>KILLS</th>
                                 <th>DEATHS</th>
                                 <th>ASSISTS</th>
-                                <th>K/R</th>
-                                <th>K/D</th>
-                                <th>@(ShowDifferentStats ? "ADR" : "HEADSHOTS")</th>
+                                <th class="thMoreSpace">K/R</th>
+                                <th class="thMoreSpace">K/D</th>
+                                <th class="thMoreSpace">@(ShowDifferentStats ? "ADR" : "HEADSHOTS")</th>
                                 <th>HEADSHOTS %</th>
                                 <th>@(ShowDifferentStats ? "ENTRY COUNT" : "MVPs")</th>
                                 <th>@(ShowDifferentStats ? "1v1 WINS" : "TRIPPLE KILLS")</th>
@@ -428,9 +428,9 @@
                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
-                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.KRRatio</td>
-                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.KDRatio</td>
-                                        <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
+                                        <td style="text-align:center;">@player.player_stats.KRRatio</td>
+                                        <td style="text-align:center;">@player.player_stats.KDRatio</td>
+                                        <td style="text-align:center;">@(ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots)</td>
                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
                                         <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs)</td>
                                         <td style="text-align:center; padding-right:2%;">@(ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills)</td>

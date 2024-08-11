@@ -85,3 +85,8 @@
     .match-row.BLAST:hover {
         background-color: rgba(85,27,142,0.18);
     }
+
+.thMoreSpace {
+    width: 7%;
+    text-align: center;
+}
