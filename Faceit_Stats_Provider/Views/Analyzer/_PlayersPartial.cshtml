@@ -1,0 +1,293 @@
+﻿@using Newtonsoft.Json
+@using System.Globalization
+@using Faceit_Stats_Provider.ModelsForAnalyzer;
+@using static Faceit_Stats_Provider.Classes.StatsHelper;
+@using static Faceit_Stats_Provider.Classes.GenerateStats;
+@using static Faceit_Stats_Provider.Classes.ScoreFormula;
+@model AnalyzerPartialViewModel
+
+
+@{
+    var faction1Leader = Model.ModifiedViewModel.Players.teams.faction1.leader;
+    var faction1Players = Model.ModifiedViewModel.Players.teams.faction1.roster;
+    var faction2Leader = Model.ModifiedViewModel.Players.teams.faction2.leader;
+    var faction2Players = Model.ModifiedViewModel.Players.teams.faction2.roster;
+    var playerStats = Model.ModifiedViewModel.PlayerStats;
+    var playerMatchStats = Model.ModifiedViewModel.PlayerMatchStats;
+
+    var CalculateNeededStastisticsResult = CalculateNeededStatistics(faction1Leader, faction2Leader, faction1Players, faction2Players, playerStats, playerMatchStats);
+
+    var maps = CalculateNeededStastisticsResult.Item1;
+    var faction1PlayerIds = CalculateNeededStastisticsResult.Item2;
+    var faction2PlayerIds = CalculateNeededStastisticsResult.Item3;
+    faction1Leader = CalculateNeededStastisticsResult.Item4;
+    faction2Leader = CalculateNeededStastisticsResult.Item5;
+    faction1Players = CalculateNeededStastisticsResult.Item6;
+    faction2Players = CalculateNeededStastisticsResult.Item7;
+    var faction1PlayerStats = CalculateNeededStastisticsResult.Item8;
+    var faction2PlayerStats = CalculateNeededStastisticsResult.Item9;
+    var faction1MapStatsKD = CalculateNeededStastisticsResult.Item10;
+    var faction2MapStatsKD = CalculateNeededStastisticsResult.Item11;
+    var faction1MapStatsKR = CalculateNeededStastisticsResult.Item12;
+    var faction2MapStatsKR = CalculateNeededStastisticsResult.Item13;
+    var faction1MapStatsWR = CalculateNeededStastisticsResult.Item14;
+    var faction2MapStatsWR = CalculateNeededStastisticsResult.Item15;
+    var faction1MapStatsMatches = CalculateNeededStastisticsResult.Item16;
+    var faction2MapStatsMatches = CalculateNeededStastisticsResult.Item17;
+    var mapScoresFaction1 = CalculateNeededStastisticsResult.Item18;
+    var mapScoresFaction2 = CalculateNeededStastisticsResult.Item19;
+    var mapAverageKDs = CalculateNeededStastisticsResult.Item20;
+    var mapAverageKDsSecond = CalculateNeededStastisticsResult.Item21;
+    var mapLinks = CalculateNeededStastisticsResult.Item22;
+    var MapStatsForSinglePlayer = CalculateNeededStastisticsResult.Item23;
+
+    List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayerCopy = new List<(List<(double, bool, double, string)>, string)>();
+}
+
+<div id="Player-Container">
+    <div class="container">
+        <div class="row justify-content-center align-items-start">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center subtitle">PLAYERS</p>
+@*                         @{
+                            await GeneratePlayersSection(faction1PlayerStats, maps, MapStatsForSinglePlayer, faction1Players);
+                        } *@
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center subtitle">PLAYERS</p>
+@*                         @{
+                            await GeneratePlayersSection(faction2PlayerStats, maps, MapStatsForSinglePlayerCopy, faction2Players);
+                        } *@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@functions {
+
+    async Task GenerateOverallSection(List<AnalyzerPlayerStats.Rootobject> playerStats, List<string> playerIds, List<(string, double)> MapScores, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, Dictionary<string, List<string>> TeamMapStatsMatches, List<string> maps, bool SecondTeam, List<(string playerId, AnalyzerMatchStats.Rootobject)> PlayerMatchStats, List<(double, bool, double, string)> mapAverageKDsResult)
+    {
+        var OverallSectionInfo = OverallSection(playerStats, playerIds, MapScores, MapStatsForSinglePlayer, TeamMapStatsMatches, maps, false, PlayerMatchStats);
+
+        var WrCombined = OverallSectionInfo.Item2;
+        var KdCombined = OverallSectionInfo.Item3;
+        var KrCombined = OverallSectionInfo.Item4;
+        var totalMatchesCombined = OverallSectionInfo.Item1;
+        var last20WrCombinedResult = OverallSectionInfo.Item6;
+        var last20KdCombined = OverallSectionInfo.Item7;
+        var last20KrCombined = OverallSectionInfo.Item8;
+        var last20totalMatchesCombined = OverallSectionInfo.Item5;
+        mapAverageKDsResult = OverallSectionInfo.Item9;
+
+        <div class="BestPicksNStatsContainer">
+            <p class="Combined">
+                COMBINED:
+
+                <span class="CombinedInfo"></span>
+                <span class="CombinedInfo" style="color:#F2F2F2; font-weight:bold;"> @totalMatchesCombined</span><span class="CombinedInfo" style="color:#F2F2F2;"> Matches, </span>
+                <span class="CombinedInfo" style="color:@(WrCombined >= 50 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @WrCombined.ToString("F0").Replace(",", ".")%</span> <span class="CombinedInfo" style="color:#F2F2F2;"> WR, </span>
+                <span class="CombinedInfo" style="color:@(KdCombined >= 1.00 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @KdCombined.ToString("F2").Replace(",", ".") </span><span class="CombinedInfo" style="color:#F2F2F2;">K/D, </span>
+                <span class="CombinedInfo" style="color:@(KrCombined >= 0.75 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @KrCombined.ToString("F2").Replace(",", ".")</span> <span class="CombinedInfo" style="color:#F2F2F2;"> K/R </span>
+            </p>
+
+            <p class="Combined">
+                LAST 20:
+
+                <span class="CombinedInfo"></span>
+                <span class="CombinedInfo" style="color:#F2F2F2; font-weight:bold;"> @last20totalMatchesCombined</span><span class="CombinedInfo" style="color:#F2F2F2;"> Matches, </span>
+                <span class="CombinedInfo" style="color:@(last20WrCombinedResult >= 50 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @last20WrCombinedResult.ToString("F0").Replace(",", ".")%</span> <span class="CombinedInfo" style="color:#F2F2F2;"> WR, </span>
+                <span class="CombinedInfo" style="color:@(last20KdCombined >= 1.00 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @last20KdCombined.ToString("F2").Replace(",", ".") </span><span class="CombinedInfo" style="color:#F2F2F2;">K/D, </span>
+                <span class="CombinedInfo" style="color:@(last20KrCombined >= 0.75 ? "#6BBE49" : "#F20707"); font-weight:bold;"> @last20KrCombined.ToString("F2").Replace(",", ".")</span> <span class="CombinedInfo" style="color:#F2F2F2;"> K/R </span>
+            </p>
+        </div>
+    }
+
+    async Task GeneratePlayersSection(List<AnalyzerPlayerStats.Rootobject> factionPlayerStats, List<string> maps, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerMatchPlayers.Roster[] FactionPlayers)
+    {
+        @foreach (var playerStat in factionPlayerStats)
+        {
+            var player = FactionPlayers.FirstOrDefault(p => p.player_id == playerStat.player_id);
+
+            if (player != null)
+            {
+                var Last20PlayerSectionInfo = Last20PlayerSection(playerStat, maps, MapStatsForSinglePlayer, player);
+                var csgostats = Model.ModifiedViewModel.PlayerStatsForCsGo.Where(k => k.player_id == playerStat.player_id).ToList();
+                var CalculatedQuantityOfMatches = CalculateQuantityOfMatches(maps, csgostats, playerStat);
+                var PlayerLast20KD = Last20PlayerSectionInfo.Item1;
+                var PlayerLast20KR = Last20PlayerSectionInfo.Item3;
+                var PlayerLast20WR = Last20PlayerSectionInfo.Item2;
+                var PlayerTotalMatchesLast20 = Last20PlayerSectionInfo.Item4;
+
+                <div class="PlayerAnalyzer player-info" data-player-id="@player.player_id">
+                    <div class="PlayerAnalyzerContent">
+
+                        <div class="ExcludePlayerSwitch">
+                            <label class="switch">
+                                <input type="checkbox" class="player-toggle" data-player-id="@player.player_id" checked>
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+
+
+                        <img src="~/plus_green.png" alt="Plus-Icon" class="PlayerAnalyzeplus" />
+                        <span>@player.nickname</span>
+
+
+                    </div>
+                </div>
+                <br />
+
+                <div class="PlayerMapsAnalyzer hidden" data-player-id="@player.player_id">
+                    <div class="CombinedCombinedPlayerStatsAnalyzer">
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:#ff3c22; font-weight:100;">COMBINED:</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="font-weight:bold;">@CalculatedQuantityOfMatches.Item1</span><span>Matches,</span>
+
+                        @{
+                            double WinRatioCS2 = (double.Parse(CalculatedQuantityOfMatches.Item2.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(CalculatedQuantityOfMatches.Item1.ToString().Replace(",", "."), CultureInfo.InvariantCulture)) * 100;
+                        }
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(WinRatioCS2 >= 50 ? "#6BBE49" : "#F20707")">@WinRatioCS2.ToString("F0")%</span><span>WR,</span>
+
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(CalculatedQuantityOfMatches.Item3.ToString().Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707")">@CalculatedQuantityOfMatches.Item3.ToString("F2").Replace(",", ".")</span><span>K/D,</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(double.Parse(CalculatedQuantityOfMatches.Item4.ToString().Replace(",", "."), CultureInfo.InvariantCulture) >= 0.75 ? "#6BBE49" : "#F20707")">@CalculatedQuantityOfMatches.Item4.ToString("F2").Replace(",", ".")</span><span>K/R</span>
+                    </div>
+
+                    <div class="CombinedLast20PlayerStatsAnalyzer">
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:#ff3c22; font-weight:100;">LAST 20:</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="font-weight:bold;">@PlayerTotalMatchesLast20.ToString("F0")</span><span>Matches,</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20WR >= 50 ? "#6BBE49" : "#F20707")">@PlayerLast20WR.ToString("F0")%</span><span>WR,</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20KD >= 1.00 ? "#6BBE49" : "#F20707")">@PlayerLast20KD.ToString("F2").Replace(",", ".")</span> <span>K/D,</span>
+                        <span class="CombinedLast20PlayerStatsAnalyzer-item" style="color:@(PlayerLast20KR >= 0.75 ? "#6BBE49" : "#F20707")">@PlayerLast20KR.ToString("F2").Replace(",", ".")</span> <span>K/R</span>
+                    </div>
+
+                    @{
+                        await MapStatsPlayerSection(maps, player, MapStatsForSinglePlayer, playerStat);
+                    }
+                </div>
+            }
+        }
+    }
+
+    (int, int, double, double) CalculateQuantityOfMatches(List<string> maps, List<AnalyzerPlayerStatsForCsgo.Rootobject> playerStatForCsgo, AnalyzerPlayerStats.Rootobject playerStat)
+    {
+        //var displayedMapsCsgo = playerStatForCsgo[0].segments.Where(map=>map.mode=="5v5" && maps.Contains(map.label.ToUpper().Substring(3))).ToList();
+
+        var displayedMaps = playerStat.segments.Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper())).ToList();
+
+        //int matches = 0;
+
+        int matchesOverall = 0;
+        int winsOverall = 0;
+        int TotalKills = 0;
+        int TotalDeaths = 0;
+        int TotalRounds = 0;
+
+        //foreach (var map in displayedMapsCsgo)
+        //{
+        //    matches += int.Parse(map.stats.Matches);
+        //}
+
+        foreach (var map in displayedMaps)
+        {
+            matchesOverall += int.Parse(map.stats.Matches);
+            winsOverall += int.Parse(map.stats.Wins);
+            TotalKills += int.Parse(map.stats.Kills);
+            TotalDeaths += int.Parse(map.stats.Deaths);
+            TotalRounds += int.Parse(map.stats.Rounds);
+        }
+
+        double TotalKD = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalDeaths.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+        double TotalKR = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalRounds.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+
+        return (matchesOverall, winsOverall, TotalKD, TotalKR);
+    }
+
+    async Task MapStatsPlayerSection(List<string> maps, AnalyzerMatchPlayers.Roster player, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerPlayerStats.Rootobject playerStat)
+    {
+        var displayedMaps = playerStat.segments
+        .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
+        .OrderByDescending(x => x.label)
+        .ToList();
+
+        foreach (var map in displayedMaps)
+        {
+            var PlayerMapStatsLast20 = CalculatePlayerMapAverage(MapStatsForSinglePlayer, player.player_id, map.label);
+
+            <div class="map-item">
+                <div class="map-item-element">
+                    <img src="~/Map_Icons/de_@(map.label.ToLower()).png" width="45" height="45" class="MapIcon" />
+
+                    <div class="map-item-stats-container">
+                        <span style="font-weight:bold;">@map.label:</span>
+                        <span class="AnalyzerResult" style="color:@(int.Parse(map.stats.WinRate) >= 50 ? "#6BBE49" : "#F20707")">
+                            <span style="color:#F2F2F2; font-weight:100;">@map.stats.Matches / </span>
+                            @map.stats.WinRate%
+                        </span> WR,
+                        <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKDRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 1.00 ? "#6BBE49" : "#F20707")">
+                            @map.stats.AverageKDRatio
+                        </span> K/D,
+                        <span class="AnalyzerResult" style="color:@(Math.Round(double.Parse(map.stats.AverageKRRatio.Replace(",", "."), CultureInfo.InvariantCulture), 2) >= 0.75 ? "#6BBE49" : "#F20707")">
+                            @map.stats.AverageKRRatio
+                        </span> K/R
+                    </div>
+                </div>
+
+                <div class="map-item-element map-item-element-Last20">
+                    <div style="width:45px; height:45px"></div>
+                    <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                    <span class="AnalyzerResultOverallLast10">@PlayerMapStatsLast20.totalMatches</span><span>Matches,</span>
+
+                    @if (PlayerMapStatsLast20.totalMatches != 0.00)
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.winRatio >= 50 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.winRatio.ToString("F0").Replace(",", ".")%</span>
+                        <span>WR,</span>
+                    }
+                    else
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
+                    }
+
+                    @if (PlayerMapStatsLast20.avgKD != 0.00)
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.avgKD > 1.00 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.avgKD.ToString("F2").Replace(",", ".")</span>
+                        <span>K/D,</span>
+                    }
+                    else
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found,</span>
+                    }
+
+                    @if (PlayerMapStatsLast20.avgKR != 0.00)
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:@(PlayerMapStatsLast20.avgKR > 0.75 ? "#6BBE49" : "#F20707")">@PlayerMapStatsLast20.avgKR.ToString("F2").Replace(",", ".")</span>
+                        <span>K/R</span>
+                    }
+                    else
+                    {
+                        <span class="AnalyzerResultOverallLast10" style="color:#F20707;">not found</span>
+                    }
+                </div>
+            </div>
+            <br />
+        }
+
+        if (displayedMaps.Count != 7)
+        {
+            for (int i = displayedMaps.Count; i < 7; i++)
+            {
+                <div class="map-item" style="height:55px;"></div>
+                <br />
+            }
+        }
+    }
+
+}

@@ -20,7 +20,7 @@ namespace Faceit_Stats_Provider.Classes
 
 
             double MinOverallKD = 0, MaxOverallKD = 3;
-            double MinOverallMatches = 0, MaxOverallMatches = 10000;
+            double MinOverallMatches = 0, MaxOverallMatches = 17000;
             double MinKR = 0, MaxKR = 2;
             double MinWR = 0, MaxWR = 1;
             double MinLast20Matches = 0, MaxLast20Matches = 100;

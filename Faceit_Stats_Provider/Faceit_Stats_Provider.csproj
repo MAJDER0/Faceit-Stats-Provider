@@ -24,4 +24,11 @@
     <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Analyzer\_PlayersPartial.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

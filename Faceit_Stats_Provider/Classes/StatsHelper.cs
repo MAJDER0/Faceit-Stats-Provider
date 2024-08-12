@@ -242,36 +242,38 @@ namespace Faceit_Stats_Provider.Classes
         string playerId,
         string map)
         {
-            if (mapAverageKDs == null || !mapAverageKDs.Any())
-            {
-                return (0.0, 0.0, 0.0, 0, map);
-            }
 
-            // Filter the list based on the map name
-            var mapData = mapAverageKDs
-                .Where(m => string.Equals(m.map, map, StringComparison.OrdinalIgnoreCase))
-                .SelectMany(m => m.Item1)  // Flatten the list of player stats
-                .Where(p => string.Equals(p.playerId, playerId, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+                if (mapAverageKDs == null || !mapAverageKDs.Any())
+                {
+                    return (0.0, 0.0, 0.0, 0, map);
+                }
 
-            if (!mapData.Any())
-            {
-                return (0.0, 0.0, 0.0, 0, map);
-            }
+                // Filter the list based on the map name
+                var mapData = mapAverageKDs
+                    .Where(m => string.Equals(m.map, map, StringComparison.OrdinalIgnoreCase))
+                    .SelectMany(m => m.Item1)  // Flatten the list of player stats
+                    .Where(p => string.Equals(p.playerId, playerId, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
 
-            // Calculate averages for the filtered list
-            double totalKD = mapData.Sum(p => p.kd);
-            double totalKR = mapData.Sum(p => p.kr);
-            int totalMatches = mapData.Count;
-            int wins = mapData.Count(p => p.isWinner);
+                if (!mapData.Any())
+                {
+                    return (0.0, 0.0, 0.0, 0, map);
+                }
 
-            double avgKD = totalKD / totalMatches;
-            double avgKR = totalKR / totalMatches;
+                // Calculate averages for the filtered list
+                double totalKD = mapData.Sum(p => p.kd);
+                double totalKR = mapData.Sum(p => p.kr);
+                int totalMatches = mapData.Count;
+                int wins = mapData.Count(p => p.isWinner);
 
-            // Calculate win ratio as a percentage
-            double winRatio = (double)wins / totalMatches * 100;
+                double avgKD = totalKD / totalMatches;
+                double avgKR = totalKR / totalMatches;
 
-            return (avgKD, avgKR, winRatio, totalMatches, map);
+                // Calculate win ratio as a percentage
+                double winRatio = (double)wins / totalMatches * 100;
+
+                return (avgKD, avgKR, winRatio, totalMatches, map);
+
         }
 
 
