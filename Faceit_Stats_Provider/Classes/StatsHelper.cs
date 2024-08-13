@@ -273,9 +273,8 @@ namespace Faceit_Stats_Provider.Classes
                 double winRatio = (double)wins / totalMatches * 100;
 
                 return (avgKD, avgKR, winRatio, totalMatches, map);
-
         }
-
+        
 
 
         public static int CalculateTotalMatches(List<string> matches)

@@ -417,7 +417,7 @@
 
                 <div class="map-item-element map-item-element-Last20">
                     <div style="width:45px; height:45px"></div>
-                    <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                    <span style="color:#8202a5; font-weight:bold;">Last 20:</span>
                     <span class="AnalyzerResultOverallLast10">@PlayerMapStatsLast20.totalMatches</span><span>Matches,</span>
 
                     @if (PlayerMapStatsLast20.totalMatches != 0.00)
@@ -494,7 +494,7 @@
                         </span>
                         <div class="OverallLast20AnalyzeMap">
                             <span class="Last20InfoText" id="Last20InfoText-@mapScore.Item1">
-                                <span style="color:#5A0273; font-weight:bold;display:inline-block; width:68.25px;">Last 20:</span>
+                                <span style="color:#8202a5; font-weight:bold;display:inline-block; width:68.25px;">Last 20:</span>
                                 <span class="AnalyzerResultOverallLast10" style="display:inline-block;width:47px; text-align:center;">@mapAverageKDsResult.Count() </span><span style="width:74px;display:inline-block;color:#F2F2F2;  font-weight:normal;"> Matches,</span>
                                 @if (mapAverageKDsResult.Count() != 0.00)
                                 {
@@ -543,12 +543,12 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
-        function clearPlayerContainer() {
-            var playerContainer = document.getElementById("Player-Container");
-            if (playerContainer) {
-                playerContainer.style.display = "none";
-            }
-        }
+        //function clearPlayerContainer() {
+        //    var playerContainer = document.getElementById("Player-Container");
+        //    if (playerContainer) {
+        //        playerContainer.style.display = "none";
+        //    }
+        //}
 
         $(document).ready(function () {
             var excludedPlayers = [];
@@ -688,7 +688,7 @@
                         success: function (data) {
                             // Update the view with the new data
 
-                            clearPlayerContainer();
+                            //clearPlayerContainer();
                             $('#statistics-container').html(data);
                         },
                         error: function (xhr, status, error) {

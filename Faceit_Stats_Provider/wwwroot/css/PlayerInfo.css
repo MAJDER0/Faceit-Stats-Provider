@@ -1,7 +1,7 @@
 ﻿.PlayerNick {
     width: 300px;
     text-align: center;
-    color: #5A0273;
+    color: #8202a5;
     font-weight: bold;
     font-size: 25px;
 }
@@ -42,5 +42,5 @@
 .ProfilImage {
     border-width: 1px;
     border-style: solid;
-    border-color: #5A0273;
+    border-color: #8202a5;
 }

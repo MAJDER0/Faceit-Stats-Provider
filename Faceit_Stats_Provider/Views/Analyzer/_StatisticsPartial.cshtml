@@ -163,59 +163,56 @@
     }
 }
 
+    <div id="statistics-container">
+        <div class="container">
 
 
+            <div class="row justify-content-center align-items-start">
 
-<div id="statistics-container">
-    <div class="container">
+                <div class="col-md-6">
+                    <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction1.name.Replace("_"," "))</p>
 
+                    <div class="row">
 
-        <div class="row justify-content-center align-items-start">
+                        <div class="StatsToRecalculateFirstTeam">
 
-            <div class="col-md-6">
-                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction1.name.Replace("_"," "))</p>
+                            @{
+                                await AnalyzerGenerateAllStatisticsFirstTeam(maps, faction1PlayerIds, faction2PlayerIds, faction1Leader, faction2Leader, faction1Players, faction2Players, faction1PlayerStats,
+                                faction2PlayerStats, faction1MapStatsKD, faction2MapStatsKD, faction1MapStatsKR, faction2MapStatsKR, faction1MapStatsWR, faction2MapStatsWR, faction1MapStatsMatches, faction2MapStatsMatches, mapScoresFaction1, mapScoresFaction2, mapAverageKDs,
+                                mapAverageKDsSecond, mapLinks, MapStatsForSinglePlayer);
+                            }
 
-                <div class="row">
-
-                    <div class="StatsToRecalculateFirstTeam">
-
-                        @{
-                            await AnalyzerGenerateAllStatisticsFirstTeam(maps, faction1PlayerIds, faction2PlayerIds, faction1Leader, faction2Leader, faction1Players, faction2Players, faction1PlayerStats,
-                            faction2PlayerStats, faction1MapStatsKD, faction2MapStatsKD, faction1MapStatsKR, faction2MapStatsKR, faction1MapStatsWR, faction2MapStatsWR, faction1MapStatsMatches, faction2MapStatsMatches, mapScoresFaction1, mapScoresFaction2, mapAverageKDs,
-                            mapAverageKDsSecond, mapLinks, MapStatsForSinglePlayer);
-                        }
-
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction2.name.Replace("_"," "))</p>
-
-                <div class="row">
-
-                    <div class="StatsToRecalculateSecondTeam">
-
-                        @{
-                            MapStatsForSinglePlayerCopy.Clear();
-
-                            await AnalyzerGenerateAllStatisticsSecondTeam(maps, faction1PlayerIds, faction2PlayerIds, faction1Leader, faction2Leader, faction1Players, faction2Players, faction1PlayerStats,
-                            faction2PlayerStats, faction1MapStatsKD, faction2MapStatsKD, faction1MapStatsKR, faction2MapStatsKR, faction1MapStatsWR, faction2MapStatsWR, faction1MapStatsMatches, faction2MapStatsMatches, mapScoresFaction1, mapScoresFaction2, mapAverageKDs,
-                            mapAverageKDsSecond, mapLinks, MapStatsForSinglePlayerCopy);
-                        }
+                        </div>
 
                     </div>
-
                 </div>
+
+                <div class="col-md-6">
+                    <p class="text-center title">@CapitalizeOnlyFirstLetter(Model.ModifiedViewModel.Players.teams.faction2.name.Replace("_"," "))</p>
+
+                    <div class="row">
+
+                        <div class="StatsToRecalculateSecondTeam">
+
+                            @{
+                                MapStatsForSinglePlayerCopy.Clear();
+
+                                await AnalyzerGenerateAllStatisticsSecondTeam(maps, faction1PlayerIds, faction2PlayerIds, faction1Leader, faction2Leader, faction1Players, faction2Players, faction1PlayerStats,
+                                faction2PlayerStats, faction1MapStatsKD, faction2MapStatsKD, faction1MapStatsKR, faction2MapStatsKR, faction1MapStatsWR, faction2MapStatsWR, faction1MapStatsMatches, faction2MapStatsMatches, mapScoresFaction1, mapScoresFaction2, mapAverageKDs,
+                                mapAverageKDsSecond, mapLinks, MapStatsForSinglePlayerCopy);
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
+
+
 
         </div>
-
-
-
     </div>
-</div>
 
 
 @functions {
@@ -353,7 +350,7 @@
 
                 <div class="map-item-element map-item-element-Last20">
                     <div style="width:45px; height:45px"></div>
-                    <span style="color:#5A0273; font-weight:bold;">Last 20:</span>
+                    <span style="color:#8202a5; font-weight:bold;">Last 20:</span>
                     <span class="AnalyzerResultOverallLast10">@PlayerMapStatsLast20.totalMatches</span><span>Matches,</span>
 
                     @if (PlayerMapStatsLast20.totalMatches != 0.00)
@@ -469,7 +466,7 @@
                             </span>
                             <div class="OverallLast20AnalyzeMap">
                                 <span class="Last20InfoText" id="Last20InfoText-@mapScore.Item1">
-                                    <span style="color:#5A0273; font-weight:bold;display:inline-block; width:68.25px;">Last 20:</span>
+                                    <span style="color:#8202a5; font-weight:bold;display:inline-block; width:68.25px;">Last 20:</span>
                                     <span class="AnalyzerResultOverallLast10" style="display:inline-block;width:47px; text-align:center;">@mapAverageKDsResult.Count() </span><span style="width:74px;display:inline-block;color:#F2F2F2;  font-weight:normal;"> Matches,</span>
                                     @if (mapAverageKDsResult.Count() != 0.00)
                                 {

@@ -5,83 +5,76 @@ build_property.UsingMicrosoftNETSdkWeb = true
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
-build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Faceit_Stats_Provider
 build_property.RootNamespace = Faceit_Stats_Provider
-build_property.ProjectDir = C:\Users\Majderki\source\repos\Faceit-Stats-Provider-MVC\Faceit_Stats_Provider\
-build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.ProjectDir = C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Majderki\source\repos\Faceit-Stats-Provider-MVC\Faceit_Stats_Provider
+build_property.MSBuildProjectDirectory = C:\Users\Tomek\source\repos\Faceit_Stats_Provider\Faceit_Stats_Provider
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Analyzer/Analyze.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/Analyze.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcQW5hbHl6ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Analyzer/AnalyzerSearch.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/AnalyzerSearch.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcQW5hbHl6ZXJTZWFyY2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Analyzer/_PlayersPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcX1BsYXllcnNQYXJ0aWFsLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Analyzer/_StatisticsPartial.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/_StatisticsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcX1N0YXRpc3RpY3NQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Extension/Extension.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Extension/Extension.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXh0ZW5zaW9uXEV4dGVuc2lvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/FAQ/FAQ.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/FAQ/FAQ.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRkFRXEZBUS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW52YWxpZE1hdGNoUm9vbUxpbmtcSW52YWxpZE1hdGNoUm9vbUxpbmsuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/PlayerNotFoundBySteamID/PlayerNotFoundBySteamID.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/PlayerNotFoundBySteamID/PlayerNotFoundBySteamID.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheWVyTm90Rm91bmRCeVN0ZWFtSURcUGxheWVyTm90Rm91bmRCeVN0ZWFtSUQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/PlayerNotFound/PlayerNotFound.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/PlayerNotFound/PlayerNotFound.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheWVyTm90Rm91bmRcUGxheWVyTm90Rm91bmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/PlayerStats/PlayerStats.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/PlayerStats/PlayerStats.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGxheWVyU3RhdHNcUGxheWVyU3RhdHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Shared/Error.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Shared/Index.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Shared/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Shared/MatchListPartial.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Shared/MatchListPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXE1hdGNoTGlzdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/_ViewImports.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/_ViewStart.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Majderki/source/repos/Faceit-Stats-Provider-MVC/Faceit_Stats_Provider/Views/Shared/_Layout.cshtml]
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-8cwxfdxcrg
