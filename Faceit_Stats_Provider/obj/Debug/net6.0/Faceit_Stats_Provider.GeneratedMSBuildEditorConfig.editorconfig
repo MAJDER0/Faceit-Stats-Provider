@@ -23,6 +23,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcQW5hbHl6ZXJTZWFyY2guY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/_PlayersPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcX1BsYXllcnNQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Tomek/source/repos/Faceit_Stats_Provider/Faceit_Stats_Provider/Views/Analyzer/_StatisticsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW5hbHl6ZXJcX1N0YXRpc3RpY3NQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

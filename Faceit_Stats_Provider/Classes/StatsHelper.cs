@@ -281,7 +281,7 @@ namespace Faceit_Stats_Provider.Classes
         {
             if (matches == null || matches.Count == 0)
                 return 0;
-            return matches.Select(match => int.Parse(match)).Sum();
+            return (int)matches.Select(match => double.Parse(match)).Sum();
         }
 
         public static List<(double, bool, double, string)> CalculateMapAverageKD(List<(string playerId, AnalyzerMatchStats.Rootobject)> playerMatchStats, string map, List<string> playerIds)

@@ -141,7 +141,8 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerStats = playerStats,
                     PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats,
-                    PlayerStatsCombinedViewModel = combinedPlayerStats
+                    PlayerStatsCombinedViewModel = combinedPlayerStats,
+                    IsIncludedCsGoStats = false
                 };
 
                 var initialModelCopy = JsonConvert.DeserializeObject<AnalyzerViewModel>(JsonConvert.SerializeObject(initialViewModel));
@@ -154,6 +155,7 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerStatsForCsGo = playerStatsForCsGo,
                     PlayerMatchStats = playerMatchStats,
                     PlayerStatsCombinedViewModel = combinedPlayerStats,
+                    IsIncludedCsGoStats = false,
                     InitialModelCopy = ModelMapper.ToExcludePlayerModel(initialModelCopy)
                 };
 
@@ -202,7 +204,8 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerMatchStats = toggleRequest.PlayerMatchStats
                         .Select(pms => (pms.playerId, pms.matchStats))
                         .ToList(),
-                    InitialModelCopy = toggleRequest.InitialModelCopy
+                    InitialModelCopy = toggleRequest.InitialModelCopy,
+                    IsIncludedCsGoStats = true
                 };
             }
             else
@@ -218,7 +221,8 @@ namespace Faceit_Stats_Provider.Controllers
                     PlayerMatchStats = initialModelCopy.PlayerMatchStats
                         .Select(pms => (pms.playerId, pms.matchStats))
                         .ToList(),
-                    InitialModelCopy = initialModelCopy.InitialModelCopy
+                    InitialModelCopy = initialModelCopy.InitialModelCopy,
+                     IsIncludedCsGoStats = false
                 };
             }
 
@@ -345,7 +349,6 @@ namespace Faceit_Stats_Provider.Controllers
                 return PartialView("_StatisticsPartial", partialViewModel);
             }
         }
-
 
         private string ExtractRoomIdFromUrl(string url)
         {
@@ -536,14 +539,14 @@ namespace Faceit_Stats_Provider.Controllers
                     game_id = combined.game_id,
                     lifetime = new AnalyzerPlayerStats.Lifetime
                     {
-                        Wins = combined.lifetime.Wins,
-                        TotalHeadshots = combined.lifetime.TotalHeadshots,
-                        LongestWinStreak = combined.lifetime.LongestWinStreak,
-                        KDRatio = combined.lifetime.KDRatio,
-                        Matches = combined.lifetime.Matches,
-                        AverageHeadshots = combined.lifetime.AverageHeadshots,
-                        AverageKDRatio = combined.lifetime.AverageKDRatio,
-                        WinRate = combined.lifetime.WinRate,
+                        Wins = combined.lifetime.Wins?.Replace(",", "."),
+                        TotalHeadshots = combined.lifetime.TotalHeadshots?.Replace(",", "."),
+                        LongestWinStreak = combined.lifetime.LongestWinStreak?.Replace(",", "."),
+                        KDRatio = combined.lifetime.KDRatio?.Replace(",", "."),
+                        Matches = combined.lifetime.Matches?.Replace(",", "."),
+                        AverageHeadshots = combined.lifetime.AverageHeadshots?.Replace(",", "."),
+                        AverageKDRatio = combined.lifetime.AverageKDRatio?.Replace(",", "."),
+                        WinRate = combined.lifetime.WinRate?.Replace(",", "."),
                         ExtensionData = combined.lifetime.ExtensionData
                     },
                     segments = combined.segments.Select(seg => new AnalyzerPlayerStats.Segment
@@ -553,24 +556,24 @@ namespace Faceit_Stats_Provider.Controllers
                         img_regular = seg.img_regular,
                         stats = new AnalyzerPlayerStats.Stats
                         {
-                            Kills = seg.stats.Kills,
-                            AverageHeadshots = seg.stats.AverageHeadshots,
-                            Assists = seg.stats.Assists,
-                            AverageKills = seg.stats.AverageKills,
-                            HeadshotsperMatch = seg.stats.HeadshotsperMatch,
-                            AverageKRRatio = seg.stats.AverageKRRatio,
-                            AverageKDRatio = seg.stats.AverageKDRatio,
-                            Matches = seg.stats.Matches,
-                            WinRate = seg.stats.WinRate,
-                            Rounds = seg.stats.Rounds,
-                            TotalHeadshots = seg.stats.TotalHeadshots,
-                            KRRatio = seg.stats.KRRatio,
-                            Deaths = seg.stats.Deaths,
-                            KDRatio = seg.stats.KDRatio,
-                            AverageAssists = seg.stats.AverageAssists,
-                            Headshots = seg.stats.Headshots,
-                            Wins = seg.stats.Wins,
-                            AverageDeaths = seg.stats.AverageDeaths,
+                            Kills = seg.stats.Kills?.Replace(",", "."),
+                            AverageHeadshots = seg.stats.AverageHeadshots?.Replace(",", "."),
+                            Assists = seg.stats.Assists?.Replace(",", "."),
+                            AverageKills = seg.stats.AverageKills?.Replace(",", "."),
+                            HeadshotsperMatch = seg.stats.HeadshotsperMatch?.Replace(",", "."),
+                            AverageKRRatio = seg.stats.AverageKRRatio?.Replace(",", "."),
+                            AverageKDRatio = seg.stats.AverageKDRatio?.Replace(",", "."),
+                            Matches = seg.stats.Matches?.Replace(",", "."),
+                            WinRate = seg.stats.WinRate?.Replace(",", "."),
+                            Rounds = seg.stats.Rounds?.Replace(",", "."),
+                            TotalHeadshots = seg.stats.TotalHeadshots?.Replace(",", "."),
+                            KRRatio = seg.stats.KRRatio?.Replace(",", "."),
+                            Deaths = seg.stats.Deaths?.Replace(",", "."),
+                            KDRatio = seg.stats.KDRatio?.Replace(",", "."),
+                            AverageAssists = seg.stats.AverageAssists?.Replace(",", "."),
+                            Headshots = seg.stats.Headshots?.Replace(",", "."),
+                            Wins = seg.stats.Wins?.Replace(",", "."),
+                            AverageDeaths = seg.stats.AverageDeaths?.Replace(",", "."),
                             ExtensionData = seg.stats.ExtensionData
                         },
                         type = seg.type,
@@ -583,6 +586,7 @@ namespace Faceit_Stats_Provider.Controllers
 
             return playerStats;
         }
+
 
     }
 
