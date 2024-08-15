@@ -110,7 +110,7 @@ namespace Faceit_Stats_Provider.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(nickname) && !nickname.Contains("https://steamcommunity.com/profiles/") && nickname.Count() == 36)
+            if (!string.IsNullOrEmpty(nickname) && !nickname.Contains("https://steamcommunity.com/profiles/") && IsValidUUID(nickname))
             {
                 try
                 {
@@ -450,6 +450,13 @@ namespace Faceit_Stats_Provider.Controllers
             }
 
             return null;
+        }
+
+        private bool IsValidUUID(string uuid)
+        {
+            // Regular expression to match a v4 UUID format
+            var regex = new Regex(@"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$");
+            return regex.IsMatch(uuid);
         }
 
     }
