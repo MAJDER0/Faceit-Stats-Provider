@@ -1108,7 +1108,7 @@
                                                                 @foreach (var player in playersTeam0)
                                             {
                                                                 <tr>
-                                                                    <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                                                    <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
                                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
                                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
                                                                     <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
@@ -1202,7 +1202,7 @@
                                                                 @foreach (var player in playersTeam1)
                                             {
                                                     <tr>
-                                                        <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.nickname" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                                        <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
                                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
                                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
                                                         <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>

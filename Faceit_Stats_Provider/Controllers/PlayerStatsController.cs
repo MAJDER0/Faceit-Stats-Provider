@@ -68,6 +68,7 @@ namespace Faceit_Stats_Provider.Controllers
             List<EloDiff.Root> allhistory;
             List<MatchType.Rootobject> matchtype;
             NicknameBySteamId.Rootobject NicknameBySteamID;
+            NicknameBySteamId.Rootobject NicknameByFaceitID;
 
             long RedisEloRetrievesCount = 0;
             string errorString;
@@ -106,6 +107,42 @@ namespace Faceit_Stats_Provider.Controllers
                 catch
                 {
                     return View("~/Views/PlayerNotFoundBySteamID/PlayerNotFoundBySteamID.cshtml");
+                }
+            }
+
+            if (!string.IsNullOrEmpty(nickname) && !nickname.Contains("https://steamcommunity.com/profiles/") && nickname.Count() == 36)
+            {
+                try
+                {
+                    var FaceitID = nickname;
+                    var cacheKey = $"nickname_{FaceitID}";
+
+                    if (!_memoryCache.TryGetValue(cacheKey, out NicknameByFaceitID))
+                    {
+                        try
+                        {
+                            NicknameByFaceitID = await client.GetFromJsonAsync<NicknameBySteamId.Rootobject>($"v4/players/{FaceitID}");
+                        }
+                        catch
+                        {
+                            return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
+                        }
+
+                        if (NicknameByFaceitID is not null)
+                        {
+
+                            _memoryCache.Set(cacheKey, NicknameByFaceitID, TimeSpan.FromMinutes(3));
+                            nickname = NicknameByFaceitID.nickname;
+                        }
+                    }
+                    else
+                    {
+                        nickname = NicknameByFaceitID.nickname;
+                    }
+                }
+                catch
+                {
+                    return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
                 }
             }
 
