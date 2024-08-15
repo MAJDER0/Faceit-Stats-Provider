@@ -707,6 +707,13 @@
                     }
                 }
             }
+
+
+        if (Last20Elo.Count() > 20)
+        {
+            Last20Elo.RemoveRange(Last20Elo.Count - 10, 10);
+        }
+
         }
 
                                                                         for (var i = 0; i < 20; i++) {
@@ -733,8 +740,8 @@
 
                 scales: {
                     y: {
-                        min: @(eloDifference < maxDifference ? Math.Min(twentiethGameElo - maxDifference, lastGameElo - eloDifference) - 100 : lastGameElo - eloDifference - 100),
-                        max: @(eloDifference < maxDifference ? Math.Max(lastGameElo + eloDifference, lastGameElo + maxDifference) + 75 : lastGameElo + maxDifference + 75),
+                        min: @(eloDifference < maxDifference ? Math.Min(twentiethGameElo - maxDifference, lastGameElo - eloDifference) -150 : lastGameElo - eloDifference -150 ),
+                        max: @(eloDifference < maxDifference ? Math.Max(lastGameElo + eloDifference, lastGameElo + maxDifference) + 150 : lastGameElo + maxDifference + 150),
 
                         ticks: {
 
