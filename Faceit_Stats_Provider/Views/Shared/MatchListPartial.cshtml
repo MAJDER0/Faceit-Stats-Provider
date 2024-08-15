@@ -28,12 +28,13 @@
                     <tr>
                         <th>RESULT</th>
                         <th>SCORE</th>
-                        <th>MAP</th>
+                        <th style="padding-left:1.5%;">MAP</th>
                         <th>MODE</th>
-                        <th>TEAM</th>
+                        <th style="padding-left:3%;">TEAM</th>
                         <th>STATS</th>
                         <th>K/R</th>
-                        <th>K/D</th>
+                        <th >K/D</th>
+                        <th style="text-align:center;">DATE</th>
                         <th>LINK</th>
                         <th>ELO</th>
                     </tr>
@@ -70,57 +71,80 @@
                                             <p style="color:#F20707;" class="Result">LOSS</p>
                                         }
                                     </td>
-                                    <td><p style="margin-left: -4%;">@match.rounds[0].round_stats.Score<p></td>
-                                    <td><p style="margin-left: -6%;">@match.rounds[0].round_stats.Map</p></td>
-                                    <td><p style="margin-left: 4%;">@match.rounds[0].game_mode</p></td>
+                                    <td><p>@match.rounds[0].round_stats.Score<p></td>
+                                    <td><p>@match.rounds[0].round_stats.Map</p></td>
+                                    <td><p style="padding-left: 18%;">@match.rounds[0].game_mode</p></td>
                                     <td>
                                         @if (match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id))
                                         {
-                                            <p>@match.rounds[0].teams[0].team_stats.Team</p>
+                                            <p  style="padding-left: 2%;">@match.rounds[0].teams[0].team_stats.Team</p>
                                         }
                                         else if (match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id))
                                         {
-                                            <p>@match.rounds[0].teams[1].team_stats.Team</p>
+                                            <p  style="padding-left: 2%;">@match.rounds[0].teams[1].team_stats.Team</p>
                                         }
                                     </td>
                                     <td>
                                         @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                            <p style="margin-left:-20%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
                                         }
                                         else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p style="margin-left: -3%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
+                                        <p style="margin-left:-20%;">@playerStats.Kills-@playerStats.Assists-@playerStats.Deaths</p>
                                         }
                                     </td>
                                     <td>
                                         @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: 10%;">@playerStats.KRRatio</p>
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: -8%;">@playerStats.KRRatio</p>
                                         }
                                         else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707");  margin-left: 10%;" >@playerStats.KRRatio</p>
+                                        <p class="Result" style="color:@(double.Parse(playerStats.KRRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 0.70 ? "#6BBE49" : "#F20707"); margin-left: -8%;">@playerStats.KRRatio</p>
                                         }
                                     </td>
                                     <td>
                                         @if (match.rounds[0].teams[0].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[0].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: -8%;" >@playerStats.KDRatio</p>
                                         }
                                         else if (match.rounds[0].teams[1].players.Any(player => player.player_id == Model.Playerinfo.player_id))
                                         {
                                             var playerStats = match.rounds[0].teams[1].players.First(player => player.player_id == Model.Playerinfo.player_id).player_stats;
-                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: 7%;" >@playerStats.KDRatio</p>
+                                            <p class="Result" style="color:@(double.Parse(playerStats.KDRatio.Replace(",", "."), CultureInfo.InvariantCulture) >= 1.00 ? "#6BBE49" : "#F20707");  margin-left: -8%;" >@playerStats.KDRatio</p>
                                         }
                                     </td>
 
-                                <td>
+
+                                     <td>
+                                                    @{
+                                                var properMatch = Model.MatchHistoryItems.Where(k=>k.match_id == match.rounds[0].match_id).ToList();
+                                                string readableDate = "";
+
+                                                if (properMatch is not null && properMatch.Count > 0)
+                                                {
+
+                                                    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(properMatch[0].finished_at);
+
+                                                    DateTime dateTime = dateTimeOffset.ToLocalTime().DateTime;
+
+                                                    CultureInfo englishCulture = new CultureInfo("en-US");
+
+                                                     readableDate = dateTime.ToString("dd MMM HH:mm", englishCulture);
+                                                }
+                                                    }
+
+                                                    <p style="text-align:center;">@readableDate</p>
+                                                </td>
+
+
+                                <td style="padding-left:1.5%;">
                                         <a href="https://www.faceit.com/en/@Model.Game/room/@match.rounds[0].match_id" target="_blank">
                                             <img src="/niewypelnione2.png" alt="Icon" height="25px" width="25px" />
                                         </a>
@@ -280,7 +304,7 @@
 
 
                         <tr class="scoreboard -second" style="display: none;">
-                        <td colspan="10">
+                        <td colspan="11">
                             <table class="table matchesTableStats">
                                 <thead>
 

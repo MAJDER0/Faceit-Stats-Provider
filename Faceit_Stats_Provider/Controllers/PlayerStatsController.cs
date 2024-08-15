@@ -204,6 +204,7 @@ namespace Faceit_Stats_Provider.Controllers
                                         round.calculate_elo = calculateElo;
                                         round.competition_name = matchData?.competition_name;
                                         round.match_id = matchData?.match_id;
+                                        round.finished_at = matchData.finished_at;
                                     }
                                 }
 
@@ -283,6 +284,7 @@ namespace Faceit_Stats_Provider.Controllers
                                                 round.calculate_elo = calculateElo;
                                                 round.competition_name = matchData?.competition_name;
                                                 round.match_id = matchData?.match_id;
+                                                round.finished_at = matchData.finished_at;
                                             }
                                         }
 

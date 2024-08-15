@@ -16,7 +16,7 @@
             public bool calculate_elo { get; set; }
             public int configured_at { get; set; }
             public int started_at { get; set; }
-            public int finished_at { get; set; }
+            public long finished_at { get; set; }
             public string[] demo_url { get; set; }
             public string chat_room_id { get; set; }
             public int best_of { get; set; }

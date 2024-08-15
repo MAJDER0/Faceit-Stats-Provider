@@ -12,13 +12,14 @@
             public string match_id { get; set; }
             public string game_id { get; set; }
             public string region { get; set; }
-            public string match_type { get; set; }          
+            public string match_type { get; set; }
             public Teams teams { get; set; }
             public string[] playing_players { get; set; }
             public string competition_id { get; set; }
             public string competition_name { get; set; }
             public string competition_type { get; set; }
             public Results results { get; set; }
+            public long finished_at { get; set; }
         }
 
         public class Teams

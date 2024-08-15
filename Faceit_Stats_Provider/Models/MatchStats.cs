@@ -24,6 +24,7 @@ namespace Faceit_Stats_Provider.Models
             public Round_Stats round_stats { get; set; }
             public Team[] teams { get; set; }
             public string elo { get; set; }
+            public long finished_at { get; set; }
         }
 
         public class Round_Stats
@@ -33,6 +34,7 @@ namespace Faceit_Stats_Provider.Models
             public string Map { get; set; }
             public string Region { get; set; }
             public string Rounds { get; set; }
+
         }
 
         public class Team
@@ -106,7 +108,7 @@ namespace Faceit_Stats_Provider.Models
 
             [JsonPropertyName("Zeus Kills")]
             public string ZeusKills { get; set; } //
-            
+
             [JsonPropertyName("Pistol Kills")]
             public string PistolKills { get; set; }//
 
