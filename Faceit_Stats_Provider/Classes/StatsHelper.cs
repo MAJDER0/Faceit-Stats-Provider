@@ -39,23 +39,55 @@ namespace Faceit_Stats_Provider.Classes
 
             foreach (var playerStat in faction1PlayerStats)
             {
+                if (playerStat?.segments == null) continue;
+
                 foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.ToUpper())))
                 {
-                    faction1MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
-                    faction1MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
-                    faction1MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
-                    faction1MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                    if (segment?.stats == null) continue;
+
+                    if (segment.stats.AverageKDRatio != null)
+                    {
+                        faction1MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
+                    }
+                    if (segment.stats.WinRate != null)
+                    {
+                        faction1MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                    }
+                    if (segment.stats.AverageKRRatio != null)
+                    {
+                        faction1MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
+                    }
+                    if (segment.stats.Matches != null)
+                    {
+                        faction1MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                    }
                 }
             }
 
             foreach (var playerStat in faction2PlayerStats)
             {
+                if (playerStat?.segments == null) continue;
+
                 foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.ToUpper())))
                 {
-                    faction2MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
-                    faction2MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
-                    faction2MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
-                    faction2MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                    if (segment?.stats == null) continue;
+
+                    if (segment.stats.AverageKDRatio != null)
+                    {
+                        faction2MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
+                    }
+                    if (segment.stats.WinRate != null)
+                    {
+                        faction2MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                    }
+                    if (segment.stats.AverageKRRatio != null)
+                    {
+                        faction2MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
+                    }
+                    if (segment.stats.Matches != null)
+                    {
+                        faction2MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                    }
                 }
             }
 
@@ -233,8 +265,18 @@ namespace Faceit_Stats_Provider.Classes
         {
             if (ratios == null || ratios.Count == 0)
                 return 0;
-            var total = ratios.Select(ratio => double.Parse(ratio.Replace(",", "."), CultureInfo.InvariantCulture)).Sum();
-            return total / ratios.Count;
+
+            // Filter out any null or empty strings
+            var validRatios = ratios
+                .Where(ratio => !string.IsNullOrEmpty(ratio))
+                .Select(ratio => double.Parse(ratio.Replace(",", "."), CultureInfo.InvariantCulture))
+                .ToList();
+
+            if (validRatios.Count == 0)
+                return 0;
+
+            var total = validRatios.Sum();
+            return total / validRatios.Count;
         }
 
         public static (double avgKD, double avgKR, double winRatio, int totalMatches, string map) CalculatePlayerMapAverage(

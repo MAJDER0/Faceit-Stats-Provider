@@ -28,24 +28,27 @@ namespace Faceit_Stats_Provider.Classes
             int TotalWins = 0;
             int TotalMatches = 0;
 
-
             foreach (var playerStat in playerStats)
             {
+                if (playerStat?.segments == null) continue;
 
-                var properMaps = playerStat.segments.Where(p => maps.Any(map => map.Equals(p.label, StringComparison.OrdinalIgnoreCase)) && p.mode == "5v5").ToList();
+                var properMaps = playerStat.segments
+                    .Where(p => maps.Any(map => map.Equals(p.label.Replace("de_", ""), StringComparison.OrdinalIgnoreCase)) && p.mode == "5v5")
+                    .ToList();
 
                 foreach (var map in properMaps)
                 {
-                    TotalRounds += int.Parse(map.stats.Rounds);
-                    TotalKills += int.Parse(map.stats.Kills);
-                    TotalDeaths += int.Parse(map.stats.Deaths);
-                    TotalMatches += int.Parse(map.stats.Matches);
-                    TotalWins += int.Parse(map.stats.Wins);
+                    if (map?.stats == null) continue;
 
+                    TotalRounds += int.TryParse(map.stats.Rounds, out var rounds) ? rounds : 0;
+                    TotalKills += int.TryParse(map.stats.Kills, out var kills) ? kills : 0;
+                    TotalDeaths += int.TryParse(map.stats.Deaths, out var deaths) ? deaths : 0;
+                    TotalMatches += int.TryParse(map.stats.Matches, out var matches) ? matches : 0;
+                    TotalWins += int.TryParse(map.stats.Wins, out var wins) ? wins : 0;
                 }
             }
 
-               KdCombined = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalDeaths.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
+            KdCombined = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalDeaths.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
                KrCombined = (double.Parse(TotalKills.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalRounds.ToString().Replace(",", "."), CultureInfo.InvariantCulture));
                WrCombined = (double.Parse(TotalWins.ToString().Replace(",", "."), CultureInfo.InvariantCulture) / double.Parse(TotalMatches.ToString().Replace(",", "."), CultureInfo.InvariantCulture))*100;
 
@@ -79,26 +82,34 @@ namespace Faceit_Stats_Provider.Classes
         }
 
 
-        public static (double, double, double, int) Last20PlayerSection(AnalyzerPlayerStats.Rootobject playerStat, List<string> maps, List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer, AnalyzerMatchPlayers.Roster player)
+        public static (double, double, double, int) Last20PlayerSection(
+     AnalyzerPlayerStats.Rootobject playerStat,
+     List<string> maps,
+     List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer,
+     AnalyzerMatchPlayers.Roster player)
         {
+            if (playerStat?.segments == null)
+            {
+                return (0.0, 0.0, 0.0, 0); // Return default values if segments are null
+            }
 
             var displayedMapsLast20 = playerStat.segments
-            .Where(map => map.mode == "5v5" && maps.Contains(map.label.ToUpper()))
+            .Where(map => map.mode == "5v5" && maps.Contains(map.label?.Replace("de_", "").ToUpper()))
             .OrderByDescending(x => x.label)
             .ToList();
 
-            // Make a local copy of MapStatsForSinglePlayer
+
             var localMapStatsForSinglePlayer = MapStatsForSinglePlayer.ToList();
 
             var mapData = localMapStatsForSinglePlayer
-            .Where(m => displayedMapsLast20.Any(dm => string.Equals(dm.label, m.Item2, StringComparison.OrdinalIgnoreCase)) &&
-            m.Item1.Any(item => item.Item4 == player.player_id))
-            .Select(m => new
-            {
-                m.Item2, // map label
-                PlayerStats = m.Item1.Where(item => item.Item4 == player.player_id).ToList()
-            })
-            .ToList();
+                .Where(m => displayedMapsLast20.Any(dm => string.Equals(dm.label, m.Item2, StringComparison.OrdinalIgnoreCase)) &&
+                            m.Item1.Any(item => item.Item4 == player.player_id))
+                .Select(m => new
+                {
+                    m.Item2, // map label
+                    PlayerStats = m.Item1.Where(item => item.Item4 == player.player_id).ToList()
+                })
+                .ToList();
 
             double PlayerLast20KD = 0.00;
             double PlayerLast20KR = 0.00;
@@ -115,18 +126,22 @@ namespace Faceit_Stats_Provider.Classes
                 PlayerLast20KR += Kr;
                 PlayerLast20WR += Wr;
                 PlayerTotalMatchesLast20 += map.PlayerStats.Count;
-
-
             }
 
-            PlayerLast20KD = PlayerLast20KD / PlayerTotalMatchesLast20;
-            PlayerLast20KR = PlayerLast20KR / PlayerTotalMatchesLast20;
-            PlayerLast20WR = PlayerLast20WR / PlayerTotalMatchesLast20;
-
-            PlayerLast20WR = PlayerLast20WR * 100;
+            if (PlayerTotalMatchesLast20 > 0)
+            {
+                PlayerLast20KD /= PlayerTotalMatchesLast20;
+                PlayerLast20KR /= PlayerTotalMatchesLast20;
+                PlayerLast20WR = (PlayerLast20WR / PlayerTotalMatchesLast20) * 100;
+            }
+            else
+            {
+                PlayerLast20KD = 0;
+                PlayerLast20KR = 0;
+                PlayerLast20WR = 0;
+            }
 
             return (PlayerLast20KD, PlayerLast20WR, PlayerLast20KR, PlayerTotalMatchesLast20);
-
         }
     }
 }

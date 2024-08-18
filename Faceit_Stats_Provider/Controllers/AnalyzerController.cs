@@ -55,6 +55,8 @@ namespace Faceit_Stats_Provider.Controllers
 
                 foreach (var item in players.teams.faction1.roster)
                 {
+
+
                     getPlayerStatsTasks.Add(GetOrAddToCacheAsync($"stats_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2")));
                     getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
                     getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20"))));
@@ -62,9 +64,44 @@ namespace Faceit_Stats_Provider.Controllers
 
                 foreach (var item in players.teams.faction2.roster)
                 {
-                    getPlayerStatsTasks.Add(GetOrAddToCacheAsync($"stats_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2")));
+                    try
+                    {
+                        var cs2stats = await client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2");
+                        if (cs2stats != null)
+                        {
+                            getPlayerStatsTasks.Add(Task.FromResult(cs2stats));
+                        }
+                    }
+                    catch
+                    {
+                        getPlayerStatsTasks.Add(
+                            Task.FromResult(new AnalyzerPlayerStats.Rootobject
+                            {
+                                player_id = item.player_id,
+                                lifetime = null,
+                                segments = null,
+                                game_id = item.game_player_id,
+                            })
+                        );
+                    }
                     getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20"))));
+
+                    try
+                    {
+                        var cs2GameHistory = await client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20");
+
+                        if (cs2GameHistory != null && cs2GameHistory.items != null)
+                        {
+                            getPlayerMatchHistoryTasks.Add((item.player_id, Task.FromResult(cs2GameHistory)));
+                        }
+
+                    }
+                    catch
+                    {
+                        getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=csgo&from=120&offset=0&limit=20"))));
+
+                    }
+
                 }
 
                 // Await all tasks concurrently
@@ -92,41 +129,48 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     var combinedSegments = new Dictionary<string, AnalyzerPlayerStatsCombined.Segment>();
 
-                    foreach (var cs2Segment in cs2.segments)
+                    if (cs2?.segments != null)
                     {
-                        var normalizedLabel = NormalizeLabel(cs2Segment.label);
-                        combinedSegments[normalizedLabel] = ConvertToCombinedSegment(cs2Segment);
-                    }
-                    var csgoProperMaps = csgo.segments.Where(mode => mode.mode == "5v5").ToList();
-
-                    foreach (var csgoSegment in csgoProperMaps)
-                    {
-                        var normalizedLabel = NormalizeLabel(csgoSegment.label);
-                        if (combinedSegments.TryGetValue(normalizedLabel, out var existingSegment))
+                        foreach (var cs2Segment in cs2.segments)
                         {
-                            combinedSegments[normalizedLabel] = CombineSegments(existingSegment, ConvertToCombinedSegment(csgoSegment));
+                            var normalizedLabel = NormalizeLabel(cs2Segment.label);
+                            combinedSegments[normalizedLabel] = ConvertToCombinedSegment(cs2Segment);
                         }
-                        else
+                    }
+
+                    if (csgo?.segments != null)
+                    {
+                        var csgoProperMaps = csgo.segments.Where(mode => mode.mode == "5v5").ToList();
+
+                        foreach (var csgoSegment in csgoProperMaps)
                         {
-                            combinedSegments[normalizedLabel] = ConvertToCombinedSegment(csgoSegment);
+                            var normalizedLabel = NormalizeLabel(csgoSegment.label);
+                            if (combinedSegments.TryGetValue(normalizedLabel, out var existingSegment))
+                            {
+                                combinedSegments[normalizedLabel] = CombineSegments(existingSegment, ConvertToCombinedSegment(csgoSegment));
+                            }
+                            else
+                            {
+                                combinedSegments[normalizedLabel] = ConvertToCombinedSegment(csgoSegment);
+                            }
                         }
                     }
 
                     return new AnalyzerPlayerStatsCombined.Rootobject
                     {
-                        player_id = cs2.player_id,
-                        game_id = cs2.game_id,
+                        player_id = cs2?.player_id ?? csgo?.player_id,
+                        game_id = cs2?.game_id ?? csgo?.game_id,
                         lifetime = new AnalyzerPlayerStatsCombined.Lifetime
                         {
-                            Wins = cs2.lifetime.Wins,
-                            TotalHeadshots = cs2.lifetime.TotalHeadshots,
-                            LongestWinStreak = cs2.lifetime.LongestWinStreak,
-                            KDRatio = cs2.lifetime.KDRatio,
-                            Matches = cs2.lifetime.Matches,
-                            AverageHeadshots = cs2.lifetime.AverageHeadshots,
-                            AverageKDRatio = cs2.lifetime.AverageKDRatio,
-                            WinRate = cs2.lifetime.WinRate,
-                            ExtensionData = cs2.lifetime.ExtensionData
+                            Wins = cs2?.lifetime?.Wins ?? csgo?.lifetime?.Wins,
+                            TotalHeadshots = cs2?.lifetime?.TotalHeadshots ?? csgo?.lifetime?.TotalHeadshots,
+                            LongestWinStreak = cs2?.lifetime?.LongestWinStreak ?? csgo?.lifetime?.LongestWinStreak,
+                            KDRatio = cs2?.lifetime?.KDRatio ?? csgo?.lifetime?.KDRatio,
+                            Matches = cs2?.lifetime?.Matches ?? csgo?.lifetime?.Matches,
+                            AverageHeadshots = cs2?.lifetime?.AverageHeadshots ?? csgo?.lifetime?.AverageHeadshots,
+                            AverageKDRatio = cs2?.lifetime?.AverageKDRatio ?? csgo?.lifetime?.AverageKDRatio,
+                            WinRate = cs2?.lifetime?.WinRate ?? csgo?.lifetime?.WinRate,
+                            ExtensionData = cs2?.lifetime?.ExtensionData ?? csgo?.lifetime?.ExtensionData
                         },
                         segments = combinedSegments.Values.ToArray()
                     };
@@ -222,7 +266,7 @@ namespace Faceit_Stats_Provider.Controllers
                         .Select(pms => (pms.playerId, pms.matchStats))
                         .ToList(),
                     InitialModelCopy = initialModelCopy.InitialModelCopy,
-                     IsIncludedCsGoStats = false
+                    IsIncludedCsGoStats = false
                 };
             }
 
