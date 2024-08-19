@@ -90,6 +90,10 @@ namespace Faceit_Stats_Provider.Controllers
                     {
                         var cs2GameHistory = await client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
+                        if (cs2GameHistory.items.Count() == 0) {
+                            throw new Exception();
+                        }
+
                         if (cs2GameHistory != null && cs2GameHistory.items != null)
                         {
                             getPlayerMatchHistoryTasks.Add((item.player_id, Task.FromResult(cs2GameHistory)));
@@ -112,6 +116,7 @@ namespace Faceit_Stats_Provider.Controllers
                 // Retrieve results from tasks
                 var playerStats = getPlayerStatsTasks.Select(t => t.Result).ToList();
                 var playerStatsForCsGo = getPlayerStatsForCsGoTasks.Select(t => t.Result).ToList();
+
                 var playerMatchHistory = getPlayerMatchHistoryTasks.Select(t => (t.playerId, t.Item2.Result)).ToList();
 
                 foreach (var (playerId, playerHistory) in playerMatchHistory)
