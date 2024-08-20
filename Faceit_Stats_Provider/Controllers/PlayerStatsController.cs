@@ -75,11 +75,23 @@ namespace Faceit_Stats_Provider.Controllers
             string game = "cs2";
 
 
-            if (!string.IsNullOrEmpty(nickname) && nickname.Contains("https://steamcommunity.com/profiles/"))
+            if (!string.IsNullOrEmpty(nickname) && (nickname.Contains("https://steamcommunity.com/profiles/") || nickname.Contains("https://steamcommunity.com/id/")))
             {
                 try
                 {
-                    var SteamID = ExtractSteamId(nickname);
+                    string SteamID = "";
+
+                    if (nickname.Contains("https://steamcommunity.com/profiles/"))
+                    {
+                        SteamID = ExtractSteamId(nickname);
+                    } else if (nickname.Contains("https://steamcommunity.com/id/")) 
+                    {
+                        var SteamCustomID = ExtractIdFromUrl(nickname);
+
+                        SteamID = await ResolveVanityURL(SteamCustomID);
+
+                    }
+
                     var cacheKey = $"nickname_{SteamID}";
 
                     if (!_memoryCache.TryGetValue(cacheKey, out NicknameBySteamID))
@@ -452,11 +464,40 @@ namespace Faceit_Stats_Provider.Controllers
             return null;
         }
 
+
+        public string ExtractIdFromUrl(string url)
+        {
+            string pattern = @"https:\/\/steamcommunity\.com\/id\/([^\/]+)";
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(url);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+
+            return null;
+        }
+
         private bool IsValidUUID(string uuid)
         {
             // Regular expression to match a v4 UUID format
             var regex = new Regex(@"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$");
             return regex.IsMatch(uuid);
+        }
+
+        public async Task<string> ResolveVanityURL(string vanityId)
+        {
+            var apiKey = _configuration["SteamAPIKey"];  // Retrieve the API key from the configuration
+            var client = _clientFactory.CreateClient();  // Create a new HttpClient instance using IHttpClientFactory
+            var response = await client.GetFromJsonAsync<ResponeFromSteamForCustomSteamID.Rootobject>($"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={apiKey}&vanityurl={vanityId}");
+
+            if (response != null && response.response.success == 1)
+            {
+                return response.response.steamid;
+            }
+
+            return null;
         }
 
     }
