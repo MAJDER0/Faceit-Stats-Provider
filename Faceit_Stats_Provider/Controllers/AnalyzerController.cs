@@ -53,13 +53,57 @@ namespace Faceit_Stats_Provider.Controllers
             {
                 players = await GetOrAddToCacheAsync($"players_{RoomID}", () => client.GetFromJsonAsync<AnalyzerMatchPlayers.Rootobject>($"v4/matches/{RoomID}"));
 
+                if (players.teams.faction1.roster is null || players.teams.faction2.roster is null)
+                {
+                    AnalyzerMatchPlayersOldMatch.Rootobject oldMatch = await client.GetFromJsonAsync<AnalyzerMatchPlayersOldMatch.Rootobject>($"v4/matches/{RoomID}");
+
+                     players = CovertOldPlatformMatchForAnalyzer.ConvertOldMatchToNew(oldMatch);
+                }
+
                 foreach (var item in players.teams.faction1.roster)
                 {
-
-
-                    getPlayerStatsTasks.Add(GetOrAddToCacheAsync($"stats_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2")));
+                    try
+                    {
+                        var cs2stats = await client.GetFromJsonAsync<AnalyzerPlayerStats.Rootobject>($"v4/players/{item.player_id}/stats/cs2");
+                        if (cs2stats != null)
+                        {
+                            getPlayerStatsTasks.Add(Task.FromResult(cs2stats));
+                        }
+                    }
+                    catch
+                    {
+                        getPlayerStatsTasks.Add(
+                            Task.FromResult(new AnalyzerPlayerStats.Rootobject
+                            {
+                                player_id = item.player_id,
+                                lifetime = null,
+                                segments = null,
+                                game_id = item.game_player_id,
+                            })
+                        );
+                    }
                     getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
-                    getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20"))));
+
+                    try
+                    {
+                        var cs2GameHistory = await client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20");
+
+                        if (cs2GameHistory.items.Count() == 0)
+                        {
+                            throw new Exception();
+                        }
+
+                        if (cs2GameHistory != null && cs2GameHistory.items != null)
+                        {
+                            getPlayerMatchHistoryTasks.Add((item.player_id, Task.FromResult(cs2GameHistory)));
+                        }
+
+                    }
+                    catch
+                    {
+                        getPlayerMatchHistoryTasks.Add((item.player_id, GetOrAddToCacheAsync($"history_cs2_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=csgo&from=120&offset=0&limit=20"))));
+
+                    }
                 }
 
                 foreach (var item in players.teams.faction2.roster)

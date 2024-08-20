@@ -102,7 +102,7 @@ namespace Faceit_Stats_Provider.Classes
             var localMapStatsForSinglePlayer = MapStatsForSinglePlayer.ToList();
 
             var mapData = localMapStatsForSinglePlayer
-                .Where(m => displayedMapsLast20.Any(dm => string.Equals(dm.label, m.Item2, StringComparison.OrdinalIgnoreCase)) &&
+                .Where(m => displayedMapsLast20.Any(dm => string.Equals(dm.label.Replace("de_",""), m.Item2, StringComparison.OrdinalIgnoreCase)) &&
                             m.Item1.Any(item => item.Item4 == player.player_id))
                 .Select(m => new
                 {

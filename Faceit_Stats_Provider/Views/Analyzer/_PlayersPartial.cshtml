@@ -103,7 +103,9 @@ factionPlayerStats, List<string>
 
             if (player != null)
             {
-                var Last20PlayerSectionInfo = Last20PlayerSection(playerStat, maps, MapStatsForSinglePlayer, player);
+                var playerStatCombined = ConvertCombinedToPlayerStats(Model.PlayerStatsCombinedViewModel).Where(player=>player.player_id == playerStat.player_id).ToList();
+
+                var Last20PlayerSectionInfo = Last20PlayerSection(playerStatCombined[0], maps, MapStatsForSinglePlayer, player);
                 var csgostats = Model.PlayerStatsForCsGo.Where(k => k.player_id == playerStat.player_id).ToList();
                 var CalculatedQuantityOfMatches = CalculateQuantityOfMatches(maps, csgostats, playerStat);
                 var PlayerLast20KD = Last20PlayerSectionInfo.Item1;
@@ -168,7 +170,7 @@ factionPlayerStats, List<string>
         }
 
         var displayedMaps = playerStat.segments
-            .Where(map => map.mode == "5v5" && maps.Contains(map.label?.ToUpper()))
+            .Where(map => map.mode == "5v5" && maps.Contains(map.label.Replace("de_","")?.ToUpper()))
             .ToList();
 
         int matchesOverall = 0;
@@ -215,13 +217,18 @@ factionPlayerStats, List<string>
         }else
         {
 
-            displayedMaps = playerStat.segments
-            .Where(map => map.mode == "5v5" && maps.Contains(map.label?.ToUpper()))
-            .OrderByDescending(x => x.label)
+            displayedMaps = playerStat.segments.Select(map =>
+                {
+                    map.label = map.label?.Replace("de_", "").ToUpper();  // Normalize to uppercase
+                    return map;
+                })
+            .Where(map => map.mode == "5v5" && maps.Contains(map.label.Replace("de_","")?.ToUpper()))
+             .OrderBy(map => maps.IndexOf(map.label))
             .ToList();
 
         // Add missing maps
-        var displayedMapLabels = displayedMaps.Select(map => map.label?.ToUpper()).ToList();
+            var displayedMapLabels = displayedMaps.Select(map => map.label?.ToUpper()).ToList();
+
         foreach (var mapName in maps)
         {
             if (!displayedMapLabels.Contains(mapName.ToUpper()))
@@ -237,11 +244,10 @@ factionPlayerStats, List<string>
                 });
             }
         }
-
-        // Optionally re-order the displayedMaps list to maintain a specific order if needed
-        displayedMaps = displayedMaps
-            .OrderBy(map => map.label != null ? maps.IndexOf(map.label.ToUpper()) : int.MaxValue)
+            displayedMaps = displayedMaps
+             .OrderBy(map => maps.IndexOf(map.label))
             .ToList();
+
         }
 
         foreach (var map in displayedMaps)
@@ -250,7 +256,7 @@ factionPlayerStats, List<string>
 
             <div class="map-item">
                 <div class="map-item-element">
-                    <img src="~/Map_Icons/de_@(map?.label?.ToLower()).png" width="45" height="45" class="MapIcon" />
+                    <img src="~/Map_Icons/de_@(map?.label).png" width="45" height="45" class="MapIcon" />
 
                     <div class="map-item-stats-container">
                         <span style="font-weight:bold;">@map?.label:</span>
