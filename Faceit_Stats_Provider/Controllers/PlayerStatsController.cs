@@ -488,8 +488,8 @@ namespace Faceit_Stats_Provider.Controllers
 
         public async Task<string> ResolveVanityURL(string vanityId)
         {
-            var apiKey = _configuration["SteamAPIKey"];  // Retrieve the API key from the configuration
-            var client = _clientFactory.CreateClient();  // Create a new HttpClient instance using IHttpClientFactory
+            var apiKey = _configuration["SteamAPIKey"]; 
+            var client = _clientFactory.CreateClient();  
             var response = await client.GetFromJsonAsync<ResponeFromSteamForCustomSteamID.Rootobject>($"https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key={apiKey}&vanityurl={vanityId}");
 
             if (response != null && response.response.success == 1)
