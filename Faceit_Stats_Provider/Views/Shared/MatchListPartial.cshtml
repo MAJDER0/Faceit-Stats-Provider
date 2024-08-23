@@ -169,9 +169,9 @@
                                             }
 
                                         }
-                                    <p class="Result" style="color:@(elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
+                                    <p class="Result" style="color:@(elodifference == 0 ? "#6BBE49" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
                                             @(
-                                                elodifference == 0 ? "" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))
+                                                elodifference == 0 ? "+" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))
                                                 )@Math.Abs(elodifference)
                                     </p>
                                         @{
