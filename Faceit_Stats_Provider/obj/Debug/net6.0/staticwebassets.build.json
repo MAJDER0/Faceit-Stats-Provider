@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "J1fG4PCBFzyy8DyqSajUrZiq8eN/BS7ojKNGYiTdQak=",
+  "Hash": "o0BZyDufEBGKckuW43rdDlxGb11VPu2z7OHzKxK+WYQ=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -236,23 +236,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\MapStatsTable.css"
-    },
-    {
-      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\MatchUnavailable.css",
-      "SourceId": "Faceit_Stats_Provider",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
-      "BasePath": "_content/Faceit_Stats_Provider",
-      "RelativePath": "css/MatchUnavailable.css",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\css\\MatchUnavailable.css"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\css\\NavBar.css",
