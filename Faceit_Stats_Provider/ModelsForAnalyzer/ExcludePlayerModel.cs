@@ -16,5 +16,7 @@ public class ExcludePlayerModel
     public List<AnalyzerPlayerStatsCombined.Rootobject> PlayerStatsCombinedViewModel { get; set; }
     public ExcludePlayerModel InitialModelCopy { get; set; }
 
-    public bool IncludeCsGoStats { get; set; } 
+    public bool IncludeCsGoStats { get; set; }
+
+    public bool CsGoStatsOnlyDisplayed { get; set; }
 }

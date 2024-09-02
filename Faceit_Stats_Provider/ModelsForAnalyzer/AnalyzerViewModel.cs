@@ -15,5 +15,6 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
         public List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayer { get; set; }
         public List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayerCopy { get; set; }
         public bool IsIncludedCsGoStats { get; set; }
+        public bool CsGoStatsOnlyDisplayed { get; set; }
     }
 }

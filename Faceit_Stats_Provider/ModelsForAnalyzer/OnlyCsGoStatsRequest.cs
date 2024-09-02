@@ -2,11 +2,10 @@
 
 namespace Faceit_Stats_Provider.ModelsForAnalyzer
 {
-    public class ToggleIncludeCsGoStatsRequest
+    public class OnlyCsGoStatsRequest
     {
         public string RoomId { get; set; }
         public bool IncludeCsGoStats { get; set; }
-        public bool CsGoStatsOnlyDisplayed { get; set; }
         public List<string> ExcludedPlayers { get; set; }
         public List<AnalyzerPlayerStats.Rootobject> PlayerStats { get; set; }
         public List<AnalyzerPlayerStatsCombined.Rootobject> PlayerStatsCombinedViewModel { get; set; }
@@ -17,5 +16,7 @@ namespace Faceit_Stats_Provider.ModelsForAnalyzer
         public List<AnalyzerPlayerStatsForCsgo.Rootobject> PlayerStatsForCsGo { get; set; }
 
         public ExcludePlayerModel InitialModelCopy { get; set; }
+
+        public bool CsGoStatsOnlyDisplayed { get; set; }
     }
 }

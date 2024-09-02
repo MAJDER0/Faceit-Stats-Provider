@@ -260,7 +260,86 @@ namespace Faceit_Stats_Provider.Controllers
             }
         }
 
-        [HttpPost("/ToggleIncludeCsGoStats")]
+        [HttpPost("/OnlyCsGoStats")]
+        public IActionResult OnlyCsGoStats([FromBody] object request)
+        {
+            // Convert the object to a JSON string
+            var jsonString = request.ToString();
+
+            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
+            var toggleRequest = JsonConvert.DeserializeObject<OnlyCsGoStatsRequest>(jsonString);
+
+            if (toggleRequest == null)
+            {
+                return BadRequest("Request is null");
+            }
+
+            // Validate the request data
+            if (string.IsNullOrEmpty(toggleRequest.RoomId) || toggleRequest.Players == null || toggleRequest.PlayerMatchStats == null)
+            {
+                return BadRequest("Invalid request data");
+            }
+
+            AnalyzerViewModel viewModel;
+
+            var ConvertCsGoStatsAsPlayerStats = ConvertCsgoToAnalyzerPlayerStats(toggleRequest.PlayerStatsForCsGo);
+
+            if (toggleRequest.IncludeCsGoStats == false && toggleRequest.CsGoStatsOnlyDisplayed == true) {
+
+                viewModel = new AnalyzerViewModel
+                {
+                    RoomId = toggleRequest.RoomId,
+                    Players = toggleRequest.Players,
+                    PlayerStats = ConvertCsGoStatsAsPlayerStats,
+                    PlayerStatsForCsGo = toggleRequest.PlayerStatsForCsGo,
+                    PlayerStatsCombinedViewModel = toggleRequest.PlayerStatsCombinedViewModel,
+                    PlayerMatchStats = toggleRequest.PlayerMatchStats
+                          .Select(pms => (pms.playerId, pms.matchStats))
+                          .ToList(),
+                    InitialModelCopy = toggleRequest.InitialModelCopy,
+                    IsIncludedCsGoStats = true,
+                    CsGoStatsOnlyDisplayed = true,
+                };
+            }
+            else
+            {
+                var initialModelCopy = toggleRequest.InitialModelCopy;
+                viewModel = new AnalyzerViewModel
+                {
+                    RoomId = initialModelCopy.RoomId,
+                    Players = initialModelCopy.Players,
+                    PlayerStats = initialModelCopy.PlayerStats,
+                    PlayerStatsForCsGo = initialModelCopy.PlayerStatsForCsGo,
+                    PlayerStatsCombinedViewModel = initialModelCopy.PlayerStatsCombinedViewModel,
+                    PlayerMatchStats = initialModelCopy.PlayerMatchStats
+                        .Select(pms => (pms.playerId, pms.matchStats))
+                        .ToList(),
+                    InitialModelCopy = initialModelCopy.InitialModelCopy,
+                    IsIncludedCsGoStats = false,
+                    CsGoStatsOnlyDisplayed = false,
+                };
+            }
+
+            // Apply the excluded players logic
+            if (toggleRequest.ExcludedPlayers != null && toggleRequest.ExcludedPlayers.Any())
+            {
+                viewModel.Players.teams.faction1.roster = viewModel.Players.teams.faction1.roster.Where(p => !toggleRequest.ExcludedPlayers.Contains(p.player_id)).ToArray();
+                viewModel.Players.teams.faction2.roster = viewModel.Players.teams.faction2.roster.Where(p => !toggleRequest.ExcludedPlayers.Contains(p.player_id)).ToArray();
+                viewModel.PlayerStats = viewModel.PlayerStats.Where(ps => !toggleRequest.ExcludedPlayers.Contains(ps.player_id)).ToList();
+                viewModel.PlayerMatchStats = viewModel.PlayerMatchStats.Where(pms => !toggleRequest.ExcludedPlayers.Contains(pms.playerId)).ToList();
+            }
+
+            var partialViewModel = new AnalyzerPartialViewModel
+            {
+                ModifiedViewModel = viewModel,
+                OriginalViewModel = ModelMapper.ToAnalyzerViewModel(toggleRequest.InitialModelCopy) // Use mapping function
+            };
+
+            return PartialView("_StatisticsPartial", partialViewModel);
+
+        }
+
+            [HttpPost("/ToggleIncludeCsGoStats")]
         public IActionResult ToggleIncludeCsGoStats([FromBody] object request)
         {
             // Convert the object to a JSON string
@@ -298,7 +377,8 @@ namespace Faceit_Stats_Provider.Controllers
                         .Select(pms => (pms.playerId, pms.matchStats))
                         .ToList(),
                     InitialModelCopy = toggleRequest.InitialModelCopy,
-                    IsIncludedCsGoStats = true
+                    IsIncludedCsGoStats = true,
+                    CsGoStatsOnlyDisplayed = false
                 };
             }
             else
@@ -315,7 +395,8 @@ namespace Faceit_Stats_Provider.Controllers
                         .Select(pms => (pms.playerId, pms.matchStats))
                         .ToList(),
                     InitialModelCopy = initialModelCopy.InitialModelCopy,
-                    IsIncludedCsGoStats = false
+                    IsIncludedCsGoStats = false,
+                    CsGoStatsOnlyDisplayed = false,
                 };
             }
 
@@ -682,7 +763,60 @@ namespace Faceit_Stats_Provider.Controllers
             return playerStats;
         }
 
+        private List<AnalyzerPlayerStats.Rootobject> ConvertCsgoToAnalyzerPlayerStats(List<AnalyzerPlayerStatsForCsgo.Rootobject> csgoStatsList)
+        {
+            if (csgoStatsList == null || !csgoStatsList.Any()) return new List<AnalyzerPlayerStats.Rootobject>();
 
+            return csgoStatsList.Select(csgoStats => new AnalyzerPlayerStats.Rootobject
+            {
+                player_id = csgoStats.player_id,
+                game_id = csgoStats.game_id,
+                lifetime = new AnalyzerPlayerStats.Lifetime
+                {
+                    Wins = csgoStats.lifetime?.Wins,
+                    TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
+                    LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
+                    KDRatio = csgoStats.lifetime?.KDRatio,
+                    Matches = csgoStats.lifetime?.Matches,
+                    RecentResults = csgoStats.lifetime?.RecentResults,
+                    AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
+                    AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
+                    WinRate = csgoStats.lifetime?.WinRate,
+                    CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
+                    ExtensionData = csgoStats.lifetime?.ExtensionData
+                },
+                segments = csgoStats.segments?.Select(segment => new AnalyzerPlayerStats.Segment
+                {
+                    label = segment.label,
+                    img_small = segment.img_small,
+                    img_regular = segment.img_regular,
+                    stats = new AnalyzerPlayerStats.Stats
+                    {
+                        Kills = segment.stats.Kills,
+                        AverageHeadshots = segment.stats.AverageHeadshots,
+                        Assists = segment.stats.Assists,
+                        AverageKills = segment.stats.AverageKills,
+                        HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                        AverageKRRatio = segment.stats.AverageKRRatio,
+                        AverageQuadroKills = segment.stats.AverageQuadroKills,
+                        Matches = segment.stats.Matches,
+                        WinRate = segment.stats.WinRate,
+                        Rounds = segment.stats.Rounds,
+                        TotalHeadshots = segment.stats.TotalHeadshots,
+                        KRRatio = segment.stats.KRRatio,
+                        Deaths = segment.stats.Deaths,
+                        KDRatio = segment.stats.KDRatio,
+                        AverageAssists = segment.stats.AverageAssists,
+                        Headshots = segment.stats.Headshots,
+                        Wins = segment.stats.Wins,
+                        AverageDeaths = segment.stats.AverageDeaths,
+                        ExtensionData = segment.stats.ExtensionData
+                    },
+                    type = segment.type,
+                    mode = segment.mode
+                }).ToArray()
+            }).ToList();
+        }
     }
 
 }
