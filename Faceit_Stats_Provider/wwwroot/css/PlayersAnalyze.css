@@ -1,4 +1,8 @@
-﻿.PlayerAnalyzer {
+﻿#statistics-container {
+    margin-top:1.5%;
+}
+
+.PlayerAnalyzer {
     width: 95%;
     border: solid 1px #ff3c22;
     border-radius: 30px;

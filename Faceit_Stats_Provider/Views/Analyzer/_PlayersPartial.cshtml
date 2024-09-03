@@ -18,9 +18,13 @@
 
     var playerStatsConverted = new List<AnalyzerPlayerStats.Rootobject>();
 
-    if (Model.IsIncludedCsGoStats == true)
+    if (Model.IsIncludedCsGoStats == true && Model.CsGoStatsOnlyDisplayed == false)
     {
         playerStatsConverted = ConvertCombinedToPlayerStats(Model.PlayerStatsCombinedViewModel);
+    }
+    else if (Model.IsIncludedCsGoStats == false && Model.CsGoStatsOnlyDisplayed == true)
+    {
+        playerStatsConverted = ConvertCsgoToAnalyzerPlayerStats(Model.PlayerStatsForCsGo);
     }
     else
     {
@@ -348,6 +352,64 @@ factionPlayerStats, List<string>
             }
         }
     }
+
+
+    private List<AnalyzerPlayerStats.Rootobject> ConvertCsgoToAnalyzerPlayerStats(List<AnalyzerPlayerStatsForCsgo.Rootobject> csgoStatsList)
+    {
+        if (csgoStatsList == null || !csgoStatsList.Any()) return new List<AnalyzerPlayerStats.Rootobject>();
+
+        return csgoStatsList.Select(csgoStats => new AnalyzerPlayerStats.Rootobject
+            {
+                player_id = csgoStats.player_id,
+                game_id = csgoStats.game_id,
+                lifetime = new AnalyzerPlayerStats.Lifetime
+                {
+                    Wins = csgoStats.lifetime?.Wins,
+                    TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
+                    LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
+                    KDRatio = csgoStats.lifetime?.KDRatio,
+                    Matches = csgoStats.lifetime?.Matches,
+                    RecentResults = csgoStats.lifetime?.RecentResults,
+                    AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
+                    AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
+                    WinRate = csgoStats.lifetime?.WinRate,
+                    CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
+                    ExtensionData = csgoStats.lifetime?.ExtensionData
+                },
+                segments = csgoStats.segments?.Select(segment => new AnalyzerPlayerStats.Segment
+                {
+                    label = segment.label,
+                    img_small = segment.img_small,
+                    img_regular = segment.img_regular,
+                    stats = new AnalyzerPlayerStats.Stats
+                    {
+                        Kills = segment.stats.Kills,
+                        AverageHeadshots = segment.stats.AverageHeadshots,
+                        Assists = segment.stats.Assists,
+                        AverageKills = segment.stats.AverageKills,
+                        HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                        AverageKRRatio = segment.stats.AverageKRRatio,
+                        AverageKDRatio = segment.stats.AverageKDRatio,
+                        AverageQuadroKills = segment.stats.AverageQuadroKills,
+                        Matches = segment.stats.Matches,
+                        WinRate = segment.stats.WinRate,
+                        Rounds = segment.stats.Rounds,
+                        TotalHeadshots = segment.stats.TotalHeadshots,
+                        KRRatio = segment.stats.KRRatio,
+                        Deaths = segment.stats.Deaths,
+                        KDRatio = segment.stats.KDRatio,
+                        AverageAssists = segment.stats.AverageAssists,
+                        Headshots = segment.stats.Headshots,
+                        Wins = segment.stats.Wins,
+                        AverageDeaths = segment.stats.AverageDeaths,
+                        ExtensionData = segment.stats.ExtensionData
+                    },
+                    type = segment.type,
+                    mode = segment.mode
+                }).ToArray()
+            }).ToList();
+    }
+
 
     private List<AnalyzerPlayerStats.Rootobject> ConvertCombinedToPlayerStats(List<AnalyzerPlayerStatsCombined.Rootobject> combinedStats)
     {

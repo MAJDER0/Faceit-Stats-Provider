@@ -16,6 +16,7 @@ namespace Faceit_Stats_Provider.Classes
            Dictionary<string, List<string>>, Dictionary<string, List<string>>, Dictionary<string, List<string>>, Dictionary<string, List<string>>, Dictionary<string, List<string>>, Dictionary<string, List<string>>, List<(string, double)>, List<(string, double)>, List<(double, bool, double, string)>, List<(double, bool, double, string)>, Dictionary<string, string>, List<(List<(double, bool, double, string)>, string)>) CalculateNeededStatistics(
            string? faction1Leader, string? faction2Leader, AnalyzerMatchPlayers.Roster[] faction1Players, AnalyzerMatchPlayers.Roster[] faction2Players, List<AnalyzerPlayerStats.Rootobject> playerStats, List<(string playerId, AnalyzerMatchStats.Rootobject)> playerMatchStats, string? excludePlayerId = null)
         {
+            
             List<AnalyzerMatchPlayers.Roster> filteredFaction1Players = faction1Players.Where(p => p.player_id != excludePlayerId).ToList();
             List<AnalyzerMatchPlayers.Roster> filteredFaction2Players = faction2Players.Where(p => p.player_id != excludePlayerId).ToList();
 
@@ -41,25 +42,25 @@ namespace Faceit_Stats_Provider.Classes
             {
                 if (playerStat?.segments == null) continue;
 
-                foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.ToUpper())))
+                foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.Replace("de_","").ToUpper()) && s.mode == "5v5"))
                 {
                     if (segment?.stats == null) continue;
 
                     if (segment.stats.AverageKDRatio != null)
                     {
-                        faction1MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
+                        faction1MapStatsKD[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.AverageKDRatio);
                     }
                     if (segment.stats.WinRate != null)
                     {
-                        faction1MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                        faction1MapStatsWR[segment.label.Replace("de_","").ToUpper()].Add(segment.stats.WinRate);
                     }
                     if (segment.stats.AverageKRRatio != null)
                     {
-                        faction1MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
+                        faction1MapStatsKR[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.AverageKRRatio);
                     }
                     if (segment.stats.Matches != null)
                     {
-                        faction1MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                        faction1MapStatsMatches[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.Matches);
                     }
                 }
             }
@@ -68,25 +69,25 @@ namespace Faceit_Stats_Provider.Classes
             {
                 if (playerStat?.segments == null) continue;
 
-                foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.ToUpper())))
+                foreach (var segment in playerStat.segments.Where(s => maps.Contains(s.label.Replace("de_", "").ToUpper()) && s.mode == "5v5"))
                 {
                     if (segment?.stats == null) continue;
 
                     if (segment.stats.AverageKDRatio != null)
                     {
-                        faction2MapStatsKD[segment.label.ToUpper()].Add(segment.stats.AverageKDRatio);
+                        faction2MapStatsKD[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.AverageKDRatio);
                     }
                     if (segment.stats.WinRate != null)
                     {
-                        faction2MapStatsWR[segment.label.ToUpper()].Add(segment.stats.WinRate);
+                        faction2MapStatsWR[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.WinRate);
                     }
                     if (segment.stats.AverageKRRatio != null)
                     {
-                        faction2MapStatsKR[segment.label.ToUpper()].Add(segment.stats.AverageKRRatio);
+                        faction2MapStatsKR[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.AverageKRRatio);
                     }
                     if (segment.stats.Matches != null)
                     {
-                        faction2MapStatsMatches[segment.label.ToUpper()].Add(segment.stats.Matches);
+                        faction2MapStatsMatches[segment.label.Replace("de_", "").ToUpper()].Add(segment.stats.Matches);
                     }
                 }
             }

@@ -220,14 +220,22 @@
     </div>
 </div>
 
-<div id="players-partial-container-Cs2Stats">
+<div id="players-partial-container-Cs2Stats" style="display:@(Model.IsIncludedCsGoStats ? "none" : Model.CsGoStatsOnlyDisplayed ? "none" : "block")">
     @await Html.PartialAsync("~/Views/Analyzer/_PlayersPartial.cshtml", Model)
 </div>
 
-
-<div id="players-partial-container-CsGoStatsIncluded" style="display:none">
+<div id="players-partial-container-CsGoStatsIncluded" style="display:@(Model.IsIncludedCsGoStats && !Model.CsGoStatsOnlyDisplayed ? "block" : "none")">
     @{
         Model.IsIncludedCsGoStats = true;
+        Model.CsGoStatsOnlyDisplayed = false;
+    }
+    @await Html.PartialAsync("~/Views/Analyzer/_PlayersPartial.cshtml", Model)
+</div>
+
+<div id="players-partial-container-CsGoStatsOnly" style="display:@(Model.CsGoStatsOnlyDisplayed ? "block" : "none")">
+    @{
+        Model.IsIncludedCsGoStats = false;
+        Model.CsGoStatsOnlyDisplayed = true;
     }
     @await Html.PartialAsync("~/Views/Analyzer/_PlayersPartial.cshtml", Model)
 </div>
@@ -519,12 +527,14 @@
 }
 
 @section scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         $(document).ready(function () {
             var excludedPlayers = [];
-            var includeCsGoStats = @Model.IsIncludedCsGoStats.ToString().ToLower() === "true"; // Initialize from model
-            var CsGoStatsOnlyDisplayed = @Model.CsGoStatsOnlyDisplayed.ToString().ToLower() === "true"; // Initialize from model
+            var includeCsGoStats = @Model.IsIncludedCsGoStats.ToString().ToLower() === "true";
+            var CsGoStatsOnlyDisplayed = @Model.CsGoStatsOnlyDisplayed.ToString().ToLower() === "true";
 
             try {
                 var faction1Players = @Html.Raw(JsonConvert.SerializeObject(Model.Players.teams.faction1.roster));
@@ -554,7 +564,6 @@
                     InitialModelCopy: initialModelCopy
                 };
 
-                // Function to toggle player in both containers
                 function togglePlayer(playerId, isChecked) {
                     var cs2Checkbox = $('#players-partial-container-Cs2Stats .player-toggle[data-player-id="' + playerId + '"]');
                     if (cs2Checkbox.length) {
@@ -565,9 +574,13 @@
                     if (csgoCheckbox.length) {
                         csgoCheckbox.prop('checked', isChecked);
                     }
+
+                    var csgoOnlyCheckbox = $('#players-partial-container-CsGoStatsOnly .player-toggle[data-player-id="' + playerId + '"]');
+                    if (csgoOnlyCheckbox.length) {
+                        csgoOnlyCheckbox.prop('checked', isChecked);
+                    }
                 }
 
-                // Attach event handler to checkboxes in CS2 Stats container
                 $('#players-partial-container-Cs2Stats').on('change', '.player-toggle', function () {
                     var playerId = $(this).data('player-id');
                     var isChecked = $(this).is(':checked');
@@ -575,7 +588,6 @@
                     handlePlayerToggle(playerId, isChecked);
                 });
 
-                // Attach event handler to checkboxes in CS:GO Stats container
                 $('#players-partial-container-CsGoStatsIncluded').on('change', '.player-toggle', function () {
                     var playerId = $(this).data('player-id');
                     var isChecked = $(this).is(':checked');
@@ -583,34 +595,39 @@
                     handlePlayerToggle(playerId, isChecked);
                 });
 
-                // Initial synchronization if needed (e.g., on page load)
-                $('#players-partial-container-Cs2Stats .player-toggle').each(function () {
+                $('#players-partial-container-CsGoStatsOnly').on('change', '.player-toggle', function () {
                     var playerId = $(this).data('player-id');
                     var isChecked = $(this).is(':checked');
                     togglePlayer(playerId, isChecked);
+                    handlePlayerToggle(playerId, isChecked);
                 });
 
-                // Ensure correct initial state for CS:GO stats inclusion
                 function setInitialCsGoStatsState() {
                     if (includeCsGoStats) {
                         $('#IncludeCsGoStatsForAnalyzer').prop('checked', true);
                         $('#players-partial-container-CsGoStatsIncluded').css("display", "block");
                         $('#players-partial-container-Cs2Stats').css("display", "none");
+                        $('#players-partial-container-CsGoStatsOnly').css("display", "none");
+                    } else if (CsGoStatsOnlyDisplayed) {
+                        $('#IncludeCsGoStatsForAnalyzer').prop('checked', false);
+                        $('#OnlyCsGoStatsForAnalyzer').prop('checked', true);
+                        $('#players-partial-container-CsGoStatsOnly').css("display", "block");
+                        $('#players-partial-container-Cs2Stats').css("display", "none");
+                        $('#players-partial-container-CsGoStatsIncluded').css("display", "none");
                     } else {
                         $('#IncludeCsGoStatsForAnalyzer').prop('checked', false);
                         $('#players-partial-container-CsGoStatsIncluded').css("display", "none");
+                        $('#players-partial-container-CsGoStatsOnly').css("display", "none");
                         $('#players-partial-container-Cs2Stats').css("display", "block");
                     }
                 }
 
                 setInitialCsGoStatsState();
 
-                // Attach click event handler for player info to show/hide stats with animation
                 $('.player-info').click(function () {
                     var playerId = $(this).data('player-id');
                     var $playerAnalyzer = $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]');
 
-                    // Animate the roll-out effect
                     if ($playerAnalyzer.hasClass('hidden')) {
                         $playerAnalyzer.removeClass('hidden').slideDown();
                     } else {
@@ -642,7 +659,8 @@
                         Players: players,
                         PlayerStatsForCsGo: @Html.Raw(JsonConvert.SerializeObject(Model.PlayerStatsForCsGo)),
                         InitialModelCopy: initialModelCopy,
-                        IncludeCsGoStats: includeCsGoStats // Pass the current state of the toggle
+                        IncludeCsGoStats: includeCsGoStats,
+                        CsGoStatsOnlyDisplayed: CsGoStatsOnlyDisplayed // Include this flag in the request
                     };
 
                     $.ajax({
@@ -653,7 +671,6 @@
                         data: JSON.stringify(requestData),
                         success: function (data) {
                             $('#statistics-container').html(data);
-                            // Rebind events to ensure functionality after update
                             rebindEvents();
                         },
                         error: function (xhr, status, error) {
@@ -674,7 +691,11 @@
                 });
 
                 function toggleIncludeCsGoStats(includeCsGoStats) {
-                    CsGoStatsOnlyDisplayed = false; // Ensure Only CS:GO Stats is off
+                    if (includeCsGoStats) {
+                        CsGoStatsOnlyDisplayed = false;
+                        $('#OnlyCsGoStatsForAnalyzer').prop('checked', false);
+                    }
+
                     var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
                         return { playerId: pms.Item1, matchStats: pms.Item2 };
                     });
@@ -699,12 +720,8 @@
                         data: JSON.stringify(requestData),
                         success: function (data) {
                             $('#statistics-container').html(data);
-                            // Ensure correct state after toggling
                             setInitialCsGoStatsState();
-                            // Rebind events to ensure functionality after update
                             rebindEvents();
-
-                            // Additional AJAX request to update the partial view
                             $('#players-partial-container').html('');
                         },
                         error: function (xhr, status, error) {
@@ -715,7 +732,11 @@
                 }
 
                 function toggleOnlyCsGoStats(CsGoStatsOnlyDisplayed) {
-                    includeCsGoStats = false; // Ensure Include CS:GO Stats is off
+                    if (CsGoStatsOnlyDisplayed) {
+                        includeCsGoStats = false;
+                        $('#IncludeCsGoStatsForAnalyzer').prop('checked', false);
+                    }
+
                     var playerMatchStats = playerMatchStatsRaw.map(function (pms) {
                         return { playerId: pms.Item1, matchStats: pms.Item2 };
                     });
@@ -741,13 +762,8 @@
                         data: JSON.stringify(requestData),
                         success: function (data) {
                             $('#statistics-container').html(data);
-
                             setInitialCsGoStatsState();
-      
                             rebindEvents();
-
-                            console.log("XD?");
-
                             $('#players-partial-container').html('');
                         },
                         error: function (xhr, status, error) {
@@ -758,12 +774,10 @@
                 }
 
                 function rebindEvents() {
-                    // Rebind click event handler for player info to show/hide stats with animation
                     $('.player-info').off('click').on('click', function () {
                         var playerId = $(this).data('player-id');
                         var $playerAnalyzer = $('.PlayerMapsAnalyzer[data-player-id="' + playerId + '"]');
 
-                        // Animate the roll-out effect
                         if ($playerAnalyzer.hasClass('hidden')) {
                             $playerAnalyzer.removeClass('hidden').slideDown();
                         } else {
@@ -771,7 +785,6 @@
                         }
                     });
 
-                    // Rebind change event handler for player toggles
                     $('.player-toggle').off('change').on('change', function () {
                         var playerId = $(this).data('player-id');
                         var isChecked = $(this).is(':checked');
@@ -779,7 +792,6 @@
                     });
                 }
 
-                // Initial binding of events
                 rebindEvents();
 
             } catch (error) {
@@ -787,5 +799,6 @@
             }
         });
     </script>
+
 
 }

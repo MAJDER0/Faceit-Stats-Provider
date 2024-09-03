@@ -442,10 +442,24 @@ namespace Faceit_Stats_Provider.Controllers
             var initialModelCopy = model.InitialModelCopy;
             var players = model.Players;
             var excludedPlayerIds = model.ExcludedPlayers;
-            var includeCsGoStats = model.IncludeCsGoStats; // Ensure this field is in your ExcludePlayerModel
+            var includeCsGoStats = model.IncludeCsGoStats;
+            var csGoStatsOnlyDisplayed = model.CsGoStatsOnlyDisplayed; // Ensure this field is in your ExcludePlayerModel
 
             // Determine the correct player stats to use
-            var playerStats = includeCsGoStats ? ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel) : model.PlayerStats;
+            var playerStats = new List<AnalyzerPlayerStats.Rootobject>();
+
+            if (includeCsGoStats == true & csGoStatsOnlyDisplayed == false)
+            {
+                playerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
+            }
+            else if (includeCsGoStats == false & csGoStatsOnlyDisplayed == true)
+            {
+                playerStats = ConvertCsgoToAnalyzerPlayerStats(model.PlayerStatsForCsGo);
+            }
+            else {
+                playerStats = model.PlayerStats;
+            }
+
             var playerMatchStats = model.PlayerMatchStats?
                 .Where(pms => !excludedPlayerIds.Contains(pms.playerId))
                 .Select(pms => (pms.playerId, pms.matchStats))
@@ -475,6 +489,8 @@ namespace Faceit_Stats_Provider.Controllers
                     Players = players,
                     PlayerStats = CombinedPlayerStats,
                     PlayerMatchStats = playerMatchStats,
+                    IsIncludedCsGoStats = includeCsGoStats,
+                    CsGoStatsOnlyDisplayed = csGoStatsOnlyDisplayed,
                     InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
                 };
 
@@ -493,16 +509,12 @@ namespace Faceit_Stats_Provider.Controllers
                 var restoredPlayerStats = initialModelCopy.PlayerStats;
                 var restoredPlayerMatchStats = initialModelCopy.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList();
 
-
-
                 var result = StatsHelper.CalculateNeededStatistics(restoredPlayers.teams.faction1.leader, restoredPlayers.teams.faction2.leader, restoredPlayers.teams.faction1.roster, restoredPlayers.teams.faction2.roster, restoredPlayerStats, restoredPlayerMatchStats);
                 var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
 
                 if (model.IncludeCsGoStats == true && excludedPlayerIds.Count == 0)
                 {
                     CombinedPlayerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
-
-
                 }
 
                 var modifiedViewModel = new AnalyzerViewModel
@@ -511,6 +523,8 @@ namespace Faceit_Stats_Provider.Controllers
                     Players = restoredPlayers,
                     PlayerStats = CombinedPlayerStats,
                     PlayerMatchStats = restoredPlayerMatchStats,
+                    IsIncludedCsGoStats = includeCsGoStats,
+                    CsGoStatsOnlyDisplayed = csGoStatsOnlyDisplayed,
                     InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
                 };
 
@@ -523,6 +537,7 @@ namespace Faceit_Stats_Provider.Controllers
                 return PartialView("_StatisticsPartial", partialViewModel);
             }
         }
+
 
         private string ExtractRoomIdFromUrl(string url)
         {
@@ -798,6 +813,7 @@ namespace Faceit_Stats_Provider.Controllers
                         AverageKills = segment.stats.AverageKills,
                         HeadshotsperMatch = segment.stats.HeadshotsperMatch,
                         AverageKRRatio = segment.stats.AverageKRRatio,
+                        AverageKDRatio = segment.stats.AverageKDRatio,
                         AverageQuadroKills = segment.stats.AverageQuadroKills,
                         Matches = segment.stats.Matches,
                         WinRate = segment.stats.WinRate,
