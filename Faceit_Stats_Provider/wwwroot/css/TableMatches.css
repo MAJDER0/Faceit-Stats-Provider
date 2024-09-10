@@ -86,6 +86,16 @@
         background-color: rgba(85,27,142,0.18);
     }
 
+
+.match-row-second.BLAST {
+    background-color: rgba(85,27,142,0.2);
+    cursor: pointer;
+}
+
+    .match-row-second.BLAST:hover {
+        background-color: rgba(85,27,142,0.18);
+    }
+
 .thMoreSpace {
     width: 7%;
     text-align: center;

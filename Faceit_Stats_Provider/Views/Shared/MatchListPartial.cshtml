@@ -196,7 +196,7 @@
                                         }
                                 </td>
                                 <td></td>
-                                <td>
+                                <td colspan="3">
                                     <p class="Result">@match.rounds[0].competition_name</p>
                                 </td>
                                 <td></td>
@@ -293,7 +293,7 @@
 
                             else
                             {
-                            <tr class="-second UnrankedMatch">
+                            <tr class="match-row-second UnrankedMatch">
                                     @{
                                         RenderMatchInTable();
                                     }
@@ -303,7 +303,7 @@
 
 
 
-                        <tr class="scoreboard -second" style="display: none;">
+                        <tr class="scoreboard match-row-second" style="display: none;">
                             <td colspan="11">
                                 <table class="table matchesTableStats">
                                     <thead>
@@ -350,7 +350,7 @@
                                             @if (match.rounds[0].best_of != "Walkover")
                                             {
 
-                                                if (match.rounds[0].teams.Count() >=1)
+                                                if (match.rounds[0].teams.Count() >= 1)
                                                 {
 
                                                     var playersTeam0 = match.rounds[0].teams[0].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
@@ -358,76 +358,86 @@
 
                                                     @foreach (var player in playersTeam0)
                                                     {
-                                                        <tr>
-                                                            <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
-                                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
-                                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
-                                                            <td style="text-align:center;">@player.player_stats.KRRatio</td>
-                                                            <td style="text-align:center;">@player.player_stats.KDRatio</td>
-                                                            <td style="text-align:center;">@(
-                                            ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots
-                                            )</td>
-                                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
-                                                            <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs
-                                            )</td>
-                                                            <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills
-                                            )</td>
-                                                            <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills
-                                            )</td>
-                                                            <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills
-                                            )</td>
+                                                    <tr>
+                                                        <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
+                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
+                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
+                                                        <td style="text-align:center;">@player.player_stats.KRRatio</td>
+                                                        <td style="text-align:center;">@player.player_stats.KDRatio</td>
+                                                        <td style="text-align:center;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots
+                                                                    )
+                                                        </td>
+                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
+                                                        <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs
+                                                                    )
+                                                        </td>
+                                                        <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills
+                                                                    )
+                                                        </td>
+                                                        <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills
+                                                                    )
+                                                        </td>
+                                                        <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills
+                                                                    )
+                                                        </td>
                                                             @if (ShowDifferentStats)
                                                             {
-                                                                <td class="more-button" style="text-align:center;">
-                                                                    <img src="/niewypelnione2red.png" alt="Icon" class="more-button-cursor" height="25px" width="25px" />
-                                                                </td>
-                                                            }
-                                                        </tr>
-
-                                                        <tr class="scoreboard -second" style="display: none;">
-                                                            <td colspan="13">
-
-                                                                <table class="table matchesAdditionalTableStats">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>CLUTCH KILLS</th>
-                                                                            <th>FIRST KILLS</th>
-                                                                            <th>TOTAL DAMAGE</th>
-                                                                            <th>ENTRY WINS</th>
-                                                                            <th>FLASH COUNT</th>
-                                                                            <th>FLASH SUCCESS</th>
-                                                                            <th>ENEMIES FLASHED</th>
-                                                                            <th>PISTOL KILLS</th>
-                                                                            <th>SNIPER KILLS</th>
-                                                                            <th>ZEUS KILLS</th>
-                                                                            <th>KNIFE KILLS</th>
-                                                                            <th>DOUBLE KILLS</th>
-
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.ClutchKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.FirstKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.Damage</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.EntryWins</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashCount</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashSuccesses</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.EnemiesFlashed</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.PistolKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.SniperKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.ZeusKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.KnifeKills</td>
-                                                                        <td style="text-align:center; padding-right:5%;">@player.player_stats.DoubleKills</td>
-                                                                    </tbody>
-                                                                </table>
+                                                            <td class="more-button" style="text-align:center;">
+                                                                <img src="/niewypelnione2red.png" alt="Icon" class="more-button-cursor" height="25px" width="25px" />
                                                             </td>
-                                                        </tr>
+                                                            }
+                                                    </tr>
+
+                                                    <tr class="scoreboard match-row-second" style="display: none;">
+                                                        <td colspan="13">
+
+                                                            <table class="table matchesAdditionalTableStats">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>CLUTCH KILLS</th>
+                                                                        <th>FIRST KILLS</th>
+                                                                        <th>TOTAL DAMAGE</th>
+                                                                        <th>ENTRY WINS</th>
+                                                                        <th>FLASH COUNT</th>
+                                                                        <th>FLASH SUCCESS</th>
+                                                                        <th>ENEMIES FLASHED</th>
+                                                                        <th>PISTOL KILLS</th>
+                                                                        <th>SNIPER KILLS</th>
+                                                                        <th>ZEUS KILLS</th>
+                                                                        <th>KNIFE KILLS</th>
+                                                                        <th>DOUBLE KILLS</th>
+
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.ClutchKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.FirstKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.Damage</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.EntryWins</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashCount</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashSuccesses</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.EnemiesFlashed</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.PistolKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.SniperKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.ZeusKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.KnifeKills</td>
+                                                                <td style="text-align:center; padding-right:5%;">@player.player_stats.DoubleKills</td>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
                                                     }
                                                 }
                                             }
@@ -459,85 +469,95 @@
                         <tbody>
                                             @if (match.rounds[0].best_of != "Walkover")
                                             {
-                                                if (match.rounds[0].teams.Count()==2)
+                                                if (match.rounds[0].teams.Count() == 2)
                                                 {
                                                     var playersTeam1 = match.rounds[0].teams[1].players.OrderByDescending(p => int.Parse(p.player_stats.Kills));
 
 
-                                                @foreach (var player in playersTeam1)
-                                                {
-                                                    <tr>
-                                                        <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
-                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
-                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
-                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
-                                                        <td style="text-align:center;">@player.player_stats.KRRatio</td>
-                                                        <td style="text-align:center;">@player.player_stats.KDRatio</td>
-                                                        <td style="text-align:center;">@(
-                                            ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots
-                                            )</td>
-                                                        <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
-                                                        <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs
-                                            )</td>
-                                                        <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills
-                                            )</td>
-                                                        <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills
-                                            )</td>
-                                                        <td style="text-align:center; padding-right:2%;">@(
-                                            ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills
-                                            )</td>
-                                                        @if (ShowDifferentStats)
-                                                        {
-                                                            <td class="more-button" style="text-align:center;">
-                                                                <img src="/niewypelnione2red.png" alt="Icon" class="more-button-cursor" height="25px" width="25px" />
-                                                            </td>
-                                                        }
-                                                    </tr>
+                                                    @foreach (var player in playersTeam1)
+                                                    {
+                                        <tr>
+                                            <td style="text-align:left;"> <a asp-action="PlayerStats" asp-route-nickname="@player.player_id" style="text-decoration:none; color:                                                                                                  @(player.player_id == Model.Playerinfo.player_id ? "#6BBE49" : "white")">@player.nickname</a></td>
+                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Kills</td>
+                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Deaths</td>
+                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.Assists</td>
+                                            <td style="text-align:center;">@player.player_stats.KRRatio</td>
+                                            <td style="text-align:center;">@player.player_stats.KDRatio</td>
+                                            <td style="text-align:center;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.ADR : player.player_stats.Headshots
+                                                                    )
+                                            </td>
+                                            <td style="text-align:center; padding-right:2%;">@player.player_stats.HeadshotsPercentage</td>
+                                            <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.EntryCount : player.player_stats.MVPs
+                                                                    )
+                                            </td>
+                                            <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.v1Wins : player.player_stats.TripleKills
+                                                                    )
+                                            </td>
+                                            <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.v2Wins : player.player_stats.QuadroKills
+                                                                    )
+                                            </td>
+                                            <td style="text-align:center; padding-right:2%;">
+                                                                @(
+                                                                    ShowDifferentStats ? player.player_stats.UtilityDamage : player.player_stats.PentaKills
+                                                                    )
+                                            </td>
+                                                            @if (ShowDifferentStats)
+                                                            {
+                                                <td class="more-button" style="text-align:center;">
+                                                    <img src="/niewypelnione2red.png" alt="Icon" class="more-button-cursor" height="25px" width="25px" />
+                                                </td>
+                                                            }
+                                        </tr>
 
-                                                    <tr class="scoreboard -second" style="display: none;">
-                                                        <td colspan="13">
+                                        <tr class="scoreboard match-row-second" style="display: none;">
+                                            <td colspan="13">
 
-                                                            <table class="table matchesAdditionalTableStats">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>CLUTCH KILLS</th>
-                                                                        <th>FIRST KILLS</th>
-                                                                        <th>TOTAL DAMAGE</th>
-                                                                        <th>ENTRY WINS</th>
-                                                                        <th>FLASH COUNT</th>
-                                                                        <th>FLASH SUCCESS</th>
-                                                                        <th>ENEMIES FLASHED</th>
-                                                                        <th>PISTOL KILLS</th>
-                                                                        <th>SNIPER KILLS</th>
-                                                                        <th>ZEUS KILLS</th>
-                                                                        <th>KNIFE KILLS</th>
-                                                                        <th>DOUBLE KILLS</th>
+                                                <table class="table matchesAdditionalTableStats">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>CLUTCH KILLS</th>
+                                                            <th>FIRST KILLS</th>
+                                                            <th>TOTAL DAMAGE</th>
+                                                            <th>ENTRY WINS</th>
+                                                            <th>FLASH COUNT</th>
+                                                            <th>FLASH SUCCESS</th>
+                                                            <th>ENEMIES FLASHED</th>
+                                                            <th>PISTOL KILLS</th>
+                                                            <th>SNIPER KILLS</th>
+                                                            <th>ZEUS KILLS</th>
+                                                            <th>KNIFE KILLS</th>
+                                                            <th>DOUBLE KILLS</th>
 
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
 
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.ClutchKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FirstKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.Damage</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.EntryWins</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashCount</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashSuccesses</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.EnemiesFlashed</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.PistolKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.SniperKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.ZeusKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.KnifeKills</td>
-                                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.DoubleKills</td>
-                                                                </tbody>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.ClutchKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FirstKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.Damage</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.EntryWins</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashCount</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.FlashSuccesses</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.EnemiesFlashed</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.PistolKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.SniperKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.ZeusKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.KnifeKills</td>
+                                                    <td style="text-align:center; padding-right:5%;">@player.player_stats.DoubleKills</td>
+                                    </tbody>
+                                </table>
+                                </td>
+                                </tr>
+                                                    }
                                                 }
-                                            }
                                             }
                     </tbody>
                     </table>
@@ -550,3 +570,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('.more-button').on('click', function () {
+            var $row = $(this).closest('tr');
+            var $hiddenRow = $row.next('.scoreboard.match-row-second');
+            $hiddenRow.toggle();
+        });
+    });
+</script>
