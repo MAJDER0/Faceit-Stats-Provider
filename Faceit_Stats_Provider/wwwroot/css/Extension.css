@@ -1,0 +1,90 @@
+﻿
+
+#Extension-Name {
+    color: RGB(224, 17, 95);
+    font-family: 'Elemental End', sans-serif;
+    font-size: 32px;
+    text-align:center;
+}
+
+
+#Extension-Introduction {
+    max-width: 90%;
+    margin-top: 10%;
+    margin-left: 5%;
+    margin-bottom: 5%;
+    text-align: justify;
+    line-height: 1.6; 
+}
+
+    #Extension-Introduction span {
+        display:block;
+        margin-bottom:8%;
+    }
+
+.col-md-6 {
+    height:100%;
+}
+
+#Extension-Video {
+    position:absolute;
+    margin-top:5%;
+    margin-top:4%;
+    margin-left:2%;
+    margin-right: 3%;
+}
+
+#Extension-Example-Person-Images {
+    background-color: rgb(22, 22, 22);
+    width:100%;
+}
+    .image-container img {
+        margin-bottom: 1%;
+        display:inline-block;
+    }
+
+
+#Browsers {
+    display: flex;
+    justify-content:center;
+    flex-wrap: wrap;
+    gap: 15px; 
+    margin-top: 5%; 
+    margin-bottom: 8%; 
+}
+
+.browser-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 15px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .browser-button img {
+        margin-right: 10px; 
+    }
+
+
+    .browser-button:hover {
+        border: 1px solid #cc4400;
+        color:white;
+    }
+
+/* Specific styling for different browsers */
+.chrome, .opera, .firefox, .edge {
+    background-color: #222222;
+    border: 1px solid #222222;
+}
+
+
+#Available-Info {
+    display:flex;
+    justify-content:center;
+    width:89%;   
+}
