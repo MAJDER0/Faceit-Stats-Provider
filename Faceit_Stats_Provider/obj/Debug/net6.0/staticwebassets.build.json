@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3Qa4XxhfNwQ9/KaRmO6Nwik7VnB/KVS3e3uNaGqw+YI=",
+  "Hash": "iSbG8qHwytQXIg157tLEv17BzIjIWGptEfVS47HDB4Q=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -134,6 +134,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Assets\\edge.png"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\Assets\\Extension-screen.png",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "Assets/Extension-screen.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Assets\\Extension-screen.png"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\Assets\\firefox.png",
@@ -646,6 +663,40 @@
       "OriginalItemSpec": "wwwroot\\css\\TableMatches.css"
     },
     {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\Extension-video\\Extension-video.mp4",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "Extension-video/Extension-video.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Extension-video\\Extension-video.mp4"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\Extension-video\\Extension-video-cropped.mp4",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "Extension-video/Extension-video-cropped.mp4",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Extension-video\\Extension-video-cropped.mp4"
+    },
+    {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\SearchBarAnimation.js",
       "SourceId": "Faceit_Stats_Provider",
       "SourceType": "Discovered",
@@ -695,6 +746,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
+    },
+    {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\TypingEffectForExtension.js",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "js/TypingEffectForExtension.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\TypingEffectForExtension.js"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",

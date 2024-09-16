@@ -4,14 +4,13 @@
     color: RGB(224, 17, 95);
     font-family: 'Elemental End', sans-serif;
     font-size: 32px;
-    text-align:center;
+    text-align:left;
 }
 
 
 #Extension-Introduction {
     max-width: 90%;
-    margin-top: 10%;
-    margin-left: 5%;
+    margin-top: 8%;
     margin-bottom: 5%;
     text-align: justify;
     line-height: 1.6; 
@@ -19,38 +18,50 @@
 
     #Extension-Introduction span {
         display:block;
-        margin-bottom:8%;
+        margin-bottom:6.7%;
     }
+
+#Extension-Introduction em {
+    font-style: normal; /* Remove italic styling */
+    color: #cc4400; /* Apply your desired color */
+}
 
 .col-md-6 {
     height:100%;
 }
 
 #Extension-Video {
-    position:absolute;
-    margin-top:5%;
-    margin-top:4%;
-    margin-left:2%;
-    margin-right: 3%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0%;
+    box-shadow: 0px 4px 10px rgba(224, 17, 95, 0.7);
 }
 
 #Extension-Example-Person-Images {
-    background-color: rgb(22, 22, 22);
-    width:100%;
+    background: linear-gradient(to right, rgba(22, 22, 22, 0) 0%, rgb(22, 22, 22) 25%, rgb(22, 22, 22) 75%, rgba(22, 22, 22, 0) 100%);
+    width: 100%;
+    margin-bottom: 5%;
+    margin-top: 0%;
 }
+
+
     .image-container img {
-        margin-bottom: 1%;
         display:inline-block;
     }
+
+.image-container span {
+    margin-left:25%;
+}
+
 
 
 #Browsers {
     display: flex;
-    justify-content:center;
+    justify-content: flex-start;
     flex-wrap: wrap;
-    gap: 15px; 
-    margin-top: 5%; 
-    margin-bottom: 8%; 
+    gap: 15px;
+    margin-top: 5%;
+    margin-bottom: 8%;
 }
 
 .browser-button {
@@ -87,4 +98,11 @@
     display:flex;
     justify-content:center;
     width:89%;   
+}
+
+
+#Extension-Image {
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
