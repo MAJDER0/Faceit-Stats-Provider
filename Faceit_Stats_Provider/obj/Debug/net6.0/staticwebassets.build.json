@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iSbG8qHwytQXIg157tLEv17BzIjIWGptEfVS47HDB4Q=",
+  "Hash": "hoqquNRf4PJGlB8x3A2VhH/Y/X6LAznoz6bg5PUylQU=",
   "Source": "Faceit_Stats_Provider",
   "BasePath": "_content/Faceit_Stats_Provider",
   "Mode": "Default",
@@ -697,6 +697,23 @@
       "OriginalItemSpec": "wwwroot\\Extension-video\\Extension-video-cropped.mp4"
     },
     {
+      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\AppearanceEffectForExtension.js",
+      "SourceId": "Faceit_Stats_Provider",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
+      "BasePath": "_content/Faceit_Stats_Provider",
+      "RelativePath": "js/AppearanceEffectForExtension.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\AppearanceEffectForExtension.js"
+    },
+    {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\SearchBarAnimation.js",
       "SourceId": "Faceit_Stats_Provider",
       "SourceType": "Discovered",
@@ -746,23 +763,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
-    },
-    {
-      "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\js\\TypingEffectForExtension.js",
-      "SourceId": "Faceit_Stats_Provider",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\",
-      "BasePath": "_content/Faceit_Stats_Provider",
-      "RelativePath": "js/TypingEffectForExtension.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\js\\TypingEffectForExtension.js"
     },
     {
       "Identity": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
