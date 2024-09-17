@@ -573,7 +573,11 @@
 
 <script>
     $(document).ready(function () {
-        $('.more-button').on('click', function () {
+        // Remove any previous click events on .more-button to avoid multiple bindings
+        $(document).off('click', '.more-button');
+
+        // Use event delegation to handle clicks on dynamically loaded .more-button elements
+        $(document).on('click', '.more-button', function () {
             var $row = $(this).closest('tr');
             var $hiddenRow = $row.next('.scoreboard.match-row-second');
             $hiddenRow.toggle();

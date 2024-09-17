@@ -48,7 +48,8 @@ body {
 }
 
 .bg {
-    background: radial-gradient(circle at center top, #272727, #0D0D0D 60%) no-repeat;
+    background: radial-gradient(circle at center top, #272727, #0D0D0D 50%) no-repeat;
+/*    background-color: #0D0D0D;*/
     background-size: 150% 40%; /* Make it wider and control height */
     background-size: cover;
     height: 100%;
