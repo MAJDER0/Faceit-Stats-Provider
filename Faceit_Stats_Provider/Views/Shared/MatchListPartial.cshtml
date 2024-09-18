@@ -151,7 +151,6 @@
                                 </td>
                                 <td>
                                         @{
-
                                             var eloDiffList = Model.EloDiff;
                                             var targetEloDiff = eloDiffList.FirstOrDefault(eloDiff => eloDiff.match_Id == match.rounds[0].match_id);
                                             int elodifference = 0;
@@ -164,16 +163,47 @@
                                                 {
                                                     elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + 1].elo.ToString());
 
+                                                    int counter = 1;
+
+                                                    while ((elodifference > 400 || elodifference == 0) && counter <= 19)
+                                                    {
+                                                        counter++;
+                                                        elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + counter].elo.ToString());
+                                                    }
+
                                                 }
 
                                             }
 
                                         }
-                                    <p class="Result" style="color:@(elodifference == 0 ? "#6BBE49" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "#6BBE49" : "#F20707"))); margin-left: 4%;">
-                                            @(
-                                                elodifference == 0 ? "+" : (Math.Abs(elodifference) > 400 ? "" : (elodifference > 0 ? "+" : "-"))
-                                                )@Math.Abs(elodifference)
+
+
+                                        @{
+                                            var isWinner = match.rounds[0].round_stats.Winner == match.rounds[0].teams[0].team_id && match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id) ||
+                                            match.rounds[0].round_stats.Winner == match.rounds[0].teams[1].team_id && match.rounds[0].teams[1].players.Any(p => p.player_id == Model.Playerinfo.player_id);
+
+                                            var resultColor = elodifference == 0 ? "#6BBE49" :
+                                            Math.Abs(elodifference) > 400 ?
+                                            (isWinner ? "#6BBE49" : "#F20707") :
+                                            (elodifference > 0 ? "#6BBE49" : "#F20707");
+
+                                            var sign = elodifference == 0 ? "+" : (Math.Abs(elodifference) > 400 ? (isWinner ? "+" : "-") : (elodifference > 0 ? "+" : "-"));
+                                        }
+
+
+
+
+
+                                    <p class="Result" style="color:@resultColor">
+                                    
+                                            @if (targetEloDiff != null)
+                                            {
+                                            @(targetEloDiff.elo.ToString() == "0" ? Math.Abs(elodifference) : targetEloDiff.elo.ToString())
+                                            }
+                                    
+                                        (@(sign)@(Math.Abs(elodifference) > 400 ? 0 : Math.Abs(elodifference)))
                                     </p>
+
                                         @{
                                             index++;
                                         }
@@ -186,12 +216,12 @@
                                         @{
                                             if (match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                                             {
-                                            <p class="Result">BLAST</p>
+                                                <p class="Result">BLAST</p>
                                             }
 
                                             else
                                             {
-                                            <p class="Result">Walkover</p>
+                                                <p class="Result">Walkover</p>
                                             }
                                         }
                                 </td>
