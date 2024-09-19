@@ -9,6 +9,8 @@ namespace Faceit_Stats_Provider.Models
         public List<MatchStats.Round> Last20MatchesStats { get; set; }
         public OverallPlayerStats.Rootobject OverallPlayerStatsInfo { get; set; }
         public List<EloDiff.Root> EloDiff { get; set; }
+        public List<EloDiff.Root> currentModel { get; set; }
+        public int currentPage { get; set; } = -1;
         public List<EloDiff.Root> AllHistory { get; set; }
         public int? HighestCs2Elo { get; set; }
         public int? HighestCsgoElo { get; set; }

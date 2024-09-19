@@ -165,10 +165,11 @@
 
                                                     int counter = 1;
 
-                                                    while ((elodifference > 400 || elodifference == 0) && counter <= 19)
+                                                    while ((elodifference > 400 || elodifference == 0) && counter <= eloDiffList.Count()-1)
                                                     {
                                                         counter++;
                                                         elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + counter].elo.ToString());
+                                                       
                                                     }
 
                                                 }
@@ -199,6 +200,8 @@
                                             @if (targetEloDiff != null)
                                             {
                                             @(targetEloDiff.elo.ToString() == "0" ? Math.Abs(elodifference) : targetEloDiff.elo.ToString())
+                                            }else{
+                                            <span>nulll </span>
                                             }
                                     
                                         (@(sign)@(Math.Abs(elodifference) > 400 ? 0 : Math.Abs(elodifference)))
@@ -216,12 +219,12 @@
                                         @{
                                             if (match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                                             {
-                                                <p class="Result">BLAST</p>
+                                                    <p class="Result">BLAST</p>
                                             }
 
                                             else
                                             {
-                                                <p class="Result">Walkover</p>
+                                                    <p class="Result">Walkover</p>
                                             }
                                         }
                                 </td>

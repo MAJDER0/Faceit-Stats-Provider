@@ -23,6 +23,9 @@ using static Faceit_Stats_Provider.Models.PlayerStats;
 using System.Net.Sockets;
 using Faceit_Stats_Provider.Interfaces;
 using Faceit_Stats_Provider.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace Faceit_Stats_Provider.Controllers
 {
@@ -39,9 +42,10 @@ namespace Faceit_Stats_Provider.Controllers
         private readonly IConnectionMultiplexer _multiplexer;
         private readonly ILoadMoreMatches _loadMoreMatchesService;
         private readonly IFetchMaxElo _fetchMaxEloService;
+        private readonly IRazorViewEngine _razorViewEngine;
 
 
-        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer, ILoadMoreMatches loadMoreMatchesService, IFetchMaxElo fetchMaxEloService)
+        public PlayerStatsController(ILogger<HttpClientManager> logger, IHttpClientFactory clientFactory, IMemoryCache cache, IConfiguration configuration, IConnectionMultiplexer redis, GetTotalEloRetrievesCountFromRedis getTotalEloRetrievesCountFromRedis, IConnectionMultiplexer multiplexer, ILoadMoreMatches loadMoreMatchesService, IFetchMaxElo fetchMaxEloService, IRazorViewEngine razorViewEngine)
         {
             _random = new Random();
             _clientFactory = clientFactory;
@@ -52,6 +56,7 @@ namespace Faceit_Stats_Provider.Controllers
             _getTotalEloRetrievesCountFromRedis = getTotalEloRetrievesCountFromRedis;
             _multiplexer = multiplexer;
             _loadMoreMatchesService = loadMoreMatchesService;
+            _razorViewEngine = razorViewEngine;
             _fetchMaxEloService = fetchMaxEloService;
         }
 
@@ -411,6 +416,7 @@ namespace Faceit_Stats_Provider.Controllers
                 MatchHistory = matchhistory,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
+                currentModel = eloDiff,
                 Game = game,
                 ErrorMessage = errorString,
             };
@@ -425,12 +431,65 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
         }
 
-        [HttpGet("PlayerStats/LoadMoreMatches")]
-        public async Task<IActionResult> LoadMatches(string nickname, int offset, string playerID, bool isOffsetModificated, int QuantityOfEloRetrieves =10)
+        [HttpPost]
+        public async Task<IActionResult> LoadMoreMatches([FromBody] LoadMoreMatchesRequest request)
         {
-            var result = await _loadMoreMatchesService.LoadMoreMatches(nickname, offset, playerID, isOffsetModificated,QuantityOfEloRetrieves);
-            return PartialView("MatchListPartial", result);
+            if (request == null)
+            {
+                return BadRequest("Request data is null.");
+            }
+
+            // Use request.currentModel directly
+            var viewModel = await _loadMoreMatchesService.LoadMoreMatches(
+                request.nickname,
+                request.offset,
+                request.playerID,
+                request.isOffsetModificated,
+                request.QuantityOfEloRetrieves,
+                request.currentModel,
+                request.currentPage
+            );
+
+            // Render the partial view to a string
+            var partialViewHtml = RenderPartialViewToString("MatchListPartial", viewModel);
+
+            // Return JSON with both the HTML and the new EloDiff data
+            return Json(new
+            {
+                partialViewHtml = partialViewHtml,
+                newEloDiff = viewModel.EloDiff,
+                currentPage = viewModel.currentPage,
+                Game = viewModel.Game,
+            });
         }
+
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            ViewData.Model = model;
+
+            using (var sw = new System.IO.StringWriter())
+            {
+                var viewResult = _razorViewEngine.FindView(ControllerContext, viewName, false);
+
+                if (viewResult.View == null)
+                {
+                    throw new ArgumentNullException($"View {viewName} not found.");
+                }
+
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    ViewData,
+                    TempData,
+                    sw,
+                    new Microsoft.AspNetCore.Mvc.ViewFeatures.HtmlHelperOptions()
+                );
+
+                viewResult.View.RenderAsync(viewContext).GetAwaiter().GetResult();
+                return sw.GetStringBuilder().ToString();
+            }
+        }
+
 
         [HttpGet("/FetchMaxElo")]
         public async Task<IActionResult> FetchMaxElo(string playerId)
