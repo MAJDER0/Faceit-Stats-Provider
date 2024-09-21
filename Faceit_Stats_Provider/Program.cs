@@ -25,6 +25,12 @@ builder.Services.AddHttpClient("Faceit", httpClient =>
     httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI"));
 });
 
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
+
+
 // Configure HttpClient for Faceit V1 API
 builder.Services.AddHttpClient("FaceitV1", httpClient =>
 {
@@ -48,7 +54,6 @@ builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
 builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
 builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
 builder.Services.AddSingleton<HttpClientManager>();
-
 
 var app = builder.Build();
 

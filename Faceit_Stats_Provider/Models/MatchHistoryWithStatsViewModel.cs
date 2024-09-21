@@ -9,5 +9,6 @@
         public PlayerStats.Rootobject Playerinfo { get; set; }
         public string ErrorMessage { get; set; }
         public string Game { get; set; }
+        public int CsGoSwap { get; set; }
     }
 }

@@ -1,7 +1,9 @@
 ﻿@using (Html.BeginForm("Analyze", "Analyzer", FormMethod.Get))
 {
     <div class="row box">
-        <div class="FillExampleData"><p id="fillDataAnalyzer"><span>+ fill in with data</span></p></div>
+        <div class="FillExampleData">
+            <p id="fillDataAnalyzer"><span>+ fill in with data</span></p>
+        </div>
         <div class="col-sm-12 search-container">
             <input type="text" id="SearchBarAnalyzer" placeholder="" name="RoomID" />
             <input type="submit" value="Search" />

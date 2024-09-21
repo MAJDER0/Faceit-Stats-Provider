@@ -15,7 +15,8 @@ namespace Faceit_Stats_Provider.Models
         public int? HighestCs2Elo { get; set; }
         public int? HighestCsgoElo { get; set; }
         public long RedisEloRetrievesCount { get; set; }
-        public string Game { get; set; }
+        public string Game { get; set; } = "cs2";
+        public int CsGoSwap { get; set; } = 0;
         public string ErrorMessage { get; set; }
 
 
