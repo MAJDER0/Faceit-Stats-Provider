@@ -917,7 +917,7 @@
                                                                                                     </td>
 
                                                                                                     <td>
-                                                                                                            @{
+                                            @{
                                                 var eloDiffList = Model.EloDiff;
                                                 var targetEloDiff = eloDiffList.FirstOrDefault(eloDiff => eloDiff.match_Id == match.match_id);
                                                 int elodifference = 0;
@@ -935,8 +935,25 @@
                                                         while ((elodifference > 400 || elodifference == 0) && counter <= 19)
                                                         {
                                                             counter++;
-                                                            elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + counter].elo.ToString());
+                                                            if ((targetIndex + counter) >= 0 && (targetIndex + counter) < eloDiffList.Count())
+                                                            {
+                                                                elodifference = int.Parse(targetEloDiff.elo.ToString()) - int.Parse(eloDiffList[targetIndex + counter].elo.ToString());
+                                                            }
                                                         }
+
+
+                                                    if (elodifference == 0 && counter == 20)
+                                                    {
+                                                        if (Model.Playerinfo.games.cs2.faceit_elo != null)
+                                                        {
+                                                            elodifference = int.Parse(Model.Playerinfo.games.cs2.faceit_elo.ToString());
+                                                        }
+                                                        else if (Model.Playerinfo.games.csgo.faceit_elo != null)
+                                                        {
+                                                            elodifference = int.Parse(Model.Playerinfo.games.csgo.faceit_elo.ToString());
+                                                        }
+                                                    }
+
 
                                                     }
 
