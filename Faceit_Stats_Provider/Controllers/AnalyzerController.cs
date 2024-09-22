@@ -32,12 +32,18 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/Analyzer/AnalyzerSearch.cshtml");
         }
 
+        public IActionResult InvalidMatchRoomLink()
+        {
+            return View("~/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml");
+        }
+
+
         [HttpGet]
         public async Task<ActionResult> Analyze(string roomId)
         {
             if (string.IsNullOrEmpty(roomId))
             {
-                return View("~/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml");
+                return RedirectToAction("InvalidMatchRoomLink", "Analyzer");
             }
 
             var client = _clientFactory.CreateClient("Faceit");
@@ -82,7 +88,24 @@ namespace Faceit_Stats_Provider.Controllers
                             })
                         );
                     }
-                    getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+                    try
+                    {
+                        getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the error and handle it by adding a default task
+                        Console.WriteLine($"Error fetching stats for player {item.player_id}: {ex.Message}");
+
+                        // Add a default task with a fallback value to the task list
+                        getPlayerStatsForCsGoTasks.Add(Task.FromResult(new AnalyzerPlayerStatsForCsgo.Rootobject
+                        {
+                            player_id = item.player_id,
+                            game_id = item.game_player_id,
+                            lifetime = null,
+                            segments = null
+                        }));
+                    }
 
                     try
                     {
@@ -128,7 +151,25 @@ namespace Faceit_Stats_Provider.Controllers
                             })
                         );
                     }
-                    getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+
+                    try
+                    {
+                        getPlayerStatsForCsGoTasks.Add(GetOrAddToCacheAsync($"stats_csgo_{item.player_id}", () => client.GetFromJsonAsync<AnalyzerPlayerStatsForCsgo.Rootobject>($"v4/players/{item.player_id}/stats/csgo")));
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the error and handle it by adding a default task
+                        Console.WriteLine($"Error fetching stats for player {item.player_id}: {ex.Message}");
+
+                        // Add a default task with a fallback value to the task list
+                        getPlayerStatsForCsGoTasks.Add(Task.FromResult(new AnalyzerPlayerStatsForCsgo.Rootobject
+                        {
+                            player_id = item.player_id,
+                            game_id = item.game_player_id,
+                            lifetime = null,
+                            segments = null
+                        }));
+                    }
 
                     try
                     {
@@ -182,8 +223,11 @@ namespace Faceit_Stats_Provider.Controllers
                     {
                         foreach (var cs2Segment in cs2.segments)
                         {
-                            var normalizedLabel = NormalizeLabel(cs2Segment.label);
-                            combinedSegments[normalizedLabel] = ConvertToCombinedSegment(cs2Segment);
+                            if (!cs2Segment.mode.ToLower().Contains("wingman"))
+                            {
+                                var normalizedLabel = NormalizeLabel(cs2Segment.label);
+                                combinedSegments[normalizedLabel] = ConvertToCombinedSegment(cs2Segment);
+                            }
                         }
                     }
 
@@ -193,14 +237,18 @@ namespace Faceit_Stats_Provider.Controllers
 
                         foreach (var csgoSegment in csgoProperMaps)
                         {
-                            var normalizedLabel = NormalizeLabel(csgoSegment.label);
-                            if (combinedSegments.TryGetValue(normalizedLabel, out var existingSegment))
+                            if (!csgoSegment.mode.ToLower().Contains("wingman"))
                             {
-                                combinedSegments[normalizedLabel] = CombineSegments(existingSegment, ConvertToCombinedSegment(csgoSegment));
-                            }
-                            else
-                            {
-                                combinedSegments[normalizedLabel] = ConvertToCombinedSegment(csgoSegment);
+
+                                var normalizedLabel = NormalizeLabel(csgoSegment.label);
+                                if (combinedSegments.TryGetValue(normalizedLabel, out var existingSegment))
+                                {
+                                    combinedSegments[normalizedLabel] = CombineSegments(existingSegment, ConvertToCombinedSegment(csgoSegment));
+                                }
+                                else
+                                {
+                                    combinedSegments[normalizedLabel] = ConvertToCombinedSegment(csgoSegment);
+                                }
                             }
                         }
                     }
@@ -256,7 +304,7 @@ namespace Faceit_Stats_Provider.Controllers
             }
             catch (Exception ex)
             {
-                return View("~/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml");
+                return RedirectToAction("InvalidMatchRoomLink", "Analyzer");
             }
         }
 
@@ -561,7 +609,24 @@ namespace Faceit_Stats_Provider.Controllers
         {
             if (!_memoryCache.TryGetValue(cacheKey, out T cacheEntry))
             {
-                cacheEntry = await factory();
+                try
+                {
+                    cacheEntry = await factory(); // Call the API
+                }
+                catch (HttpRequestException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // Log the specific request that failed with a 404 error
+                    Console.WriteLine($"404 error for cache key: {cacheKey}. API endpoint not found.");
+                    return default(T); // Return a default value in case of 404
+                }
+                catch (Exception ex)
+                {
+                    // Handle other exceptions
+                    Console.WriteLine($"Error occurred while fetching data for cache key: {cacheKey}. Message: {ex.Message}");
+                    return default(T); // Return a default value in case of other errors
+                }
+
+                // If no exceptions, add the result to the cache
                 var cacheEntryOptions = new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = CacheDuration
@@ -570,6 +635,7 @@ namespace Faceit_Stats_Provider.Controllers
             }
             return cacheEntry;
         }
+
 
         private async Task<T> HandleHttpRequestAsync<T>(Task<T> task)
         {
@@ -782,56 +848,61 @@ namespace Faceit_Stats_Provider.Controllers
         {
             if (csgoStatsList == null || !csgoStatsList.Any()) return new List<AnalyzerPlayerStats.Rootobject>();
 
-            return csgoStatsList.Select(csgoStats => new AnalyzerPlayerStats.Rootobject
-            {
-                player_id = csgoStats.player_id,
-                game_id = csgoStats.game_id,
-                lifetime = new AnalyzerPlayerStats.Lifetime
-                {
-                    Wins = csgoStats.lifetime?.Wins,
-                    TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
-                    LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
-                    KDRatio = csgoStats.lifetime?.KDRatio,
-                    Matches = csgoStats.lifetime?.Matches,
-                    RecentResults = csgoStats.lifetime?.RecentResults,
-                    AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
-                    AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
-                    WinRate = csgoStats.lifetime?.WinRate,
-                    CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
-                    ExtensionData = csgoStats.lifetime?.ExtensionData
-                },
-                segments = csgoStats.segments?.Select(segment => new AnalyzerPlayerStats.Segment
-                {
-                    label = segment.label,
-                    img_small = segment.img_small,
-                    img_regular = segment.img_regular,
-                    stats = new AnalyzerPlayerStats.Stats
-                    {
-                        Kills = segment.stats.Kills,
-                        AverageHeadshots = segment.stats.AverageHeadshots,
-                        Assists = segment.stats.Assists,
-                        AverageKills = segment.stats.AverageKills,
-                        HeadshotsperMatch = segment.stats.HeadshotsperMatch,
-                        AverageKRRatio = segment.stats.AverageKRRatio,
-                        AverageKDRatio = segment.stats.AverageKDRatio,
-                        AverageQuadroKills = segment.stats.AverageQuadroKills,
-                        Matches = segment.stats.Matches,
-                        WinRate = segment.stats.WinRate,
-                        Rounds = segment.stats.Rounds,
-                        TotalHeadshots = segment.stats.TotalHeadshots,
-                        KRRatio = segment.stats.KRRatio,
-                        Deaths = segment.stats.Deaths,
-                        KDRatio = segment.stats.KDRatio,
-                        AverageAssists = segment.stats.AverageAssists,
-                        Headshots = segment.stats.Headshots,
-                        Wins = segment.stats.Wins,
-                        AverageDeaths = segment.stats.AverageDeaths,
-                        ExtensionData = segment.stats.ExtensionData
-                    },
-                    type = segment.type,
-                    mode = segment.mode
-                }).ToArray()
-            }).ToList();
+            return csgoStatsList
+      .Where(csgoStats => csgoStats != null)  // Ensure csgoStats is not null
+      .Select(csgoStats => new AnalyzerPlayerStats.Rootobject
+      {
+          player_id = csgoStats.player_id,
+          game_id = csgoStats.game_id,
+          lifetime = csgoStats.lifetime != null ? new AnalyzerPlayerStats.Lifetime
+          {
+              Wins = csgoStats.lifetime?.Wins,
+              TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
+              LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
+              KDRatio = csgoStats.lifetime?.KDRatio,
+              Matches = csgoStats.lifetime?.Matches,
+              RecentResults = csgoStats.lifetime?.RecentResults,
+              AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
+              AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
+              WinRate = csgoStats.lifetime?.WinRate,
+              CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
+              ExtensionData = csgoStats.lifetime?.ExtensionData
+          } : null,  // Return null for lifetime if csgoStats.lifetime is null
+
+          segments = csgoStats.segments?.Where(segment => segment != null)  // Ensure no null segments
+              .Select(segment => new AnalyzerPlayerStats.Segment
+              {
+                  label = segment.label,
+                  img_small = segment.img_small,
+                  img_regular = segment.img_regular,
+                  stats = segment.stats != null ? new AnalyzerPlayerStats.Stats
+                  {
+                      Kills = segment.stats.Kills,
+                      AverageHeadshots = segment.stats.AverageHeadshots,
+                      Assists = segment.stats.Assists,
+                      AverageKills = segment.stats.AverageKills,
+                      HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                      AverageKRRatio = segment.stats.AverageKRRatio,
+                      AverageKDRatio = segment.stats.AverageKDRatio,
+                      AverageQuadroKills = segment.stats.AverageQuadroKills,
+                      Matches = segment.stats.Matches,
+                      WinRate = segment.stats.WinRate,
+                      Rounds = segment.stats.Rounds,
+                      TotalHeadshots = segment.stats.TotalHeadshots,
+                      KRRatio = segment.stats.KRRatio,
+                      Deaths = segment.stats.Deaths,
+                      KDRatio = segment.stats.KDRatio,
+                      AverageAssists = segment.stats.AverageAssists,
+                      Headshots = segment.stats.Headshots,
+                      Wins = segment.stats.Wins,
+                      AverageDeaths = segment.stats.AverageDeaths,
+                      ExtensionData = segment.stats.ExtensionData
+                  } : null,  // Return null for stats if segment.stats is null
+                  type = segment.type,
+                  mode = segment.mode
+              }).ToArray() ?? Array.Empty<AnalyzerPlayerStats.Segment>()  // Handle null segments array
+      }).ToList();
+
         }
     }
 

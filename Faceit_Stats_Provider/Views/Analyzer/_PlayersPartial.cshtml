@@ -110,7 +110,12 @@ factionPlayerStats, List<string>
                 var playerStatCombined = ConvertCombinedToPlayerStats(Model.PlayerStatsCombinedViewModel).Where(player=>player.player_id == playerStat.player_id).ToList();
 
                 var Last20PlayerSectionInfo = Last20PlayerSection(playerStatCombined[0], maps, MapStatsForSinglePlayer, player);
-                var csgostats = Model.PlayerStatsForCsGo.Where(k => k.player_id == playerStat.player_id).ToList();
+
+                var csgostats = Model.PlayerStatsForCsGo
+    .Where(k => k != null && k.player_id != null && k.player_id == playerStat.player_id)
+    .ToList();
+
+
                 var CalculatedQuantityOfMatches = CalculateQuantityOfMatches(maps, csgostats, playerStat);
                 var PlayerLast20KD = Last20PlayerSectionInfo.Item1;
                 var PlayerLast20KR = Last20PlayerSectionInfo.Item3;
@@ -358,56 +363,61 @@ factionPlayerStats, List<string>
     {
         if (csgoStatsList == null || !csgoStatsList.Any()) return new List<AnalyzerPlayerStats.Rootobject>();
 
-        return csgoStatsList.Select(csgoStats => new AnalyzerPlayerStats.Rootobject
-            {
-                player_id = csgoStats.player_id,
-                game_id = csgoStats.game_id,
-                lifetime = new AnalyzerPlayerStats.Lifetime
-                {
-                    Wins = csgoStats.lifetime?.Wins,
-                    TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
-                    LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
-                    KDRatio = csgoStats.lifetime?.KDRatio,
-                    Matches = csgoStats.lifetime?.Matches,
-                    RecentResults = csgoStats.lifetime?.RecentResults,
-                    AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
-                    AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
-                    WinRate = csgoStats.lifetime?.WinRate,
-                    CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
-                    ExtensionData = csgoStats.lifetime?.ExtensionData
-                },
-                segments = csgoStats.segments?.Select(segment => new AnalyzerPlayerStats.Segment
-                {
-                    label = segment.label,
-                    img_small = segment.img_small,
-                    img_regular = segment.img_regular,
-                    stats = new AnalyzerPlayerStats.Stats
-                    {
-                        Kills = segment.stats.Kills,
-                        AverageHeadshots = segment.stats.AverageHeadshots,
-                        Assists = segment.stats.Assists,
-                        AverageKills = segment.stats.AverageKills,
-                        HeadshotsperMatch = segment.stats.HeadshotsperMatch,
-                        AverageKRRatio = segment.stats.AverageKRRatio,
-                        AverageKDRatio = segment.stats.AverageKDRatio,
-                        AverageQuadroKills = segment.stats.AverageQuadroKills,
-                        Matches = segment.stats.Matches,
-                        WinRate = segment.stats.WinRate,
-                        Rounds = segment.stats.Rounds,
-                        TotalHeadshots = segment.stats.TotalHeadshots,
-                        KRRatio = segment.stats.KRRatio,
-                        Deaths = segment.stats.Deaths,
-                        KDRatio = segment.stats.KDRatio,
-                        AverageAssists = segment.stats.AverageAssists,
-                        Headshots = segment.stats.Headshots,
-                        Wins = segment.stats.Wins,
-                        AverageDeaths = segment.stats.AverageDeaths,
-                        ExtensionData = segment.stats.ExtensionData
-                    },
-                    type = segment.type,
-                    mode = segment.mode
-                }).ToArray()
-            }).ToList();
+        return csgoStatsList
+     .Where(csgoStats => csgoStats != null)  // Ensure csgoStats is not null
+     .Select(csgoStats => new AnalyzerPlayerStats.Rootobject
+         {
+             player_id = csgoStats.player_id,
+             game_id = csgoStats.game_id,
+             lifetime = csgoStats.lifetime != null ? new AnalyzerPlayerStats.Lifetime
+             {
+                 Wins = csgoStats.lifetime?.Wins,
+                 TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
+                 LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
+                 KDRatio = csgoStats.lifetime?.KDRatio,
+                 Matches = csgoStats.lifetime?.Matches,
+                 RecentResults = csgoStats.lifetime?.RecentResults,
+                 AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
+                 AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
+                 WinRate = csgoStats.lifetime?.WinRate,
+                 CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
+                 ExtensionData = csgoStats.lifetime?.ExtensionData
+             } : null,  // Handle null csgoStats.lifetime
+
+             segments = csgoStats.segments?.Where(segment => segment != null) // Ensure segments are not null
+                 .Select(segment => new AnalyzerPlayerStats.Segment
+                 {
+                     label = segment.label,
+                     img_small = segment.img_small,
+                     img_regular = segment.img_regular,
+                     stats = segment.stats != null ? new AnalyzerPlayerStats.Stats
+                     {
+                         Kills = segment.stats.Kills,
+                         AverageHeadshots = segment.stats.AverageHeadshots,
+                         Assists = segment.stats.Assists,
+                         AverageKills = segment.stats.AverageKills,
+                         HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                         AverageKRRatio = segment.stats.AverageKRRatio,
+                         AverageKDRatio = segment.stats.AverageKDRatio,
+                         AverageQuadroKills = segment.stats.AverageQuadroKills,
+                         Matches = segment.stats.Matches,
+                         WinRate = segment.stats.WinRate,
+                         Rounds = segment.stats.Rounds,
+                         TotalHeadshots = segment.stats.TotalHeadshots,
+                         KRRatio = segment.stats.KRRatio,
+                         Deaths = segment.stats.Deaths,
+                         KDRatio = segment.stats.KDRatio,
+                         AverageAssists = segment.stats.AverageAssists,
+                         Headshots = segment.stats.Headshots,
+                         Wins = segment.stats.Wins,
+                         AverageDeaths = segment.stats.AverageDeaths,
+                         ExtensionData = segment.stats.ExtensionData
+                     } : null,  // Handle null segment.stats
+                     type = segment.type,
+                     mode = segment.mode
+                 }).ToArray() ?? Array.Empty<AnalyzerPlayerStats.Segment>()  // Handle null segments list
+         }).ToList();
+
     }
 
 

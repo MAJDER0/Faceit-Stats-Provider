@@ -439,7 +439,6 @@ namespace Faceit_Stats_Provider.Controllers
                 return BadRequest("Request data is null.");
             }
 
-            _logger.LogInformation($"Received CsGoSwap HAGSADGHSDGAUIDSOU: {request.CsGoSwap}");
 
             // Use request.currentModel directly
             var viewModel = await _loadMoreMatchesService.LoadMoreMatches(
@@ -457,8 +456,6 @@ namespace Faceit_Stats_Provider.Controllers
             // Render the partial view to a string
             var partialViewHtml = RenderPartialViewToString("MatchListPartial", viewModel);
 
-            _logger.LogInformation($"Received game HAGSADGHSDGAUIDSOU: {viewModel.Game}");
-            _logger.LogInformation($"Received CsGoSwap2222 HAGSADGHSDGAUIDSOU: {viewModel.CsGoSwap}");
 
             // Return JSON with both the HTML and the new EloDiff data
             return Json(new
