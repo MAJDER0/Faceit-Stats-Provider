@@ -505,7 +505,15 @@ namespace Faceit_Stats_Provider.Controllers
             try
             {
                 var highestEloData = await _fetchMaxEloService.FetchMaxEloAsync(playerId);
-                return Ok(highestEloData);
+
+                return Ok(new
+                {
+                    highestCs2Elo = highestEloData.HighestCs2Elo,
+                    highestCs2EloMatchID = highestEloData.HighestCs2MatchID,
+                    highestCsgoElo = highestEloData.HighestCsgoElo,
+                    highestCsgoMatchID = highestEloData.HighestCsgoMatchID
+                });
+
             }
             catch (Exception ex)
             {

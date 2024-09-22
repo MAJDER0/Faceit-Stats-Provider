@@ -201,20 +201,27 @@ namespace Faceit_Stats_Provider.Services
 
             // Fetch the highest elo data
             var FetchedMaxElosFromRedisCs2 = 0;
+            var FetchedMaxElosFromRedisCs2MatchID = "";
             var FetchedMaxElosFromRedisCsgo = 0;
+            var FetchedMaxElosFromRedisCsgoMatchID = "";
 
             if (_multiplexer.IsConnected)
             {
                 var redisFetcher = new RedisFetchMaxElo(_configuration);
                 var FetchedMaxElos = await redisFetcher.GetHighestEloAsync(playerId);
                 FetchedMaxElosFromRedisCs2 = FetchedMaxElos.HighestCs2Elo;
+                FetchedMaxElosFromRedisCs2MatchID = FetchedMaxElos.Cs2MatchId;
+
                 FetchedMaxElosFromRedisCsgo = FetchedMaxElos.HighestCsgoElo;
+                FetchedMaxElosFromRedisCsgoMatchID = FetchedMaxElos.CsgoMatchId;
             }
 
             var HighestElos = new HighestEloDataModel
             {
                 HighestCs2Elo = FetchedMaxElosFromRedisCs2,
-                HighestCsgoElo = FetchedMaxElosFromRedisCsgo
+                HighestCs2MatchID = FetchedMaxElosFromRedisCs2MatchID,
+                HighestCsgoElo = FetchedMaxElosFromRedisCsgo,
+                HighestCsgoMatchID = FetchedMaxElosFromRedisCsgoMatchID
             };
 
             return HighestElos;

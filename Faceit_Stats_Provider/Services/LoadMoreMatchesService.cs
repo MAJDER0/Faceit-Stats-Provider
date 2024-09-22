@@ -75,7 +75,7 @@ namespace Faceit_Stats_Provider.Services
                 var playerinf = await client.GetFromJsonAsync<PlayerStats.Rootobject>($"v4/players?nickname={nickname}");
 
                 var matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                    $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit=10");
+                    $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit={limit}");
 
                 if (matchhistory?.items == null || matchhistory.items.Length == 0)
                 {
@@ -87,13 +87,13 @@ namespace Faceit_Stats_Provider.Services
                         CsGoSwap = 1;
                     }
                     matchhistory = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit=10");
+                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit={limit}");
                 }
 
                 if (isOffsetModificated)
                 {
                     var additionalMatch = await client.GetFromJsonAsync<MatchHistory.Rootobject>(
-                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset + limit}&limit=10");
+                        $"v4/players/{playerID}/history?game={game}&from=1200&offset={offset}&limit={limit}");
 
                     if (additionalMatch?.items != null && additionalMatch.items.Any())
                     {
@@ -178,8 +178,14 @@ namespace Faceit_Stats_Provider.Services
                     if (game != "csgo")
                     {
                         // Fetch "csgo" data as well, if game is not "csgo"
-                        eloDiffTaskCs2Check = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                            $"v1/stats/time/users/{playerID}/games/cs2?page={page + 1}&size=100");
+                        try
+                        {
+                            eloDiffTaskCs2Check = client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                                $"v1/stats/time/users/{playerID}/games/cs2?page={page + 1}&size=100");
+                        }
+                        catch {
+                            eloDiffTaskCs2Check = null;
+                        }
                     }
 
                     if (currentPage != page || eloDiffTaskCs2Check is null || eloDiffTaskCs2Check.Result.Count() == 0)

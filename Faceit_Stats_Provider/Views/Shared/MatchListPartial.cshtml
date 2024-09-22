@@ -11,7 +11,7 @@
             }
             else if (Model.Playerinfo is null)
             {
-                <div class="h4 NoMoreMatches">No more matches</div>
+                <div class="h4 NoMoreMatches">No more matches currently available</div>
 
                 <script>
                     $(document).ready(function () {
@@ -72,7 +72,7 @@
                                         }
                                 </td>
                                 <td><p>@match.rounds[0].round_stats.Score<p></td>
-                                <td><p>@match.rounds[0].round_stats.Map</p></td>
+                                <td style="overflow: hidden; text-overflow: ellipsis; max-width: 100px; word-wrap: break-word; word-break: break-word;"><p>@match.rounds[0].round_stats.Map</p></td>
                                 <td><p style="padding-left: 18%;">@match.rounds[0].game_mode</p></td>
                                 <td>
                                         @if (match.rounds[0].teams[0].players.Any(p => p.player_id == Model.Playerinfo.player_id))
@@ -235,12 +235,12 @@
                                         @{
                                             if (match.rounds[0].competition_name.ToString().ToUpper().Contains("BLAST"))
                                             {
-                                                    <p class="Result">BLAST</p>
+                                                            <p class="Result">BLAST</p>
                                             }
 
                                             else
                                             {
-                                                    <p class="Result">Walkover</p>
+                                                            <p class="Result">Walkover</p>
                                             }
                                         }
                                 </td>

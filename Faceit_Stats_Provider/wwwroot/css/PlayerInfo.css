@@ -44,3 +44,20 @@
     border-style: solid;
     border-color: #8202a5;
 }
+
+.HighestCs2EloContainer a {
+    color: white;
+    text-decoration: none;
+}
+
+
+/* Make sure this comes after the above */
+.max-links {
+    text-decoration: none;
+    color: inherit;
+}
+
+    .max-links:hover {
+        color: RGB(224, 17, 95);
+        background-color: #1a1a1a;
+    }

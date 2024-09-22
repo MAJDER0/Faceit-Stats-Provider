@@ -19,7 +19,7 @@ public class RedisFetchMaxElo
         _redis = ConnectionMultiplexer.Connect(_configuration.GetConnectionString("Redis"));
     }
 
-    public async Task<(int HighestCsgoElo, int HighestCs2Elo)> GetHighestEloAsync(string userId)
+    public async Task<(int HighestCsgoElo, string CsgoMatchId, int HighestCs2Elo, string Cs2MatchId)> GetHighestEloAsync(string userId)
     {
         IDatabase db = _redis.GetDatabase();
         var key = $"userMatchesHistory_{userId}";
@@ -27,27 +27,37 @@ public class RedisFetchMaxElo
         string userMatchesJson = await db.StringGetAsync(key);
         if (string.IsNullOrEmpty(userMatchesJson))
         {
-            return (0, 0); // No data found, return default values
+            return (0, string.Empty, 0, string.Empty); // No data found, return default values
         }
 
         var userMatches = JsonSerializer.Deserialize<IEnumerable<RedisMatchData.MatchData>>(userMatchesJson);
         if (userMatches == null || !userMatches.Any())
         {
-            return (0, 0); // No matches found, return default values
+            return (0, string.Empty, 0, string.Empty); // No matches found, return default values
         }
 
-        var HighestCsgoElo = userMatches
-            .Where(match => match.game == "csgo") 
-            .Select(match => match.elo) 
-            .DefaultIfEmpty(0) 
-            .Max(); 
+        // Get the highest ELO and match ID for CSGO
+        var highestCsgoMatch = userMatches
+            .Where(match => match.game == "csgo")
+            .Select(match => new { match.elo, match.matchId })
+            .OrderByDescending(match => match.elo)
+            .FirstOrDefault();
 
-        var HighestCs2Elo = userMatches
-            .Where(match => match.game == "cs2") 
-            .Select(match => match.elo) 
-            .DefaultIfEmpty(0) 
-            .Max(); 
+        // Get the highest ELO and match ID for CS2
+        var highestCs2Match = userMatches
+            .Where(match => match.game == "cs2")
+            .Select(match => new { match.elo, match.matchId })
+            .OrderByDescending(match => match.elo)
+            .FirstOrDefault();
 
-        return (HighestCsgoElo, HighestCs2Elo);
+        // Extract the ELO and match ID for both games
+        int highestCsgoElo = highestCsgoMatch?.elo ?? 0;
+        string csgoMatchId = highestCsgoMatch?.matchId ?? string.Empty;
+
+        int highestCs2Elo = highestCs2Match?.elo ?? 0;
+        string cs2MatchId = highestCs2Match?.matchId ?? string.Empty;
+
+        return (highestCsgoElo, csgoMatchId, highestCs2Elo, cs2MatchId);
     }
+
 }
