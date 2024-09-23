@@ -47,6 +47,31 @@ body {
     transform: translate(-50%,-50%);
 }
 
+html {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #222222 rgba(0, 0, 0, 0.1); /* Firefox */
+}
+
+/* Webkit Browsers */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1); /* Background of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #222222; /* Scrollbar thumb color */
+    border-radius: 6px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #333333; /* Lighter shade on hover */
+    }
+
+
+
 .bg {
     background: radial-gradient(circle at center top, #272727, #0D0D0D 50%) no-repeat;
 /*    background-color: #0D0D0D;*/

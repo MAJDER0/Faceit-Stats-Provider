@@ -249,15 +249,15 @@
                         $(document).ready(function () {
                             var playerId = '@Model.Playerinfo.player_id'; // Get playerId from model
 
-                              function updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID) {
-            // Make the ELO values clickable and redirect to the corresponding match room
-            $('#max-csgo-elo').html(
+                            function updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID) {
+                                // Make the ELO values clickable and redirect to the corresponding match room
+                                $('#max-csgo-elo').html(
                                     'MAX CS:GO ELO: <a class="max-links" href="https://www.faceit.com/en/csgo/room/' + maxCsgoMatchID + '" target="_blank">' + maxCsgoElo + '</a>'
-            );
-            $('#highest-cs2-elo-value').html(
-                '<a class="max-links" href="https://www.faceit.com/en/cs2/room/' + maxCs2MatchID + '" target="_blank">' + maxCs2Elo + '</a>'
-            );
-        }
+                                );
+                                $('#highest-cs2-elo-value').html(
+                                    '<a class="max-links" href="https://www.faceit.com/en/cs2/room/' + maxCs2MatchID + '" target="_blank">' + maxCs2Elo + '</a>'
+                                );
+                            }
                             $.ajax({
                                 url: '/FetchMaxElo',
                                 type: 'GET',
@@ -739,7 +739,7 @@
 
         }
 
-                                                                                                for (var i = 0; i < 20; i++) {
+                                                                                                        for (var i = 0; i < 20; i++) {
             matches.push(totalMatches - i);
         }
 
@@ -1395,10 +1395,39 @@
                                 currentModel = response.newEloDiff;
                                 currentPage = response.currentPage;
 
-                                console.log("Received CsGoSwap from server: " + response.CsGoSwap); // Log the server response for CsGoSwap
-                                console.log("Received Game from server: " + response.game); // Log the server response for CsGoSwap
-                                console.log("Received currentPage from server: " + response.currentPage); // Log the server response for CsGoSwap
-                                console.log("Received newEloDiff from server: " + response.newEloDiff); // Log the server response for CsGoSwap
+                                $('.matchesTable').css({
+                                    'table-layout': 'auto',  // or 'fixed', depending on your desired layout
+                                    'width': '100%'
+                                });
+
+
+                                if (toggleSwitch.checked) {
+                                    last20Stats.style.display = 'none';
+                                    All5v5games.style.display = 'none';
+                                    rankedGames.style.display = 'block';
+
+                                    for (let i = 0; i < v5ALLmatches.length; i++) {
+                                        v5ALLmatches[i].style.display = 'none';
+                                    }
+
+                                    for (let i = 0; i < v1TableMatches.length; i++) {
+                                        v1TableMatches[i].style.display = 'none';
+                                    }
+                                }
+
+                                if (toggle5V5Games.checked) {
+                                    last20Stats.style.display = 'none';
+                                    All5v5games.style.display = 'block';
+                                    rankedGames.style.display = 'none';
+
+                                    for (let i = 0; i < v1TableMatches.length; i++) {
+                                        v1TableMatches[i].style.display = 'none';
+                                    }
+
+                                    for (let i = 0; i < v5ALLmatches.length; i++) {
+                                        v5ALLmatches[i].style.display = 'table-row';
+                                    }
+                                }
 
                                 // Update CsGoSwap with the value from the server response
                                 CsGoSwap = response.csGoSwap;
