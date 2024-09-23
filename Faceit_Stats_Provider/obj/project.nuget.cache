@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rcNSFbBORa5dzpaTMbZw/4pMmRYPuLX9ZvtWdqs/GvW330NGWxVBaNVr6QZnsVGt25/fQ91M5M4zxDRaFu/Oow==",
+  "dgSpecHash": "vTava5M9Qq0nocFukBDbBqvLX9C4ZRABKtYGqywPGYrWSFSTqtEiWEOZuJhK8rkiC2SNo3jaLwG+hCyfwvMUEQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Tomek\\source\\repos\\Faceit_Stats_Provider\\Faceit_Stats_Provider\\Faceit_Stats_Provider.csproj",
   "expectedPackageFiles": [
@@ -45,6 +45,7 @@
     "C:\\Users\\Tomek\\.nuget\\packages\\microsoft.net.http.headers\\2.2.0\\microsoft.net.http.headers.2.2.0.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\microsoft.netcore.platforms\\2.0.0\\microsoft.netcore.platforms.2.0.0.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\Tomek\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.17.0\\microsoft.visualstudio.azure.containers.tools.targets.1.17.0.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\Tomek\\.nuget\\packages\\stackexchange.redis\\2.7.27\\stackexchange.redis.2.7.27.nupkg.sha512",
