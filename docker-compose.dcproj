@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>2c58605a-4cde-4d76-aeb2-c67a5b52e928</ProjectGuid>
+    <ProjectGuid>b16ab11d-1b58-4393-a0cb-e99959ef987d</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>faceit_stats_provider</DockerServiceName>

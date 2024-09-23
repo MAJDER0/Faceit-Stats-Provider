@@ -5,8 +5,8 @@ services:
     container_name: Faceit_Stats_Provider
     image: ${DOCKER_REGISTRY-}faceitstatsprovider
     build:
-      context: .
-      dockerfile: Faceit_Stats_Provider/Dockerfile
+      context: .  # This is the root of the project where the Dockerfile is located
+      dockerfile: Faceit_Stats_Provider/Dockerfile  # Path to the Dockerfile
     ports:
       - "8000:80"
     networks:

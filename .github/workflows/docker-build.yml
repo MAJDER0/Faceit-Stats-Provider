@@ -1,3 +1,13 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,6 +28,7 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v4
       with:
-        context: ./Faceit_Stats_Provider
+        context: .
+        file: Faceit_Stats_Provider/Dockerfile  # Ensure correct path to Dockerfile
         push: true
         tags: majder0/faceitstatsprovider:dev

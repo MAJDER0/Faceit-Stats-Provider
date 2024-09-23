@@ -5,3 +5,10 @@ Faceit_Stats_Provider/appsettings.json
 **/bin/Debug
 **/bin
 **/bin/debug
+/obj/*
+/obj/
+**/obj/*
+/obj/Debug
+**/obj/Debug
+**/obj
+**/obj/debug
