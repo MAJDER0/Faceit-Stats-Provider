@@ -28,6 +28,6 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v4  
       with:
-        context: .
+        context: ./Faceit_Stats_Provider  
         push: true
-        tags: majder0/faceitstatsprovider:dev  
+        tags: majder0/faceitstatsprovider:dev
