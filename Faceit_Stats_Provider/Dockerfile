@@ -6,13 +6,13 @@ EXPOSE 443
 
 # Use the .NET SDK image to build the application
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-WORKDIR /src
+WORKDIR /src/Faceit_Stats_Provider # <-- Set the correct working directory for the project
 # Copy the .csproj and restore as distinct layers
-COPY ["Faceit_Stats_Provider.csproj", "./"]
+COPY ["Faceit_Stats_Provider/Faceit_Stats_Provider.csproj", "./"]
 RUN dotnet restore "./Faceit_Stats_Provider.csproj"
-# Copy everything else and build
-COPY . .
-WORKDIR "/src"
+
+# Copy the rest of the project files and build
+COPY Faceit_Stats_Provider/. .
 RUN dotnet build "./Faceit_Stats_Provider.csproj" -c Release -o /app/build
 
 # Publish the application

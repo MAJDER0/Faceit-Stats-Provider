@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  faceit_stats_provider:
+    container_name: Faceit_Stats_Provider
+    image: ${DOCKER_REGISTRY-}faceitstatsprovider
+    build:
+      context: .
+      dockerfile: Faceit_Stats_Provider/Dockerfile
+    ports:
+      - "8000:80"
+    networks:
+      - faceit_stats_provider_network
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - faceit_stats_provider_network
+
+networks:
+  faceit_stats_provider_network:
+    driver: bridge

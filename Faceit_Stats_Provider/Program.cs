@@ -14,15 +14,19 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables();  
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient();
 
-// Configure HttpClient for Faceit API
 builder.Services.AddHttpClient("Faceit", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://open.faceit.com/data/");
-    httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI"));
+    httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI")); 
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -30,8 +34,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 
-
-// Configure HttpClient for Faceit V1 API
 builder.Services.AddHttpClient("FaceitV1", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://api.faceit.com/stats/");
@@ -43,12 +45,12 @@ builder.Services.AddMemoryCache();
 // Add Redis connection
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
-    configuration.AbortOnConnectFail = false; 
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true); 
+    configuration.AbortOnConnectFail = false;
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();;
+builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
 builder.Services.AddSingleton<ILoadMoreMatches, LoadMoreMatchesService>();
 builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
 builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
@@ -57,7 +59,7 @@ builder.Services.AddSingleton<HttpClientManager>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -68,7 +70,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",
@@ -82,8 +83,6 @@ app.MapControllerRoute(
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
-
 });
-
 
 app.Run();

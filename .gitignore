@@ -1,1 +1,7 @@
 Faceit_Stats_Provider/appsettings.json
+/bin/*
+**/bin/*
+/bin/Debug
+**/bin/Debug
+**/bin
+**/bin/debug
