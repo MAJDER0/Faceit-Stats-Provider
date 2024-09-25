@@ -163,6 +163,34 @@ namespace Faceit_Stats_Provider.Controllers
                 }
             }
 
+            if (!string.IsNullOrEmpty(nickname) && nickname.Contains("https://www.faceit.com/"))
+            {
+                try
+                {
+                    // Extract the nickname from the Faceit profile URL, including additional segments like /stats/cs2
+                    string pattern = @"https:\/\/www\.faceit\.com\/[a-zA-Z]{2}\/players\/([^\/]+)";
+                    Regex regex = new Regex(pattern);
+                    Match match = regex.Match(nickname);
+
+                    if (match.Success)
+                    {
+                        // Extract the nickname from the URL
+                        nickname = match.Groups[1].Value;
+
+                        // Remove any trailing slashes or additional segments like /stats/cs2
+                        nickname = nickname.TrimEnd('/');
+                    }
+                    else
+                    {
+                        return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
+                    }
+                }
+                catch
+                {
+                    return View("~/Views/PlayerNotFound/PlayerNotFound.cshtml");
+                }
+            }
+
             try
             {
                 Stopwatch z = new Stopwatch();

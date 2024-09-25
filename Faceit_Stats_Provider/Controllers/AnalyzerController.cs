@@ -467,124 +467,98 @@ namespace Faceit_Stats_Provider.Controllers
             return PartialView("_StatisticsPartial", partialViewModel);
         }
 
-
         [HttpPost]
         public ActionResult TogglePlayer([FromBody] object data)
         {
-            // Convert the object to a JSON string
             var jsonString = data.ToString();
-
-            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
             var model = JsonConvert.DeserializeObject<ExcludePlayerModel>(jsonString);
 
-            if (model == null)
+            if (model == null || model.Players == null || model.PlayerStats == null || model.PlayerMatchStats == null)
             {
-                return BadRequest("Model is null");
-            }
-
-            if (model.Players == null || model.PlayerStats == null || model.PlayerMatchStats == null)
-            {
-                return BadRequest("Required data is missing");
+                return BadRequest("Invalid data.");
             }
 
             var initialModelCopy = model.InitialModelCopy;
             var players = model.Players;
             var excludedPlayerIds = model.ExcludedPlayers;
             var includeCsGoStats = model.IncludeCsGoStats;
-            var csGoStatsOnlyDisplayed = model.CsGoStatsOnlyDisplayed; // Ensure this field is in your ExcludePlayerModel
+            var csGoStatsOnlyDisplayed = model.CsGoStatsOnlyDisplayed; // Ensure this is respected
 
-            // Determine the correct player stats to use
-            var playerStats = new List<AnalyzerPlayerStats.Rootobject>();
+            List<AnalyzerPlayerStats.Rootobject> playerStats;
 
-            if (includeCsGoStats == true & csGoStatsOnlyDisplayed == false)
+            // Respect CS:GO stats-only mode and inclusion state
+            if (includeCsGoStats == false && csGoStatsOnlyDisplayed == true)
             {
-                playerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
-            }
-            else if (includeCsGoStats == false & csGoStatsOnlyDisplayed == true)
-            {
+                // Use CS:GO stats when in CS:GO stats-only mode
                 playerStats = ConvertCsgoToAnalyzerPlayerStats(model.PlayerStatsForCsGo);
             }
-            else {
+            else if (includeCsGoStats == true && csGoStatsOnlyDisplayed == false)
+            {
+                // Use combined stats (CS2 + CS:GO) when including CS:GO stats
+                playerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
+            }
+            else
+            {
+                // Default to CS2 stats
                 playerStats = model.PlayerStats;
             }
 
-            var playerMatchStats = model.PlayerMatchStats?
+            // Filter out excluded players from playerMatchStats
+            var playerMatchStats = model.PlayerMatchStats
                 .Where(pms => !excludedPlayerIds.Contains(pms.playerId))
                 .Select(pms => (pms.playerId, pms.matchStats))
                 .ToList();
 
-            // Exclude the players from the model
-            if (excludedPlayerIds != null && excludedPlayerIds.Count > 0)
+            if (excludedPlayerIds.Count > 0)
             {
+                // Exclude players from the roster
                 if (players.teams.faction1?.roster != null)
                 {
-                    players.teams.faction1.roster = players.teams.faction1.roster.Where(p => !excludedPlayerIds.Contains(p.player_id)).ToArray();
+                    players.teams.faction1.roster = players.teams.faction1.roster
+                        .Where(p => !excludedPlayerIds.Contains(p.player_id))
+                        .ToArray();
                 }
 
                 if (players.teams.faction2?.roster != null)
                 {
-                    players.teams.faction2.roster = players.teams.faction2.roster.Where(p => !excludedPlayerIds.Contains(p.player_id)).ToArray();
+                    players.teams.faction2.roster = players.teams.faction2.roster
+                        .Where(p => !excludedPlayerIds.Contains(p.player_id))
+                        .ToArray();
                 }
 
-                playerStats = playerStats?.Where(ps => !excludedPlayerIds.Contains(ps.player_id)).ToList();
-
+                // Calculate updated statistics after exclusion
                 var result = StatsHelper.CalculateNeededStatistics(players.teams.faction1.leader, players.teams.faction2.leader, players.teams.faction1.roster, players.teams.faction2.roster, playerStats, playerMatchStats);
-                var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
-
-                var modifiedViewModel = new AnalyzerViewModel
-                {
-                    RoomId = model.RoomId,
-                    Players = players,
-                    PlayerStats = CombinedPlayerStats,
-                    PlayerMatchStats = playerMatchStats,
-                    IsIncludedCsGoStats = includeCsGoStats,
-                    CsGoStatsOnlyDisplayed = csGoStatsOnlyDisplayed,
-                    InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
-                };
-
-                var partialViewModel = new AnalyzerPartialViewModel
-                {
-                    ModifiedViewModel = modifiedViewModel,
-                    OriginalViewModel = ModelMapper.ToAnalyzerViewModel(initialModelCopy) // Use mapping function
-                };
-
-                return PartialView("_StatisticsPartial", partialViewModel);
+                playerStats = result.Item8.Concat(result.Item9).ToList();
             }
             else
             {
-                // Restore the original view model
-                var restoredPlayers = initialModelCopy.Players;
-                var restoredPlayerStats = initialModelCopy.PlayerStats;
-                var restoredPlayerMatchStats = initialModelCopy.PlayerMatchStats.Select(pms => (pms.playerId, pms.matchStats)).ToList();
-
-                var result = StatsHelper.CalculateNeededStatistics(restoredPlayers.teams.faction1.leader, restoredPlayers.teams.faction2.leader, restoredPlayers.teams.faction1.roster, restoredPlayers.teams.faction2.roster, restoredPlayerStats, restoredPlayerMatchStats);
-                var CombinedPlayerStats = result.Item8.Concat(result.Item9).ToList();
-
-                if (model.IncludeCsGoStats == true && excludedPlayerIds.Count == 0)
+                // When all players are included, ensure CS:GO stats remain displayed if required
+                if (includeCsGoStats == false && csGoStatsOnlyDisplayed == true)
                 {
-                    CombinedPlayerStats = ConvertCombinedToPlayerStats(model.PlayerStatsCombinedViewModel);
+                    playerStats = ConvertCsgoToAnalyzerPlayerStats(model.PlayerStatsForCsGo);
                 }
-
-                var modifiedViewModel = new AnalyzerViewModel
-                {
-                    RoomId = model.RoomId,
-                    Players = restoredPlayers,
-                    PlayerStats = CombinedPlayerStats,
-                    PlayerMatchStats = restoredPlayerMatchStats,
-                    IsIncludedCsGoStats = includeCsGoStats,
-                    CsGoStatsOnlyDisplayed = csGoStatsOnlyDisplayed,
-                    InitialModelCopy = initialModelCopy // Already of type ExcludePlayerModel
-                };
-
-                var partialViewModel = new AnalyzerPartialViewModel
-                {
-                    ModifiedViewModel = modifiedViewModel,
-                    OriginalViewModel = ModelMapper.ToAnalyzerViewModel(initialModelCopy) // Use mapping function
-                };
-
-                return PartialView("_StatisticsPartial", partialViewModel);
             }
+
+            var viewModel = new AnalyzerViewModel
+            {
+                RoomId = model.RoomId,
+                Players = players,
+                PlayerStats = playerStats,
+                PlayerMatchStats = playerMatchStats,
+                IsIncludedCsGoStats = includeCsGoStats,
+                CsGoStatsOnlyDisplayed = csGoStatsOnlyDisplayed,
+                InitialModelCopy = initialModelCopy
+            };
+
+            var partialViewModel = new AnalyzerPartialViewModel
+            {
+                ModifiedViewModel = viewModel,
+                OriginalViewModel = ModelMapper.ToAnalyzerViewModel(initialModelCopy)
+            };
+
+            return PartialView("_StatisticsPartial", partialViewModel);
         }
+
 
 
         private string ExtractRoomIdFromUrl(string url)
