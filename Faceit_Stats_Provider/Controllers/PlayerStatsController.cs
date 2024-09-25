@@ -242,15 +242,31 @@ namespace Faceit_Stats_Provider.Controllers
 
                 var eloDiffTaskResult = await eloDiffTask;
 
-                if (eloDiffTaskResult.Count() == 0)
+                // Check if additional data is needed
+                if (eloDiffTaskResult.Count() > 0 && eloDiffTaskResult.Count() < 31)
                 {
-                    eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
-                       $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=31");
+                    var getExtraEloDiffTask = await client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size={31 - eloDiffTaskResult.Count()}");
+
+                    // Concatenate the extra data with the original result
+                    eloDiffTaskResult = eloDiffTaskResult.Concat(getExtraEloDiffTask).ToList();
                 }
 
+                // If no data was found, check for csgo stats
+                if (eloDiffTaskResult.Count == 0)
+                {
+                    var eloDiffCsgoTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
+                        $"v1/stats/time/users/{playerinf.player_id}/games/csgo?page=0&size=31");
+                    eloDiffTaskResult = await eloDiffCsgoTask;
+                }
+
+                // Assign the final concatenated result to eloDiff
+                eloDiff = eloDiffTaskResult;
+
+                // Process match history and player stats
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
-                eloDiff = eloDiffTask.Result!;
+
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
