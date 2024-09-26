@@ -4,6 +4,7 @@ using Faceit_Stats_Provider.Models;
 using Faceit_Stats_Provider.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-    .AddEnvironmentVariables();  
+    .AddEnvironmentVariables();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -26,7 +27,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddHttpClient("Faceit", httpClient =>
 {
     httpClient.BaseAddress = new Uri("https://open.faceit.com/data/");
-    httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI")); 
+    httpClient.DefaultRequestHeaders.Add("Authorization", builder.Configuration.GetValue<string>("FaceitAPI"));
 });
 
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -45,7 +46,7 @@ builder.Services.AddMemoryCache();
 // Add Redis connection
 builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true); 
+    var configuration = ConfigurationOptions.Parse(builder.Configuration.GetConnectionString("Redis"), true);
     configuration.AbortOnConnectFail = false;
     return ConnectionMultiplexer.Connect(configuration);
 });
@@ -57,8 +58,19 @@ builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
 builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
 builder.Services.AddSingleton<HttpClientManager>();
 
-var app = builder.Build();
+// Add response compression
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<GzipCompressionProvider>();
+});
 
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = System.IO.Compression.CompressionLevel.Fastest;
+});
+
+var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
@@ -68,6 +80,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Use response compression middleware
+app.UseResponseCompression();
+
 app.UseRouting();
 app.UseAuthorization();
 

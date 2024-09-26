@@ -7,6 +7,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -37,7 +39,6 @@ namespace Faceit_Stats_Provider.Controllers
             return View("~/Views/InvalidMatchRoomLink/InvalidMatchRoomLink.cshtml");
         }
 
-
         [HttpGet]
         public async Task<ActionResult> Analyze(string roomId)
         {
@@ -63,7 +64,7 @@ namespace Faceit_Stats_Provider.Controllers
                 {
                     AnalyzerMatchPlayersOldMatch.Rootobject oldMatch = await client.GetFromJsonAsync<AnalyzerMatchPlayersOldMatch.Rootobject>($"v4/matches/{RoomID}");
 
-                     players = CovertOldPlatformMatchForAnalyzer.ConvertOldMatchToNew(oldMatch);
+                    players = CovertOldPlatformMatchForAnalyzer.ConvertOldMatchToNew(oldMatch);
                 }
 
                 foreach (var item in players.teams.faction1.roster)
@@ -175,7 +176,8 @@ namespace Faceit_Stats_Provider.Controllers
                     {
                         var cs2GameHistory = await client.GetFromJsonAsync<AnalyzerMatchHistory.Rootobject>($"v4/players/{item.player_id}/history?game=cs2&from=120&offset=0&limit=20");
 
-                        if (cs2GameHistory.items.Count() == 0) {
+                        if (cs2GameHistory.items.Count() == 0)
+                        {
                             throw new Exception();
                         }
 
@@ -273,7 +275,6 @@ namespace Faceit_Stats_Provider.Controllers
                     };
                 }).ToList();
 
-
                 // Create deep copy of the initial model
                 var initialViewModel = new AnalyzerViewModel
                 {
@@ -309,12 +310,26 @@ namespace Faceit_Stats_Provider.Controllers
         }
 
         [HttpPost("/OnlyCsGoStats")]
-        public IActionResult OnlyCsGoStats([FromBody] object request)
+        public async Task<IActionResult> OnlyCsGoStats()
         {
-            // Convert the object to a JSON string
-            var jsonString = request.ToString();
+            string jsonString;
 
-            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
+            if (Request.Headers["Content-Encoding"] == "gzip")
+            {
+                using (var decompressionStream = new GZipStream(Request.Body, CompressionMode.Decompress))
+                using (var reader = new StreamReader(decompressionStream))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+            else
+            {
+                using (var reader = new StreamReader(Request.Body))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+
             var toggleRequest = JsonConvert.DeserializeObject<OnlyCsGoStatsRequest>(jsonString);
 
             if (toggleRequest == null)
@@ -332,7 +347,8 @@ namespace Faceit_Stats_Provider.Controllers
 
             var ConvertCsGoStatsAsPlayerStats = ConvertCsgoToAnalyzerPlayerStats(toggleRequest.PlayerStatsForCsGo);
 
-            if (toggleRequest.IncludeCsGoStats == false && toggleRequest.CsGoStatsOnlyDisplayed == true) {
+            if (toggleRequest.IncludeCsGoStats == false && toggleRequest.CsGoStatsOnlyDisplayed == true)
+            {
 
                 viewModel = new AnalyzerViewModel
                 {
@@ -384,19 +400,31 @@ namespace Faceit_Stats_Provider.Controllers
             };
 
             return PartialView("_StatisticsPartial", partialViewModel);
-
         }
 
-            [HttpPost("/ToggleIncludeCsGoStats")]
-        public IActionResult ToggleIncludeCsGoStats([FromBody] object request)
+        [HttpPost("/ToggleIncludeCsGoStats")]
+        public async Task<IActionResult> ToggleIncludeCsGoStats()
         {
-            // Convert the object to a JSON string
-            var jsonString = request.ToString();
+            string jsonString;
 
-            // Deserialize the JSON string into your ToggleIncludeCsGoStatsRequest model
+            if (Request.Headers["Content-Encoding"] == "gzip")
+            {
+                using (var decompressionStream = new GZipStream(Request.Body, CompressionMode.Decompress))
+                using (var reader = new StreamReader(decompressionStream))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+            else
+            {
+                using (var reader = new StreamReader(Request.Body))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+
             var toggleRequest = JsonConvert.DeserializeObject<ToggleIncludeCsGoStatsRequest>(jsonString);
 
-            // Now you can use the toggleRequest object
             if (toggleRequest == null)
             {
                 return BadRequest("Request is null");
@@ -468,9 +496,26 @@ namespace Faceit_Stats_Provider.Controllers
         }
 
         [HttpPost]
-        public ActionResult TogglePlayer([FromBody] object data)
+        public async Task<ActionResult> TogglePlayer()
         {
-            var jsonString = data.ToString();
+            string jsonString;
+
+            if (Request.Headers["Content-Encoding"] == "gzip")
+            {
+                using (var decompressionStream = new GZipStream(Request.Body, CompressionMode.Decompress))
+                using (var reader = new StreamReader(decompressionStream))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+            else
+            {
+                using (var reader = new StreamReader(Request.Body))
+                {
+                    jsonString = await reader.ReadToEndAsync();
+                }
+            }
+
             var model = JsonConvert.DeserializeObject<ExcludePlayerModel>(jsonString);
 
             if (model == null || model.Players == null || model.PlayerStats == null || model.PlayerMatchStats == null)
@@ -559,8 +604,6 @@ namespace Faceit_Stats_Provider.Controllers
             return PartialView("_StatisticsPartial", partialViewModel);
         }
 
-
-
         private string ExtractRoomIdFromUrl(string url)
         {
             if (Uri.TryCreate(url, UriKind.Absolute, out Uri uri))
@@ -609,7 +652,6 @@ namespace Faceit_Stats_Provider.Controllers
             }
             return cacheEntry;
         }
-
 
         private async Task<T> HandleHttpRequestAsync<T>(Task<T> task)
         {
@@ -823,63 +865,61 @@ namespace Faceit_Stats_Provider.Controllers
             if (csgoStatsList == null || !csgoStatsList.Any()) return new List<AnalyzerPlayerStats.Rootobject>();
 
             return csgoStatsList
-      .Where(csgoStats => csgoStats != null)  // Ensure csgoStats is not null
-      .Select(csgoStats => new AnalyzerPlayerStats.Rootobject
-      {
-          player_id = csgoStats.player_id,
-          game_id = csgoStats.game_id,
-          lifetime = csgoStats.lifetime != null ? new AnalyzerPlayerStats.Lifetime
+          .Where(csgoStats => csgoStats != null)  // Ensure csgoStats is not null
+          .Select(csgoStats => new AnalyzerPlayerStats.Rootobject
           {
-              Wins = csgoStats.lifetime?.Wins,
-              TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
-              LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
-              KDRatio = csgoStats.lifetime?.KDRatio,
-              Matches = csgoStats.lifetime?.Matches,
-              RecentResults = csgoStats.lifetime?.RecentResults,
-              AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
-              AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
-              WinRate = csgoStats.lifetime?.WinRate,
-              CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
-              ExtensionData = csgoStats.lifetime?.ExtensionData
-          } : null,  // Return null for lifetime if csgoStats.lifetime is null
-
-          segments = csgoStats.segments?.Where(segment => segment != null)  // Ensure no null segments
-              .Select(segment => new AnalyzerPlayerStats.Segment
+              player_id = csgoStats.player_id,
+              game_id = csgoStats.game_id,
+              lifetime = csgoStats.lifetime != null ? new AnalyzerPlayerStats.Lifetime
               {
-                  label = segment.label,
-                  img_small = segment.img_small,
-                  img_regular = segment.img_regular,
-                  stats = segment.stats != null ? new AnalyzerPlayerStats.Stats
+                  Wins = csgoStats.lifetime?.Wins,
+                  TotalHeadshots = csgoStats.lifetime?.TotalHeadshots,
+                  LongestWinStreak = csgoStats.lifetime?.LongestWinStreak,
+                  KDRatio = csgoStats.lifetime?.KDRatio,
+                  Matches = csgoStats.lifetime?.Matches,
+                  RecentResults = csgoStats.lifetime?.RecentResults,
+                  AverageHeadshots = csgoStats.lifetime?.AverageHeadshots,
+                  AverageKDRatio = csgoStats.lifetime?.AverageKDRatio,
+                  WinRate = csgoStats.lifetime?.WinRate,
+                  CurrentWinStreak = csgoStats.lifetime?.CurrentWinStreak,
+                  ExtensionData = csgoStats.lifetime?.ExtensionData
+              } : null,  // Return null for lifetime if csgoStats.lifetime is null
+
+              segments = csgoStats.segments?.Where(segment => segment != null)  // Ensure no null segments
+                  .Select(segment => new AnalyzerPlayerStats.Segment
                   {
-                      Kills = segment.stats.Kills,
-                      AverageHeadshots = segment.stats.AverageHeadshots,
-                      Assists = segment.stats.Assists,
-                      AverageKills = segment.stats.AverageKills,
-                      HeadshotsperMatch = segment.stats.HeadshotsperMatch,
-                      AverageKRRatio = segment.stats.AverageKRRatio,
-                      AverageKDRatio = segment.stats.AverageKDRatio,
-                      AverageQuadroKills = segment.stats.AverageQuadroKills,
-                      Matches = segment.stats.Matches,
-                      WinRate = segment.stats.WinRate,
-                      Rounds = segment.stats.Rounds,
-                      TotalHeadshots = segment.stats.TotalHeadshots,
-                      KRRatio = segment.stats.KRRatio,
-                      Deaths = segment.stats.Deaths,
-                      KDRatio = segment.stats.KDRatio,
-                      AverageAssists = segment.stats.AverageAssists,
-                      Headshots = segment.stats.Headshots,
-                      Wins = segment.stats.Wins,
-                      AverageDeaths = segment.stats.AverageDeaths,
-                      ExtensionData = segment.stats.ExtensionData
-                  } : null,  // Return null for stats if segment.stats is null
-                  type = segment.type,
-                  mode = segment.mode
-              }).ToArray() ?? Array.Empty<AnalyzerPlayerStats.Segment>()  // Handle null segments array
-      }).ToList();
+                      label = segment.label,
+                      img_small = segment.img_small,
+                      img_regular = segment.img_regular,
+                      stats = segment.stats != null ? new AnalyzerPlayerStats.Stats
+                      {
+                          Kills = segment.stats.Kills,
+                          AverageHeadshots = segment.stats.AverageHeadshots,
+                          Assists = segment.stats.Assists,
+                          AverageKills = segment.stats.AverageKills,
+                          HeadshotsperMatch = segment.stats.HeadshotsperMatch,
+                          AverageKRRatio = segment.stats.AverageKRRatio,
+                          AverageKDRatio = segment.stats.AverageKDRatio,
+                          AverageQuadroKills = segment.stats.AverageQuadroKills,
+                          Matches = segment.stats.Matches,
+                          WinRate = segment.stats.WinRate,
+                          Rounds = segment.stats.Rounds,
+                          TotalHeadshots = segment.stats.TotalHeadshots,
+                          KRRatio = segment.stats.KRRatio,
+                          Deaths = segment.stats.Deaths,
+                          KDRatio = segment.stats.KDRatio,
+                          AverageAssists = segment.stats.AverageAssists,
+                          Headshots = segment.stats.Headshots,
+                          Wins = segment.stats.Wins,
+                          AverageDeaths = segment.stats.AverageDeaths,
+                          ExtensionData = segment.stats.ExtensionData
+                      } : null,  // Return null for stats if segment.stats is null
+                      type = segment.type,
+                      mode = segment.mode
+                  }).ToArray() ?? Array.Empty<AnalyzerPlayerStats.Segment>()  // Handle null segments array
+          }).ToList();
 
         }
     }
 
 }
-
-

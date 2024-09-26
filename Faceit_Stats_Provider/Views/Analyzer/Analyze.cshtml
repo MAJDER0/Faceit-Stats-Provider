@@ -7,7 +7,6 @@
 @model Faceit_Stats_Provider.ModelsForAnalyzer.AnalyzerViewModel
 
 @{
-
     var faction1Leader = Model.Players.teams.faction1.leader;
     var faction1Players = Model.Players.teams.faction1.roster;
     var faction2Leader = Model.Players.teams.faction2.leader;
@@ -41,8 +40,6 @@
     var mapLinks = CalculateNeededStastisticsResult.Item22;
     var MapStatsForSinglePlayer = CalculateNeededStastisticsResult.Item23;
     List<(List<(double, bool, double, string)>, string)> MapStatsForSinglePlayerCopy = new List<(List<(double, bool, double, string)>, string)>();
-
-
 }
 
 
@@ -532,7 +529,9 @@
 
 @section scripts {
 
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include pako library for compression -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.4/pako.min.js"></script>
 
     <script>
         window.onload = function () {
@@ -550,7 +549,6 @@
             });
         };
     </script>
-
 
     <script>
         $(document).ready(function () {
@@ -689,12 +687,20 @@
                         CsGoStatsOnlyDisplayed: CsGoStatsOnlyDisplayed // Include this flag in the request
                     };
 
+                    // Compress the request data
+                    var jsonData = JSON.stringify(requestData);
+                    var compressedData = pako.gzip(jsonData);
+                    var blob = new Blob([compressedData], { type: 'application/json; charset=utf-8' });
+
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("TogglePlayer", "Analyzer")',
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'html',
-                        data: JSON.stringify(requestData),
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'Content-Encoding': 'gzip'
+                        },
+                        data: blob,
                         success: function (data) {
                             $('#statistics-container').html(data);
                             rebindEvents();
@@ -738,12 +744,20 @@
                         ExcludedPlayers: excludedPlayers,
                     };
 
+                    // Compress the request data
+                    var jsonData = JSON.stringify(requestData);
+                    var compressedData = pako.gzip(jsonData);
+                    var blob = new Blob([compressedData], { type: 'application/json; charset=utf-8' });
+
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("ToggleIncludeCsGoStats", "Analyzer")',
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'html',
-                        data: JSON.stringify(requestData),
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'Content-Encoding': 'gzip'
+                        },
+                        data: blob,
                         success: function (data) {
                             $('#statistics-container').html(data);
                             setInitialCsGoStatsState();
@@ -780,12 +794,20 @@
                         ExcludedPlayers: excludedPlayers,
                     };
 
+                    // Compress the request data
+                    var jsonData = JSON.stringify(requestData);
+                    var compressedData = pako.gzip(jsonData);
+                    var blob = new Blob([compressedData], { type: 'application/json; charset=utf-8' });
+
                     $.ajax({
                         type: 'POST',
                         url: '@Url.Action("OnlyCsGoStats", "Analyzer")',
-                        contentType: 'application/json; charset=utf-8',
-                        dataType: 'html',
-                        data: JSON.stringify(requestData),
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'Content-Encoding': 'gzip'
+                        },
+                        data: blob,
                         success: function (data) {
                             $('#statistics-container').html(data);
                             setInitialCsGoStatsState();
@@ -825,6 +847,4 @@
             }
         });
     </script>
-
-
 }
