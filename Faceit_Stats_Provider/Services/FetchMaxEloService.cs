@@ -88,7 +88,15 @@ namespace Faceit_Stats_Provider.Services
                 var eloDiffTasks = new List<Task<List<RedisMatchData.MatchData>>>();
                 HttpClient eloDiffClient = null;
 
-                var retrieveCount = (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition;
+                // Ensure retrieveCount is non-negative
+                var retrieveCount = Math.Max(0, (int)RedisEloRetrievesCount - SendDataToRedisLoopCondition);
+
+                // Optionally, log a warning if retrieveCount is 0
+                if (retrieveCount == 0)
+                {
+                    _logger.LogInformation("No new data to fetch for player {playerId}", playerId);
+                    // Optionally, return early if appropriate
+                }
                 var eloRetrievesCount = Enumerable.Range(0, retrieveCount).ToList();
 
                 var parallelOptions = new ParallelOptions { MaxDegreeOfParallelism = 3 };

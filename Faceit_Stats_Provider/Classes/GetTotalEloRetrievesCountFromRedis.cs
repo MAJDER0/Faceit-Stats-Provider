@@ -29,7 +29,9 @@ public class GetTotalEloRetrievesCountFromRedis
 
             Console.WriteLine($"Found {keys.Length} keys for playerId {playerId}");
 
-            long totalCount = 0;
+            // Use a HashSet to store unique match IDs where elo != 0
+            var uniqueMatchIds = new HashSet<string>();
+
             foreach (var key in keys)
             {
                 try
@@ -43,9 +45,19 @@ public class GetTotalEloRetrievesCountFromRedis
                         if (matchData != null)
                         {
                             Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine($"Key: {key}, Count: {matchData.Count}");
+                            Console.WriteLine($"Key: {key}, Total Matches: {matchData.Count}");
                             Console.ResetColor();
-                            totalCount += matchData.Count;
+
+                            // Filter matches where elo != 0 and add to HashSet
+                            foreach (var match in matchData)
+                            {
+                                if (!string.IsNullOrEmpty(match.matchId) && match.elo != 0)
+                                {
+                                    uniqueMatchIds.Add(match.matchId);
+                                }
+                            }
+
+                            Console.WriteLine($"Matches with elo != 0: {uniqueMatchIds.Count}");
                         }
                     }
                     else
@@ -59,7 +71,8 @@ public class GetTotalEloRetrievesCountFromRedis
                 }
             }
 
-            return totalCount;
+            // Return the count of unique match IDs where elo != 0
+            return uniqueMatchIds.Count;
         }
         catch (Exception ex)
         {

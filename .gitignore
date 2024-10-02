@@ -12,3 +12,9 @@ Faceit_Stats_Provider/appsettings.json
 **/obj/Debug
 **/obj
 **/obj/debug
+/vs/*
+/vs/
+**/vs/*
+/.vs/*
+/.vs/
+**/.vs/*
