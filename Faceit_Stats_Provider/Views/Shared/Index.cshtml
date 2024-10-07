@@ -24,7 +24,7 @@
             let nicknames = [];
             const apiKey = '@(apiKey)'; 
 
-            console.log("Page loaded, starting fetch...");
+            //console.log("Page loaded, starting fetch...");
 
             // Fetch nicknames when the page loads
             nicknames = await fetchNicknames();
@@ -39,7 +39,7 @@
             });
 
             async function fetchNicknames() {
-                console.log("1: Fetch Nicknames started");
+                //console.log("1: Fetch Nicknames started");
 
                 const startTime = performance.now();
                 const playerIds = [
@@ -64,8 +64,8 @@
                 const nicknames = await fetchWithConcurrencyLimit(playerIds, maxConcurrentRequests, fetchNickname);
 
                 const fetchEndTime = performance.now();
-                console.log(`2: Fetch completed in ${fetchEndTime - startTime} ms`);
-                console.log(`3: Total time taken: ${fetchEndTime - startTime} ms`);
+                //console.log(`2: Fetch completed in ${fetchEndTime - startTime} ms`);
+                //console.log(`3: Total time taken: ${fetchEndTime - startTime} ms`);
 
                 return nicknames;
             }

@@ -263,17 +263,17 @@
                                 type: 'GET',
                                 data: { playerId: playerId },
                                 success: function (data) {
-                                    console.log("Received data from server: ", data);  // Log the entire data object
+                                    /*console.log("Received data from server: ", data); */ // Log the entire data object
 
                                     var maxCs2Elo = data.highestCs2Elo;
                                     var maxCs2MatchID = data.highestCs2EloMatchID;
                                     var maxCsgoElo = data.highestCsgoElo;
                                     var maxCsgoMatchID = data.highestCsgoMatchID;
 
-                                    console.log("CS2 ELO: ", maxCs2Elo);
-                                    console.log("CS2 Match ID: ", maxCs2MatchID);
-                                    console.log("CSGO ELO: ", maxCsgoElo);
-                                    console.log("CSGO Match ID: ", maxCsgoMatchID);
+                                    //console.log("CS2 ELO: ", maxCs2Elo);
+                                    //console.log("CS2 Match ID: ", maxCs2MatchID);
+                                    //console.log("CSGO ELO: ", maxCsgoElo);
+                                    //console.log("CSGO Match ID: ", maxCsgoMatchID);
 
                                     // Call the function to update the UI
                                     updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID);
@@ -1438,7 +1438,7 @@
 
                                 // If switching to csgo, reset offset and CsGoSwap
                                 if (response.csGoSwap == 1 && SwitchedToCsGo == false) {
-                                    console.log("updated");
+                                    //console.log("updated");
                                     SwitchedToCsGo = true;
                                     offset = 10;
                                     Game = response.game;
@@ -1447,7 +1447,7 @@
                                 }
 
                                 // Log CsGoSwap in the console to confirm it is being updated
-                                console.log("Updated CsGoSwap in JS: " + CsGoSwap);
+                                //console.log("Updated CsGoSwap in JS: " + CsGoSwap);
 
                                 // Update offset value in JavaScript variable
                                 updateOffset(offset);

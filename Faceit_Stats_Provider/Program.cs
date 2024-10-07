@@ -55,6 +55,11 @@ builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
 builder.Services.AddSingleton<ILoadMoreMatches, LoadMoreMatchesService>();
 builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
 builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
+builder.Services.AddSingleton<IGetMatchDetails, GetMatchDetailsService>();
+builder.Services.AddSingleton<IOnlyCsGoStats, OnlyCsGoStatsService>();
+builder.Services.AddSingleton<IToggleIncludeCsGoStats, ToggleIncludeCsGoStatsService>();
+builder.Services.AddSingleton<ITogglePlayer, TogglePlayerService>();
+builder.Services.AddSingleton<IPlayerStatistics, PlayerStatisticsService>();
 builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
 builder.Services.AddSingleton<HttpClientManager>();
 
