@@ -8,6 +8,8 @@ namespace Faceit_Stats_Provider.Models
         public MatchHistory.Rootobject MatchHistory { get; set; }
         public List<MatchStats.Round> Last20MatchesStats { get; set; }
         public OverallPlayerStats.Rootobject OverallPlayerStatsInfo { get; set; }
+        public OverallPlayerStatsCsGo.Rootobject OverallPlayerStatsCsGoInfo { get; set; }
+        public OverallPlayerStatsCombined.CombinedPlayerStats OverallPlayerStatsCombinedInfo { get; set; }
         public List<EloDiff.Root> EloDiff { get; set; }
         public List<EloDiff.Root> currentModel { get; set; }
         public int currentPage { get; set; } = -1;
@@ -18,6 +20,7 @@ namespace Faceit_Stats_Provider.Models
         public string Game { get; set; } = "cs2";
         public int CsGoSwap { get; set; } = 0;
         public string ErrorMessage { get; set; }
+        public bool csGoSwappedByDefault { get; set; }
 
 
         public class Rootobject

@@ -69,11 +69,14 @@ namespace Faceit_Stats_Provider.Controllers
             MatchHistory.Rootobject matchhistory;
             List<MatchStats.Round> matchstats = new List<MatchStats.Round>();
             OverallPlayerStats.Rootobject overallplayerstats;
+            OverallPlayerStatsCsGo.Rootobject overallplayerstatscsgo;
+            OverallPlayerStatsCombined.CombinedPlayerStats overallplayerstatscombined = null;
             List<EloDiff.Root> eloDiff;
             List<EloDiff.Root> allhistory;
             List<MatchType.Rootobject> matchtype;
             NicknameBySteamId.Rootobject NicknameBySteamID;
             NicknameBySteamId.Rootobject NicknameByFaceitID;
+            bool csGoSwappedByDefault = false;
 
             long RedisEloRetrievesCount = 0;
             string errorString;
@@ -219,23 +222,54 @@ namespace Faceit_Stats_Provider.Controllers
                 var overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
                     $"v4/players/{playerinf.player_id}/stats/cs2");
 
+                var overallplayerstatsTaskCsGo = client.GetFromJsonAsync<OverallPlayerStatsCsGo.Rootobject>(
+                 $"v4/players/{playerinf.player_id}/stats/csgo");
+
+                bool cs2statsFetched = true;
+                bool csgostatsFetched = false;
+                
+
                 try
                 {
                     var overallplayerstatsTaskResult = await overallplayerstatsTask;
 
                     if (overallplayerstatsTaskResult.segments.Count() == 0)
                     {
-
+                        cs2statsFetched = false;
                         throw new Exception("No cs2 Matches");
                     }
+
+
                 }
                 catch
                 {
-
+                    csGoSwappedByDefault = true;
                     overallplayerstatsTask = client.GetFromJsonAsync<OverallPlayerStats.Rootobject>(
                        $"v4/players/{playerinf.player_id}/stats/csgo");
 
                 }
+
+                if (cs2statsFetched) {
+                    try
+                    {
+                        var overallplayerstatsTaskCsGoResult = await overallplayerstatsTaskCsGo;
+
+                        if (overallplayerstatsTaskCsGoResult.segments.Count() == 0)
+                        {                          
+                            throw new Exception("No csgo Matches");
+                        }
+
+                        csgostatsFetched = true;
+                    }
+                    catch
+                    {
+
+                        overallplayerstatsTaskCsGo = null;
+
+                    }
+                }
+
+
 
                 var eloDiffTask = client2.GetFromJsonAsync<List<EloDiff.Root>>(
                     $"v1/stats/time/users/{playerinf.player_id}/games/cs2?page=0&size=31");
@@ -266,7 +300,18 @@ namespace Faceit_Stats_Provider.Controllers
                 // Process match history and player stats
                 matchhistory = matchhistoryTask.Result!;
                 overallplayerstats = overallplayerstatsTask.Result!;
+                if (overallplayerstatsTaskCsGo is not null)
+                {
+                    overallplayerstatscsgo = overallplayerstatsTaskCsGo.Result!;
+                }
+                else {
+                    overallplayerstatscsgo = null;
+                }
 
+                if (cs2statsFetched && csgostatsFetched)
+                {
+                   overallplayerstatscombined = PlayerStatsCombiner.CombinePlayerStats(overallplayerstatsTask.Result, overallplayerstatsTaskCsGo.Result);
+                }
 
                 var matchstatsCacheKey = $"{nickname}_matchstats";
 
@@ -442,7 +487,10 @@ namespace Faceit_Stats_Provider.Controllers
                 playerinf = null;
                 matchhistory = null;
                 overallplayerstats = null;
+                overallplayerstatscsgo = null;
+                overallplayerstatscombined = null;
                 matchstats = null;
+                csGoSwappedByDefault = false;
                 eloDiff = null;
                 allhistory = null;
             }
@@ -456,8 +504,11 @@ namespace Faceit_Stats_Provider.Controllers
             {
                 RedisEloRetrievesCount = RedisEloRetrievesCount,
                 OverallPlayerStatsInfo = overallplayerstats,
+                OverallPlayerStatsCsGoInfo = overallplayerstatscsgo,
+                OverallPlayerStatsCombinedInfo = overallplayerstatscombined,
                 Last20MatchesStats = matchstats,
                 MatchHistory = matchhistory,
+                csGoSwappedByDefault = csGoSwappedByDefault,
                 Playerinfo = playerinf,
                 EloDiff = eloDiff,
                 currentModel = eloDiff,

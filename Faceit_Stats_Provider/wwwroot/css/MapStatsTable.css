@@ -2,6 +2,31 @@
     margin-top: 6%;
 }
 
+.ActiveFaceitMapPoolButtons {
+    margin-top:-1.5%;
+}
+
+.ActiveFaceitMapPoolButton-item {
+    margin-left: 2%;
+}
+
+.ActiveFaceitMapPoolButton-item p {
+    font-size: 14px;
+    color: #7393B3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+}
+
+    .ActiveFaceitMapPoolButton-item p span {
+        cursor: pointer;
+    }
+
+        .ActiveFaceitMapPoolButton-item p span:hover {
+            background-color: #1a1a1a;
+        }
+
 
 .MapsTable {
     background-color: transparent;
