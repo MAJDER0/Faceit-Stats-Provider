@@ -20,8 +20,20 @@ Faceit Stats Provider is a web application that provides you with a set of usefu
   
     This is what you can see in the screenshot above. The Profile Overlay lets you view your overall statistics and stats from your last 20 matches on Faceit. You can look up common statistics regarding your play, such as average ADR, K/D, K/R, etc. It also provides features such as  **$\textsf{\color{#b14a30}{BALANCE}}$**, which displays how much elo you gained or lost within your last 20 games, and the  **$\textsf{\color{#b14a30}{MAX ELO}}$** feature, where you can see what your maximum cs
     and cs2 elo were. You can simply click on it, and it will redirect you to the game on Faceit where your max elo game was played. These two features are really simple but greatly enhance the user experience on the site.
+
+    <br>
+    
+    ![statsTable](https://github.com/user-attachments/assets/4c23bcf2-ba6f-4982-a0b5-9c38f4424d91)
+
+    <br>
     
     **$\textsf{\color{#b14a30}{There are plenty of small details that, when combined, make the site so useful for users.}}$** For instance, you can filter matches to show only ranked games, 5v5 games, or  **$\textsf{\color{#b14a30}{OTHERS}}$**, which means you can also see 1v1 matches. Additionally, on this site and **$\textsf{\color{#b14a30}{only here, as far as I know}}$** you can also see walkover matches, which are matches that were never actually played. When the others filter is included, you can also see some special matches that were played on Faceit, such as BLAST matches. These are specially highlighted, so if you're a pro player, you can feel appreciated.
+  
+  <br>
+  
+  ![BLAST](https://github.com/user-attachments/assets/f4cc8543-427e-4d5c-8269-f9db866d2f9f)
+
+  <br>
     
   **$\textsf{\color{#b14a30}{What makes this website stand out is that everything has been designed so that the user does not have to search for anything}}$**
    **$\textsf{\color{#b14a30}{and can make as few clicks as possible.}}$** 
