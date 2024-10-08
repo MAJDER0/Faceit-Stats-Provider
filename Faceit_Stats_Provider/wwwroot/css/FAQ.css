@@ -67,3 +67,8 @@
     padding-left: 1%;
 }
 
+.blast-image {
+    height: 493px;
+    width: 1000px;
+    border: solid 1px #ff3c22;
+}
