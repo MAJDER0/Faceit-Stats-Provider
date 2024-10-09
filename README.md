@@ -51,7 +51,7 @@ Faceit Stats Provider is a web application that provides you with a set of usefu
   
     <br>
 
-     ![Faceit_Stats_Provider_15](https://github.com/user-attachments/assets/2e88dd91-748c-46a5-b059-9ac43bdfbdf8)
+     ![Analyzer](https://github.com/user-attachments/assets/f0cb3c82-6974-4df9-9779-1580d1167089)
   
     <br>
 
