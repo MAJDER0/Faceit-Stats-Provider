@@ -1,5 +1,7 @@
 ﻿@using (Html.BeginForm("Analyze", "Analyzer", FormMethod.Get))
 {
+    <div id="loadingMessageContainer"><p id="loadingMessage"></p></div>
+
     <div class="row box">
         <div class="FillExampleData">
             <p id="fillDataAnalyzer"><span>+ fill in with data</span></p>
@@ -17,44 +19,40 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    function animateInfoTextAnalyzer() {
-        const info = document.getElementById("animatedInfoAnalyzer");
+        function animateInfoTextAnalyzer() {
+            const info = document.getElementById("animatedInfoAnalyzer");
             const infoText = "This feature allows you to analyze the enemy team before the game starts to determine the best map picks against them.";
-        let infoIndex = 0;
-        let showCursor = true;
+            let infoIndex = 0;
+            let showCursor = true;
 
-        function typeInfo() {
-            let displayedText = infoText.substring(0, infoIndex);
-            if (infoIndex < infoText.length) {
-                displayedText += "|"; 
+            function typeInfo() {
+                let displayedText = infoText.substring(0, infoIndex);
+                if (infoIndex < infoText.length) {
+                    displayedText += "|";
+                }
+                info.textContent = displayedText;
+                if (infoIndex < infoText.length) {
+                    infoIndex++;
+                    setTimeout(typeInfo, 10);
+                } else {
+                    showCursor = true;
+                    blinkInfoCursor();
+                }
             }
-            info.textContent = displayedText;
-            if (infoIndex < infoText.length) {
-                infoIndex++;
-                setTimeout(typeInfo, 10);
-            } else {
-                showCursor = true; 
-                blinkInfoCursor(); 
-            }
+
+            typeInfo();
         }
 
-        typeInfo(); 
-    }
-
         animateInfoTextAnalyzer();
-
     });
-
 </script>
-
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-
-
         const dataList = ["https://www.faceit.com/pl/cs2/room/1-91ae6132-d21a-4e51-a422-d7477e83ba92"];
-
+        let animationInterval = null; // Keep track of animation interval
+        let fetchingTimeout = null; // Keep track of the fetching timeout
+        let calculatingTimeout = null; // Keep track of calculating phase timeout
 
         function getRandomData() {
             const randomIndex = Math.floor(Math.random() * dataList.length);
@@ -62,12 +60,90 @@
         }
 
         document.getElementById("fillDataAnalyzer").addEventListener("click", function () {
-            // Clear the search bar
             const searchBar = document.getElementById("SearchBarAnalyzer");
             searchBar.value = "";
-
-
             searchBar.value = getRandomData();
+        });
+
+        document.querySelector('form').addEventListener('submit', function () {
+            const searchBar = document.getElementById("SearchBarAnalyzer");
+            const loadingMessage = document.getElementById("loadingMessage");
+
+            // If search bar is empty, don't start animation but allow form submission
+            if (!searchBar.value.trim()) {
+                return; // No animation, but form will still be submitted
+            }
+
+            // Clear any existing loading message and stop any existing animation
+            clearLoadingState(false);  // We don't want to reset the form here as it's being submitted
+
+            let dotCount = 0;
+            let isFetching = true;
+
+            // Random time between 2 to 3 seconds (2000 to 3000 ms)
+            const fetchingDuration = Math.random() * (3000 - 2000) + 2000;
+
+            function updateLoadingMessage() {
+                let dots = ".".repeat(dotCount);
+                if (isFetching) {
+                    loadingMessage.textContent = "fetching" + dots;
+                } else {
+                    loadingMessage.textContent = "calculating" + dots;
+                }
+                dotCount = (dotCount + 1) % 4; // Cycle between 0 and 3 dots
+            }
+
+            // Start the animation interval
+            animationInterval = setInterval(updateLoadingMessage, 300);
+
+            // After fetching duration, switch to "calculating"
+            fetchingTimeout = setTimeout(function () {
+                isFetching = false;
+            }, fetchingDuration);
+
+            // Maximum of 10 seconds for the calculating phase, then clear the animation
+            calculatingTimeout = setTimeout(function () {
+                clearLoadingState(true); // Clear the animation and reset form after 10 seconds
+            }, 10000); // 10 seconds = 10000 milliseconds
+        });
+
+        // Function to clear the loading message, stop animation, and optionally reset form
+        function clearLoadingState(resetForm = true) {
+            const loadingMessage = document.getElementById("loadingMessage");
+            loadingMessage.textContent = ""; // Clear the animation message
+
+            // Stop any existing animation
+            if (animationInterval) {
+                clearInterval(animationInterval);
+                animationInterval = null;
+            }
+
+            if (fetchingTimeout) {
+                clearTimeout(fetchingTimeout);
+                fetchingTimeout = null;
+            }
+
+            if (calculatingTimeout) {
+                clearTimeout(calculatingTimeout);
+                calculatingTimeout = null;
+            }
+
+            // Optionally clear the search bar only on back navigation, not on form submission
+            if (resetForm) {
+                const searchBar = document.getElementById("SearchBarAnalyzer");
+                searchBar.value = "";
+            }
+        }
+
+        // Reset the animation and form when navigating back
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || window.performance.navigation.type === 2) {
+                // Only clear state if the page was navigated to via the back button (bfcache)
+                clearLoadingState(true);
+            }
         });
     });
 </script>
+
+
+

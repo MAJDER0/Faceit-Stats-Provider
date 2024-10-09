@@ -597,3 +597,14 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+#loadingMessageContainer {
+    position: absolute;
+    top: 44%;
+    right: 52%;
+    color: #8202a5;
+}
+
+#loadingMessage {
+    width:50px;
+}

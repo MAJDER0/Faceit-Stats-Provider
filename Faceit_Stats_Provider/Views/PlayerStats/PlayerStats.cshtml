@@ -1501,7 +1501,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+
         var radarChart = null;
+        var expandedRows = [];
 
         // Initialize data (default to CS2)
         var labels = JSON.parse('@Html.Raw(Json.Serialize(displayedMaps.Select(map => map.label)))');
@@ -1586,6 +1588,23 @@
     });
 }
 
+
+        function trackExpandedRows() {
+            expandedRows = [];  // Clear the array before tracking
+            $(".map-row").each(function (index) {
+                if ($(this).next(".MapStatsInfo").is(":visible")) {
+                    expandedRows.push(index); // Store the index of each expanded row
+                }
+            });
+        }
+
+        // Restore expanded rows after model change
+        function restoreExpandedRows() {
+            expandedRows.forEach(function (index) {
+                var row = $(".map-row").eq(index);
+                row.next(".MapStatsInfo").show(); // Expand the row
+            });
+        }
 
         function safeParse(value, defaultValue = "N/A") {
             if (typeof value === 'string' && value.trim() !== '') {
@@ -1700,11 +1719,16 @@
                 `;
                 tableBody.append(rowHtml);
             });
+
+            restoreExpandedRows();
         }
 
 
         // Handle model switching
         function loadModel(model) {
+
+            trackExpandedRows();
+
             let newLabels, newKD, newKR, mapsData, isCombined = false;
 
             switch (model) {
