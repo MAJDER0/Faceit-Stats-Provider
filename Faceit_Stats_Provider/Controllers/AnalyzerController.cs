@@ -62,6 +62,7 @@ namespace Faceit_Stats_Provider.Controllers
         {
             if (string.IsNullOrEmpty(roomId))
             {
+                Console.WriteLine(roomId);
                 return RedirectToAction("InvalidMatchRoomLink", "Analyzer");
             }
 
