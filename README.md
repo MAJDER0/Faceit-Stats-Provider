@@ -90,8 +90,8 @@ Faceit Stats Provider is a web application that provides you with a set of usefu
 
   <br>
   
-  **$\large\textsf{\color{#ffcc4d}{However, for now it has to stay for private usage, as Faceit Developers don't provide the necessary tools to}}$**
-  **$\large\textsf{\color{#ffcc4d}{dynamically add users to the webhook. If that does change, I will release it for public usage.}}$**
+  **$\large\textsf{\color{#ffcc4d}{However, for now it has to stay for private usage, as Faceit Developers don't provide the necessary}}$**
+  **$\large\textsf{\color{#ffcc4d}{tools to dynamically add users to the webhook. If that does change, I will release it for public usage.}}$**
 
   <br>
   
