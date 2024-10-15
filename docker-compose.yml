@@ -1,25 +1,27 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  faceit_stats_provider:
-    container_name: Faceit_Stats_Provider
-    image: ${DOCKER_REGISTRY-}faceitstatsprovider
-    build:
-      context: .  # This is the root of the project where the Dockerfile is located
-      dockerfile: Faceit_Stats_Provider/Dockerfile  # Path to the Dockerfile
-    ports:
-      - "8000:80"
-    networks:
-      - faceit_stats_provider_network
-
   redis:
-    container_name: redis
     image: redis:latest
     ports:
       - "6379:6379"
-    networks:
-      - faceit_stats_provider_network
+    volumes:
+      - redis-data:/data  # For data persistence
+    restart: always
 
-networks:
-  faceit_stats_provider_network:
-    driver: bridge
+  faceit_stats_provider:
+    build:
+      context: .
+      dockerfile: Faceit_Stats_Provider/Dockerfile
+    image: faceitstatsprovider
+    ports:
+      - "80:80"  # Only map HTTP port
+    environment:
+      - ASPNETCORE_URLS=http://+:80  # Ensure HTTPS is not included
+      - ASPNETCORE_ENVIRONMENT=Production  # Set environment to Production
+    depends_on:
+      - redis
+    restart: always
+
+volumes:
+  redis-data:
