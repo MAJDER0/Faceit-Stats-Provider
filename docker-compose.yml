@@ -7,6 +7,7 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data  # For data persistence
+    command: redis-server --appendonly yes  # Enable AOF persistence
     restart: always
 
   faceit_stats_provider:
@@ -25,3 +26,4 @@ services:
 
 volumes:
   redis-data:
+    driver: local  # Ensures Redis data persists between restarts
