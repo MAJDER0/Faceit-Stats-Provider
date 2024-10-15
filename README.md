@@ -3,7 +3,7 @@ Simplifying the way to track your FACEIT performance. <br>
 
 https://github.com/user-attachments/assets/b93f556e-e3ad-4e4a-9ae3-7f5c4260f47d
 
-Try it yourself. [Faceit Stats Provider](https://github.com/MAJDER0)
+Try it yourself. [Faceit Stats Provider](https://faceitstatsprovider.com/)
 <br>
 
 ## $\large\textsf{\color{#3a865b}{What is Faceit Stats Provider?}}$
@@ -82,7 +82,7 @@ Faceit Stats Provider is a web application that provides you with a set of usefu
 
 + $$\large\textsf{\color{#c3a747}{Extension}}$$ 
   
-  I also built an extension called Faceit Position Caller. It allows you to send messages into the match room right after a match is found, so you can be sure that you will be the first one to call your position on the map. You can send messages to general chat and team chat right after the match is found. Moreover, you can choose a message that you want to send for every map that is in the map pool, so when a map is picked, your message will be sent to team chat, general chat, or both, depending on what you select. **$\textsf{\color{#b14a30}{I am really proud of this extension since I find it a really original idea.}}$**
+  I also built an extension called [Faceit Position Caller](https://github.com/MAJDER0/Faceit-Position-Caller). It allows you to send messages into the match room right after a match is found, so you can be sure that you will be the first one to call your position on the map. You can send messages to general chat and team chat right after the match is found. Moreover, you can choose a message that you want to send for every map that is in the map pool, so when a map is picked, your message will be sent to team chat, general chat, or both, depending on what you select. **$\textsf{\color{#b14a30}{I am really proud of this extension since I find it a really original idea.}}$**
 
   <br>
 
