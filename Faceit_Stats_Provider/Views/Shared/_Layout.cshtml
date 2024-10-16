@@ -15,6 +15,25 @@
     <meta property="og:image" content="https://faceitstatsprovider.com/Assets/niewypelnione2.png">
     <title>@ViewData["Title"] Faceit Stats Provider</title>
     <link rel="icon" type="image/x-icon" href="/Assets/niewypelnione2.ico" />
+
+    <link rel="canonical" href="
+@{
+    var canonicalUrl = $"{Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}";
+    if (Context.Request.Path == "/")
+    {
+        canonicalUrl = "https://faceitstatsprovider.com/";
+    }
+    else if (Context.Request.Path.StartsWithSegments("/Analyzer"))
+    {
+        canonicalUrl = "https://faceitstatsprovider.com/Analyzer";
+    }
+    else if (Context.Request.Path.StartsWithSegments("/FAQ"))
+    {
+        canonicalUrl = "https://faceitstatsprovider.com/FAQ";
+    }
+    @canonicalUrl;
+}" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/Body.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/general.css" asp-append-version="true" />
