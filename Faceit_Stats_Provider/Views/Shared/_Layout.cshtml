@@ -2,6 +2,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+    <title>
+        @{
+            string pageTitle = ViewData["Title"] as string;
+
+            if (string.IsNullOrEmpty(pageTitle))
+            {
+                var path = Context.Request.Path.Value.ToLower();
+
+                if (path == "/faq")
+                {
+                    pageTitle = "FAQ";
+                }
+                else if (path .Contains("/analyzer"))
+                {
+                    pageTitle = "Analyzer";
+                }
+                else if (path == "/")
+                {
+                    pageTitle = "Faceit Stats Provider";
+                }
+                else
+                {
+                    pageTitle = "Faceit Stats Provider";
+                }
+            }
+
+            @pageTitle
+        }
+    </title>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1f1f1f" />
@@ -13,7 +44,6 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://faceitstatsprovider.com">
     <meta property="og:image" content="https://faceitstatsprovider.com/Assets/niewypelnione2.png">
-    <title>@ViewData["Title"] Faceit Stats Provider</title>
     <link rel="icon" type="image/x-icon" href="/Assets/niewypelnione2.ico" />
 
     <link rel="canonical" href="
