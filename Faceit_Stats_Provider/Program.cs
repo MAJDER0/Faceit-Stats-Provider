@@ -51,16 +51,16 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
     return ConnectionMultiplexer.Connect(configuration);
 });
 
-builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
-builder.Services.AddSingleton<ILoadMoreMatches, LoadMoreMatchesService>();
-builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
-builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
-builder.Services.AddSingleton<IGetMatchDetails, GetMatchDetailsService>();
-builder.Services.AddSingleton<IOnlyCsGoStats, OnlyCsGoStatsService>();
-builder.Services.AddSingleton<IToggleIncludeCsGoStats, ToggleIncludeCsGoStatsService>();
-builder.Services.AddSingleton<ITogglePlayer, TogglePlayerService>();
-builder.Services.AddSingleton<IPlayerStatistics, PlayerStatisticsService>();
-builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
+builder.Services.AddTransient<GetTotalEloRetrievesCountFromRedis>();
+builder.Services.AddTransient<ILoadMoreMatches, LoadMoreMatchesService>();
+builder.Services.AddTransient<IFetchMaxElo, FetchMaxEloService>();
+builder.Services.AddTransient<IGetMatchDetails, GetMatchDetailsService>();
+builder.Services.AddTransient<IOnlyCsGoStats, OnlyCsGoStatsService>();
+builder.Services.AddTransient<IToggleIncludeCsGoStats, ToggleIncludeCsGoStatsService>();
+builder.Services.AddTransient<ITogglePlayer, TogglePlayerService>();
+builder.Services.AddTransient<IPlayerStatistics, PlayerStatisticsService>();
+builder.Services.AddTransient<IHttpClientRetryService, HttpClientRetryService>();
+builder.Services.AddTransient<IRetryPolicy, RetryPolicyService>();
 builder.Services.AddSingleton<HttpClientManager>();
 
 // Add response compression

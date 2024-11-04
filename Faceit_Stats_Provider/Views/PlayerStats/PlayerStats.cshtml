@@ -248,6 +248,8 @@
                     <script>
                         $(document).ready(function () {
                             var playerId = '@Model.Playerinfo.player_id'; // Get playerId from model
+                            var maxRetries = 3;
+                            var retryCount = 0;
 
                             function updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID) {
                                 // Make the ELO values clickable and redirect to the corresponding match room
@@ -258,31 +260,37 @@
                                     '<a class="max-links" href="https://www.faceit.com/en/cs2/room/' + maxCs2MatchID + '" target="_blank">' + maxCs2Elo + '</a>'
                                 );
                             }
-                            $.ajax({
-                                url: '/FetchMaxElo',
-                                type: 'GET',
-                                data: { playerId: playerId },
-                                success: function (data) {
-                                    /*console.log("Received data from server: ", data); */ // Log the entire data object
 
-                                    var maxCs2Elo = data.highestCs2Elo;
-                                    var maxCs2MatchID = data.highestCs2EloMatchID;
-                                    var maxCsgoElo = data.highestCsgoElo;
-                                    var maxCsgoMatchID = data.highestCsgoMatchID;
+                            function fetchData() {
+                                $.ajax({
+                                    url: '/FetchMaxElo',
+                                    type: 'GET',
+                                    data: { playerId: playerId },
+                                    success: function (data) {
+                                        var maxCs2Elo = data.highestCs2Elo;
+                                        var maxCs2MatchID = data.highestCs2EloMatchID;
+                                        var maxCsgoElo = data.highestCsgoElo;
+                                        var maxCsgoMatchID = data.highestCsgoMatchID;
 
-                                    //console.log("CS2 ELO: ", maxCs2Elo);
-                                    //console.log("CS2 Match ID: ", maxCs2MatchID);
-                                    //console.log("CSGO ELO: ", maxCsgoElo);
-                                    //console.log("CSGO Match ID: ", maxCsgoMatchID);
+                                        // Call the function to update the UI
+                                        updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID);
+                                    },
+                                    error: function () {
+                                        retryCount++;
+                                        if (retryCount < maxRetries) {
 
-                                    // Call the function to update the UI
-                                    updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID);
-                                },
-                                error: function () {
-                                    $('#player-stats-container').html('<p>Error loading data</p>');
-                                    $('#max-csgo-elo').empty();
-                                }
-                            });
+                                            setTimeout(fetchData, 100);
+
+                                        } else {
+                                            // Show error message after all retries fail
+                                            $('#player-stats-container').html('<p>error</p>');
+                                            $('#max-csgo-elo').empty();
+                                        }
+                                    }
+                                });
+                            }
+
+                            fetchData();
                         });
                     </script>
 
