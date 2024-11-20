@@ -60,7 +60,7 @@ builder.Services.AddTransient<ITogglePlayer, TogglePlayerService>();
 builder.Services.AddTransient<IPlayerStatistics, PlayerStatisticsService>();
 builder.Services.AddSingleton<IHttpClientRetryService, HttpClientRetryService>();
 builder.Services.AddSingleton<IRetryPolicy, RetryPolicyService>();
-builder.Services.AddSingleton<IFetchMaxElo, FetchMaxEloService>();
+builder.Services.AddTransient<IFetchMaxElo, FetchMaxEloService>();
 builder.Services.AddSingleton<GetTotalEloRetrievesCountFromRedis>();
 builder.Services.AddSingleton<HttpClientManager>();
 
