@@ -79,7 +79,7 @@ jobs:
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
             set -e
-            cd ~/Faceit_Stats_Provider
+            cd ~/Faceit-Stats-Provider
 
             # Checkout the deployment branch
             git checkout dev

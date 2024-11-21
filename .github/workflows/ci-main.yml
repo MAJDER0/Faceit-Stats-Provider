@@ -95,7 +95,7 @@ jobs:
             echo "DOCKER_USERNAME set to: $DOCKER_USERNAME"
 
             set -e
-            cd ~/Faceit_Stats_Provider
+            cd ~/Faceit-Stats-Provider
 
             # (Optional) Use the appropriate .env file
             # cp .env.prod .env
