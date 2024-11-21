@@ -24,7 +24,7 @@ jobs:
         run: dotnet restore Faceit_Stats_Provider.sln  
 
       - name: Build
-        run: dotnet build Faceit_Stats_Provider.sln --no-restore --configuration Release  # Corrected path to the solution file
+        run: dotnet build Faceit_Stats_Provider.sln --no-restore --configuration Release  
 
       - name: Run tests
         run: dotnet test Faceit_Stats_Provider.sln --no-build --configuration Release --collect:"XPlat Code Coverage"  
@@ -61,9 +61,7 @@ jobs:
           file: Faceit_Stats_Provider/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/faceitstatsprovider:dev
-          # Remove or adjust platforms if not needed
-          # platforms: linux/amd64
+            ${{ secrets.DOCKER_USERNAME }}/faceitstatsprovider:dev
 
   deploy-dev:
     runs-on: ubuntu-latest
