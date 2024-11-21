@@ -19,7 +19,7 @@ services:
       - "80:80"  
       - "443:443"    
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} 
       - ASPNETCORE_URLS=http://+:80;https://+:443
     volumes:
       - ./Faceit_Stats_Provider/appsettings.json:/app/appsettings.json:ro  # Mount appsettings.json as read-only
