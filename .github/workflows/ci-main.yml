@@ -56,8 +56,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and push Docker Image for Production
         uses: docker/build-push-action@v4
@@ -66,7 +66,7 @@ jobs:
           file: Faceit_Stats_Provider/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/faceitstatsprovider:prod
+            ${{ secrets.DOCKER_USERNAME }}/faceitstatsprovider:prod
           # Remove or adjust platforms if not needed
           # platforms: linux/amd64
 
@@ -79,7 +79,7 @@ jobs:
     env:
       DEPLOY_BRANCH: 'main'
       DOCKER_TAG: 'prod'
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
 
     steps:
       - name: Deploy to Server (Production)
@@ -92,7 +92,7 @@ jobs:
           script: |
             echo "Starting deployment for branch: $DEPLOY_BRANCH"
             echo "DOCKER_TAG set to: $DOCKER_TAG"
-            echo "DOCKERHUB_USERNAME set to: $DOCKERHUB_USERNAME"
+            echo "DOCKER_USERNAME set to: $DOCKER_USERNAME"
 
             set -e
             cd ~/Faceit_Stats_Provider
@@ -114,10 +114,10 @@ jobs:
             git log -1
 
             # Pull the latest Docker image
-            docker pull $DOCKERHUB_USERNAME/faceitstatsprovider:$DOCKER_TAG
+            docker pull $DOCKER_USERNAME/faceitstatsprovider:$DOCKER_TAG
 
             # Update Docker Compose to use the prod image
-            sed -i 's|image: .*faceitstatsprovider:.*|image: '${DOCKERHUB_USERNAME}/faceitstatsprovider:${DOCKER_TAG}'|' docker-compose.yml
+            sed -i 's|image: .*faceitstatsprovider:.*|image: '${DOCKER_USERNAME}/faceitstatsprovider:${DOCKER_TAG}'|' docker-compose.yml
 
             # Stop and remove existing containers to prevent name conflicts
             docker-compose down --remove-orphans
