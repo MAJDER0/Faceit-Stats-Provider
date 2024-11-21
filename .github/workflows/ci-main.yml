@@ -1,5 +1,3 @@
-name: CI/CD Pipeline - Main
-
 on:
   push:
     branches:
@@ -31,7 +29,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'  # Adjust based on your project
+          dotnet-version: '6.0.x'  
 
       - name: Install dependencies
         run: dotnet restore Faceit_Stats_Provider.sln  
@@ -98,9 +96,9 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_SSH_PORT }}
           script: |
-            echo "Starting deployment for branch: $DEPLOY_BRANCH"
-            echo "DOCKER_TAG set to: $DOCKER_TAG"
-            echo "DOCKER_USERNAME set to: $DOCKER_USERNAME"
+            echo "Starting deployment for branch: ${{ env.DEPLOY_BRANCH }}"
+            echo "DOCKER_TAG set to: ${{ env.DOCKER_TAG }}"
+            echo "DOCKER_USERNAME set to: ${{ env.DOCKER_USERNAME }}"
 
             set -e
             cd ~/Faceit-Stats-Provider
@@ -113,8 +111,8 @@ jobs:
             git clean -fd
 
             # Pull the latest changes for the deployment branch
-            git checkout $DEPLOY_BRANCH
-            git pull origin $DEPLOY_BRANCH
+            git checkout ${{ env.DEPLOY_BRANCH }}
+            git pull origin ${{ env.DEPLOY_BRANCH }}
 
             # Debugging: Check git status and latest commit after pull
             echo "After pull:"
@@ -122,10 +120,10 @@ jobs:
             git log -1
 
             # Pull the latest Docker image
-            docker pull $DOCKER_USERNAME/faceitstatsprovider:$DOCKER_TAG
+            docker pull ${{ env.DOCKER_USERNAME }}/faceitstatsprovider:${{ env.DOCKER_TAG }}
 
             # Update Docker Compose to use the prod image
-            sed -i 's|image: .*faceitstatsprovider:.*|image: '${DOCKER_USERNAME}/faceitstatsprovider:${DOCKER_TAG}'|' docker-compose.yml
+            sed -i 's|image: .*faceitstatsprovider:.*|image: '${{ env.DOCKER_USERNAME }}/faceitstatsprovider:${{ env.DOCKER_TAG }}'|' docker-compose.yml
 
             # Stop and remove existing containers to prevent name conflicts
             docker-compose down --remove-orphans
