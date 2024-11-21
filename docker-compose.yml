@@ -13,7 +13,10 @@ services:
   faceit_stats_provider:
     image: "${DOCKERHUB_USERNAME}/faceitstatsprovider:${DOCKER_TAG}"
     ports:
-      - "80:80"  # Only map HTTP port
+      - "80:80"  
+      - "443:443"    
+      - "32894:80"    
+      - "32895:443"   
     environment:
       - ASPNETCORE_URLS=http://+:80  
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} 
