@@ -21,13 +21,13 @@ jobs:
           dotnet-version: '6.0.x'  # Adjust based on your project
 
       - name: Install dependencies
-        run: dotnet restore Faceit_Stats_Provider/Faceit_Stats_Provider.sln  
+        run: dotnet restore Faceit_Stats_Provider.sln  
 
       - name: Build
-        run: dotnet build Faceit_Stats_Provider/Faceit_Stats_Provider.sln --no-restore --configuration Release  
+        run: dotnet build Faceit_Stats_Provider.sln --no-restore --configuration Release  # Corrected path to the solution file
 
       - name: Run tests
-        run: dotnet test Faceit_Stats_Provider/Faceit_Stats_Provider.sln --no-build --configuration Release --collect:"XPlat Code Coverage"  
+        run: dotnet test Faceit_Stats_Provider.sln --no-build --configuration Release --collect:"XPlat Code Coverage"  
 
       - name: Publish Test Results
         if: always()
