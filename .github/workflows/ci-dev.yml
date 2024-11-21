@@ -85,7 +85,7 @@ jobs:
             git checkout dev
 
             # Stash any local changes to the current branch
-            git stash
+            git stash || true
 
             # Pull the latest changes for the branch
             git pull origin dev
@@ -103,6 +103,7 @@ jobs:
             docker-compose up -d --build
 
             # Switch back to the main branch to maintain its state
+            git stash || true
             git checkout main
 
             # Optionally, log the deployment
