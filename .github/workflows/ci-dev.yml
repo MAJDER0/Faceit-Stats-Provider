@@ -81,11 +81,17 @@ jobs:
             set -e
             cd ~/Faceit-Stats-Provider
 
-            # Checkout the deployment branch
+            # Ensure the branch is checked out
             git checkout dev
 
-            # Pull the latest changes for the deployment branch
+            # Stash any local changes to the current branch
+            git stash
+
+            # Pull the latest changes for the branch
             git pull origin dev
+
+            # Apply the stash if needed (optional, comment out if not desired)
+            git stash pop || true
 
             # Pull the latest dev Docker image
             docker pull ${{ secrets.DOCKER_USERNAME }}/faceitstatsprovider:dev
