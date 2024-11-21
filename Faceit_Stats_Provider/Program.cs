@@ -17,9 +17,13 @@ using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var urls = builder.Configuration["ASPNETCORE_URLS"] ?? "http://localhost:5000";
+builder.WebHost.UseUrls(urls);
+
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true) 
     .AddEnvironmentVariables();
 
 // Add services to the container.

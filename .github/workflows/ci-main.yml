@@ -1,4 +1,3 @@
-# .github/workflows/ci-main.yaml
 name: CI/CD Pipeline - Main
 
 on:
@@ -20,10 +19,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: List root directory
+        run: ls -la
+
+      - name: List Faceit_Stats_Provider directory
+        run: ls -la Faceit_Stats_Provider/
+
+      - name: Find solution file
+        run: find . -name "*.sln"
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '6.0.x'  # Adjust based on your project
+          dotnet-version: '6.0.x'  
 
       - name: Install dependencies
         run: dotnet restore Faceit_Stats_Provider/Faceit_Stats_Provider.sln  
