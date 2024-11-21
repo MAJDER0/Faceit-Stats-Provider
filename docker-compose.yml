@@ -11,7 +11,7 @@ services:
     restart: always
 
   faceit_stats_provider:
-    image: "majder0/faceitstatsprovider:prod"
+    image: "${DOCKERHUB_USERNAME}/faceitstatsprovider:${DOCKER_TAG}"
     build:
       context: .
       dockerfile: Faceit_Stats_Provider/Dockerfile
