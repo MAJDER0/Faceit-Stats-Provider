@@ -1,0 +1,134 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60  
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: List root directory
+        run: ls -la
+
+      - name: List Faceit_Stats_Provider directory
+        run: ls -la Faceit_Stats_Provider/
+
+      - name: Find solution file
+        run: find . -name "*.sln"
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.x'  
+
+      - name: Install dependencies
+        run: dotnet restore Faceit_Stats_Provider.sln  
+
+      - name: Build
+        run: dotnet build Faceit_Stats_Provider.sln --no-restore --configuration Release  
+
+      - name: Run tests
+        run: dotnet test Faceit_Stats_Provider.sln --no-build --configuration Release --collect:"XPlat Code Coverage"  
+
+      - name: Publish Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: '**/TestResults/*.trx'
+
+  build-and-push-docker-image:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    timeout-minutes: 60  
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker Image for Production
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Faceit_Stats_Provider/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/faceitstatsprovider:prod
+          # Remove or adjust platforms if not needed
+          # platforms: linux/amd64
+
+  deploy-main:
+    runs-on: ubuntu-latest
+    needs: build-and-push-docker-image
+    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 120  
+    environment: Production  
+    env:
+      DEPLOY_BRANCH: 'main'
+      DOCKER_TAG: 'prod'
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+    steps:
+      - name: Deploy to Server (Production)
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_SSH_PORT }}
+          script: |
+            echo "Starting deployment for branch: ${{ env.DEPLOY_BRANCH }}"
+            echo "DOCKER_TAG set to: ${{ env.DOCKER_TAG }}"
+            echo "DOCKER_USERNAME set to: ${{ env.DOCKER_USERNAME }}"
+
+            set -e
+            cd ~/Faceit-Stats-Provider
+
+            # (Optional) Use the appropriate .env file
+            # cp .env.prod .env
+
+            # Clean repository to avoid conflicts
+            git reset --hard HEAD
+            git clean -fd
+
+            # Pull the latest changes for the deployment branch
+            git checkout ${{ env.DEPLOY_BRANCH }}
+            git pull origin ${{ env.DEPLOY_BRANCH }}
+
+            # Debugging: Check git status and latest commit after pull
+            echo "After pull:"
+            git status
+            git log -1
+
+            # Pull the latest Docker image
+            docker pull ${{ env.DOCKER_USERNAME }}/faceitstatsprovider:${{ env.DOCKER_TAG }}
+
+            # Update Docker Compose to use the prod image
+            sed -i 's|image: .*faceitstatsprovider:.*|image: '${{ env.DOCKER_USERNAME }}/faceitstatsprovider:${{ env.DOCKER_TAG }}'|' docker-compose.yml
+
+            # Stop and remove existing containers to prevent name conflicts
+            docker-compose down --remove-orphans
+
+            # Rebuild and restart Docker containers
+            docker-compose up -d --build
+
+            echo "Deployed production image to server."
