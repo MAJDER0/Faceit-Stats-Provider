@@ -11,15 +11,18 @@ services:
     restart: always
 
   faceit_stats_provider:
+    image: "${DOCKERHUB_USERNAME}/faceitstatsprovider:${DOCKER_TAG}"
     build:
       context: .
       dockerfile: Faceit_Stats_Provider/Dockerfile
-    image: faceitstatsprovider
     ports:
-      - "80:80"  # Only map HTTP port
+      - "80:80"  
+      - "443:443"    
     environment:
-      - ASPNETCORE_URLS=http://+:80  # Ensure HTTPS is not included
-      - ASPNETCORE_ENVIRONMENT=Production  # Set environment to Production
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT} 
+      - ASPNETCORE_URLS=http://+:80;https://+:443
+    volumes:
+      - ./Faceit_Stats_Provider/appsettings.json:/app/appsettings.json:ro  # Mount appsettings.json as read-only
     depends_on:
       - redis
     restart: always
