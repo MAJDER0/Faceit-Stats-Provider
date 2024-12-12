@@ -20,3 +20,4 @@ Faceit_Stats_Provider/appsettings.json
 **/.vs/*
 **/.vs/
 .vs/
+.env
