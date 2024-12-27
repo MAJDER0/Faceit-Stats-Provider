@@ -207,7 +207,7 @@
                         <span>-</span>
                     }
                 </p>
-                <p class="EloInfoUnderCanvas3" id="max-csgo-elo">MAX CS:GO ELO: <span id="max-csgo-elo-value"></span><span class="loading-dots">...</span></p>
+               @*  <p class="EloInfoUnderCanvas3" id="max-csgo-elo">MAX CS:GO ELO: <span id="max-csgo-elo-value"></span><span class="loading-dots">...</span></p> *@ // NEED TO FIX
             }
 
         </div>
@@ -253,9 +253,10 @@
 
                             function updateElos(maxCs2Elo, maxCs2MatchID, maxCsgoElo, maxCsgoMatchID) {
                                 // Make the ELO values clickable and redirect to the corresponding match room
-                                $('#max-csgo-elo').html(
-                                    'MAX CS:GO ELO: <a class="max-links" href="https://www.faceit.com/en/csgo/room/' + maxCsgoMatchID + '" target="_blank">' + maxCsgoElo + '</a>'
-                                );
+                                // NEED TO FIX IT
+                                // $('#max-csgo-elo').html(
+                                //     'MAX CS:GO ELO: <a class="max-links" href="https://www.faceit.com/en/csgo/room/' + maxCsgoMatchID + '" target="_blank">' + maxCsgoElo + '</a>'
+                                // );
                                 $('#highest-cs2-elo-value').html(
                                     '<a class="max-links" href="https://www.faceit.com/en/cs2/room/' + maxCs2MatchID + '" target="_blank">' + maxCs2Elo + '</a>'
                                 );
